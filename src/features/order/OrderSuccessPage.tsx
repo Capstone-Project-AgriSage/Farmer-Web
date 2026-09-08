@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
 const orderItems = [
   { icon: 'medication', iconColor: 'text-[#2E7D32]', name: 'Thuốc trừ bệnh Ridomil Gold 68WG', spec: 'Gói 100g (Pha 40-50L)', qty: 'x5 gói', price: '240.000 đ', tag: 'Syngenta Thụy Sĩ', tagClass: 'bg-[#E8F5E9] text-[#1B5E20]' },
@@ -8,6 +9,7 @@ const orderItems = [
 ]
 
 export default function OrderSuccessPage() {
+  useDocumentTitle('Đặt hàng thành công')
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
       <div className="w-full bg-white border-b border-[#E1E8E2] py-4 -mt-8 -mx-4 sm:-mx-6 lg:-mx-8 mb-8 px-4 sm:px-6 lg:px-8">

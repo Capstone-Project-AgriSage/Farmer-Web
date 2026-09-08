@@ -4,6 +4,8 @@ import Breadcrumb from '../../components/ui/Breadcrumb'
 import { formatVnd } from '../../data/format'
 import { getProductBySlug, products } from '../../data/mockProducts'
 import { useCart } from '../../context/CartContext'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { handleImageError } from '../../utils/image'
 
 const specOptions = [
   { label: 'Gói 100g', note: 'Pha 40 - 50L nước', price: 48000 },
@@ -25,6 +27,8 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(5)
   const [activeSpec, setActiveSpec] = useState(0)
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]['id']>('specs')
+
+  useDocumentTitle(product ? product.name : 'Không tìm thấy sản phẩm')
 
   if (!product) {
     return (
@@ -71,6 +75,7 @@ export default function ProductDetailPage() {
                   alt={product.name}
                   className="max-h-full max-w-full object-contain hover:scale-105 transition-transform duration-300"
                   src={product.image}
+                  onError={handleImageError}
                 />
               </div>
             </div>
@@ -419,7 +424,7 @@ export default function ProductDetailPage() {
                   </div>
                 </div>
                 <Link
-                  to="/#ai-diagnosis"
+                  to="/ai-doctor"
                   className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-lg shadow-sm transition-all flex items-center gap-2 whitespace-nowrap"
                 >
                   <span className="material-symbols-outlined text-[18px]">photo_camera</span>
@@ -459,6 +464,7 @@ export default function ProductDetailPage() {
                     <img
                       src={p.image}
                       alt={p.name}
+                      onError={handleImageError}
                       className="w-full h-40 object-contain p-2 bg-surface-subtle rounded-t-lg group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>

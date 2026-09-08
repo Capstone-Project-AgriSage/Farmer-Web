@@ -6,6 +6,8 @@ export const products: Product[] = [
     name: 'Ridomil Gold 68WG - Trừ nấm thán thư, xì mủ',
     brand: 'Syngenta Thụy Sĩ',
     category: 'Thuốc đặc trị nấm bệnh',
+    group: 'Thuốc BVTV & Trừ nấm',
+    diseaseTags: ['Thán thư, xì mủ sầu riêng'],
     activeIngredient: 'Metalaxyl-M + Mancozeb',
     packaging: 'Gói 100g (Thùng 100 gói)',
     image:
@@ -25,6 +27,8 @@ export const products: Product[] = [
     name: 'Nativo 750WG - Sạch lem lép hạt, rỉ sắt',
     brand: 'Bayer CropScience',
     category: 'Thuốc trừ nấm lưu dẫn',
+    group: 'Thuốc BVTV & Trừ nấm',
+    diseaseTags: ['Rỉ sắt, nấm hồng cà phê'],
     activeIngredient: 'Trifloxystrobin + Tebuconazole',
     packaging: 'Gói 120g (Thùng 80 gói)',
     image:
@@ -39,6 +43,7 @@ export const products: Product[] = [
     name: 'Đầu Trâu NPK 20-20-15 + TE Nuôi Trái Lớn',
     brand: 'Bình Điền',
     category: 'Phân bón gốc cao cấp',
+    group: 'Phân bón NPK & Vi lượng',
     activeIngredient: 'Đạm, Lân, Kali + Vi lượng chelate',
     packaging: 'Bao 50kg chính hãng',
     image:
@@ -52,6 +57,7 @@ export const products: Product[] = [
     name: 'Humic Đậm Đặc King Root 1L - Tái sinh rễ tơ',
     brand: 'Lộc Trời Group',
     category: 'Kích rễ & Phục hồi cây',
+    group: 'Phân hữu cơ vi sinh',
     activeIngredient: 'Axit Humic 85% + Fulvic + Amino Acid',
     packaging: 'Chai 1 lít (Thùng 20 chai)',
     image:
@@ -66,6 +72,7 @@ export const products: Product[] = [
     name: 'Score 250EC - Trị đốm lá & phấn trắng',
     brand: 'Syngenta Thụy Sĩ',
     category: 'Thuốc trừ bệnh phổ rộng',
+    group: 'Thuốc BVTV & Trừ nấm',
     activeIngredient: 'Difenoconazole 250g/L',
     packaging: 'Chai 250ml',
     image:
@@ -80,6 +87,8 @@ export const products: Product[] = [
     name: 'Aliette 800WG - Lưu dẫn hai chiều đặc trị nấm',
     brand: 'Bayer CropScience',
     category: 'Thuốc trị thối rễ & xì mủ',
+    group: 'Thuốc BVTV & Trừ nấm',
+    diseaseTags: ['Thán thư, xì mủ sầu riêng', 'Vàng lá, thối rễ mùa mưa'],
     activeIngredient: 'Fosetyl-Aluminium 800g/kg',
     packaging: 'Gói 100g (Thùng 100 gói)',
     image:
@@ -94,6 +103,7 @@ export const products: Product[] = [
     name: 'Phân Hữu Cơ Úc Bounce Back - Cải tạo đất',
     brand: 'Úc Nhập Khẩu',
     category: 'Phân hữu cơ vi sinh',
+    group: 'Phân hữu cơ vi sinh',
     activeIngredient: 'Chất hữu cơ 45% + NPK hữu cơ',
     packaging: 'Bao 25kg viên nở tan chậm',
     image:
@@ -108,6 +118,8 @@ export const products: Product[] = [
     name: 'Anvil 5SC - Trừ nấm hồng rỉ sắt cà phê',
     brand: 'Syngenta Thụy Sĩ',
     category: 'Thuốc trừ nấm bệnh',
+    group: 'Thuốc BVTV & Trừ nấm',
+    diseaseTags: ['Rỉ sắt, nấm hồng cà phê'],
     activeIngredient: 'Hexaconazole 50g/L',
     packaging: 'Chai 1 Lít',
     image:
@@ -122,6 +134,7 @@ export const products: Product[] = [
     name: 'Đạm Phú Mỹ Hạt Đục 46.3% N (Bao 50kg)',
     brand: 'Đạm Phú Mỹ',
     category: 'Phân đạm Urê cao cấp',
+    group: 'Phân bón NPK & Vi lượng',
     activeIngredient: 'Nitơ 46.3% tan nhanh chống thất thoát',
     packaging: 'Bao 50kg chuẩn nhà máy',
     image:

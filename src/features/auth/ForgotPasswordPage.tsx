@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
 export default function ForgotPasswordPage() {
+  useDocumentTitle('Quên mật khẩu')
   const [identity, setIdentity] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [otpSent, setOtpSent] = useState(false)

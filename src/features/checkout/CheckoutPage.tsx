@@ -2,15 +2,49 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { formatVnd } from '../../data/format'
 import { useCart } from '../../context/CartContext'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { handleImageError } from '../../utils/image'
 
 const VOUCHER_DISCOUNT = 50000
 
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart()
   const navigate = useNavigate()
+  useDocumentTitle('Thanh toán đơn hàng')
   const [deliveryMode, setDeliveryMode] = useState<'garden' | 'pickup'>('garden')
   const [shippingMethod, setShippingMethod] = useState<'truck' | 'express'>('truck')
   const [paymentMethod, setPaymentMethod] = useState<'vietqr' | 'cod' | 'credit'>('vietqr')
+  const [copiedField, setCopiedField] = useState<'account' | 'memo' | null>(null)
+
+  const copyToClipboard = (field: 'account' | 'memo', value: string) => {
+    const markCopied = () => {
+      setCopiedField(field)
+      setTimeout(() => setCopiedField((f) => (f === field ? null : f)), 1500)
+    }
+
+    const fallbackCopy = () => {
+      const textarea = document.createElement('textarea')
+      textarea.value = value
+      textarea.style.position = 'fixed'
+      textarea.style.opacity = '0'
+      document.body.appendChild(textarea)
+      textarea.focus()
+      textarea.select()
+      try {
+        document.execCommand('copy')
+        markCopied()
+      } catch {
+        // Clipboard access unavailable in this environment; ignore silently.
+      }
+      document.body.removeChild(textarea)
+    }
+
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(value).then(markCopied, fallbackCopy)
+    } else {
+      fallbackCopy()
+    }
+  }
 
   const discount = items.length > 0 ? VOUCHER_DISCOUNT : 0
   const shippingFee = shippingMethod === 'express' ? 45000 : 0
@@ -302,7 +336,17 @@ export default function CheckoutPage() {
                         </div>
                         <div className="flex items-center justify-between py-1 border-b border-border-subtle">
                           <span className="text-text-muted">Số tài khoản:</span>
-                          <span className="font-mono font-bold text-primary text-sm">19006828999</span>
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-mono font-bold text-primary text-sm">19006828999</span>
+                            <button
+                              type="button"
+                              onClick={() => copyToClipboard('account', '19006828999')}
+                              className="text-[10px] text-primary hover:underline font-semibold"
+                              title="Sao chép số TK"
+                            >
+                              {copiedField === 'account' ? 'Đã copy' : 'Copy'}
+                            </button>
+                          </div>
                         </div>
                         <div className="flex items-center justify-between py-1 border-b border-border-subtle">
                           <span className="text-text-muted">Số tiền:</span>
@@ -310,9 +354,19 @@ export default function CheckoutPage() {
                         </div>
                         <div className="flex items-center justify-between py-1">
                           <span className="text-text-muted">Nội dung CK:</span>
-                          <span className="font-mono font-bold text-text-primary bg-white px-2 py-0.5 rounded border border-border-subtle">
-                            AGR8842
-                          </span>
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-mono font-bold text-text-primary bg-white px-2 py-0.5 rounded border border-border-subtle">
+                              AGR8842
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => copyToClipboard('memo', 'AGR8842')}
+                              className="text-[10px] text-primary hover:underline font-semibold"
+                              title="Sao chép cú pháp"
+                            >
+                              {copiedField === 'memo' ? 'Đã copy' : 'Copy'}
+                            </button>
+                          </div>
                         </div>
                         <div className="p-2 rounded bg-status-success-surface text-status-success text-[11px] font-medium flex items-center gap-1 mt-1">
                           <span className="material-symbols-outlined text-[14px]">verified</span>
@@ -395,7 +449,12 @@ export default function CheckoutPage() {
                   <div key={item.product.slug} className="py-2.5 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2.5">
                       <div className="w-12 h-12 rounded-lg border border-border-subtle bg-surface-subtle p-1 flex-shrink-0 flex items-center justify-center">
-                        <img alt={item.product.name} className="w-full h-full object-contain" src={item.product.image} />
+                        <img
+                          alt={item.product.name}
+                          className="w-full h-full object-contain"
+                          src={item.product.image}
+                          onError={handleImageError}
+                        />
                       </div>
                       <div>
                         <h4 className="text-xs font-bold text-text-primary line-clamp-1">{item.product.name}</h4>

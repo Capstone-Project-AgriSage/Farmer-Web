@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import type { Product } from '../../types'
 import { formatVnd } from '../../data/format'
 import { useCart } from '../../context/CartContext'
+import { handleImageError } from '../../utils/image'
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addToCart } = useCart()
@@ -18,6 +19,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <img
           src={product.image}
           alt={product.name}
+          onError={handleImageError}
           className="w-full h-full object-contain p-2 mix-blend-multiply group-hover:scale-105 transition-transform duration-300"
         />
         <span className="absolute bottom-2 right-2 px-2 py-0.5 bg-status-success-surface text-status-success text-[10px] font-semibold rounded flex items-center gap-1 z-10">

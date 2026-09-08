@@ -2,6 +2,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import { formatVnd } from '../../data/format'
 import { useCart } from '../../context/CartContext'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { handleImageError } from '../../utils/image'
 
 const VOUCHER_DISCOUNT = 50000
 const FREE_SHIPPING_THRESHOLD = 2000000
@@ -9,6 +11,7 @@ const FREE_SHIPPING_THRESHOLD = 2000000
 export default function CartPage() {
   const { items, subtotal, updateQuantity, removeFromCart, clearCart } = useCart()
   const navigate = useNavigate()
+  useDocumentTitle('Giỏ hàng của tôi')
 
   const discount = items.length > 0 ? VOUCHER_DISCOUNT : 0
   const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : 30000
@@ -73,6 +76,7 @@ export default function CartPage() {
                           alt={item.product.name}
                           className="w-full h-full object-contain hover:scale-105 transition-transform"
                           src={item.product.image}
+                          onError={handleImageError}
                         />
                       </div>
                       <div className="space-y-1">

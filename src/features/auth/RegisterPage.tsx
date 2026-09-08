@@ -1,10 +1,56 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+
+const PHONE_REGEX = /^(0|\+84)\d{9,10}$/
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+interface FormErrors {
+  fullName?: string
+  contact?: string
+  password?: string
+  confirmPassword?: string
+  terms?: string
+}
 
 export default function RegisterPage() {
+  useDocumentTitle('Đăng ký tài khoản')
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [fullName, setFullName] = useState('Nguyễn Văn Nông')
+  const [contact, setContact] = useState('0912 345 678')
+  const [password, setPassword] = useState('NongDan@2024')
+  const [confirmPassword, setConfirmPassword] = useState('NongDan@2024')
+  const [terms, setTerms] = useState(true)
+  const [errors, setErrors] = useState<FormErrors>({})
+
+  const validate = (): FormErrors => {
+    const next: FormErrors = {}
+    if (!fullName.trim()) next.fullName = 'Vui lòng nhập họ và tên'
+
+    const normalizedContact = contact.replace(/\s/g, '')
+    if (!contact.trim()) {
+      next.contact = 'Vui lòng nhập email hoặc số điện thoại'
+    } else if (!PHONE_REGEX.test(normalizedContact) && !EMAIL_REGEX.test(contact.trim())) {
+      next.contact = 'Email hoặc số điện thoại không hợp lệ'
+    }
+
+    if (password.length < 8) next.password = 'Mật khẩu cần tối thiểu 8 ký tự'
+    if (confirmPassword !== password) next.confirmPassword = 'Mật khẩu xác nhận không khớp'
+    if (!terms) next.terms = 'Bạn cần đồng ý với điều khoản để tiếp tục'
+
+    return next
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const nextErrors = validate()
+    setErrors(nextErrors)
+    if (Object.keys(nextErrors).length === 0) {
+      navigate('/')
+    }
+  }
 
   return (
     <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
@@ -46,13 +92,7 @@ export default function RegisterPage() {
                 Gia nhập hệ sinh thái nông nghiệp thông minh AgriSage
               </p>
             </div>
-            <form
-              className="space-y-3.5"
-              onSubmit={(e) => {
-                e.preventDefault()
-                navigate('/')
-              }}
-            >
+            <form className="space-y-3.5" onSubmit={handleSubmit} noValidate>
               <div className="text-left">
                 <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-1" htmlFor="fullName">
                   Họ và tên
@@ -62,15 +102,20 @@ export default function RegisterPage() {
                     <span className="material-symbols-outlined text-[18px]">person</span>
                   </div>
                   <input
-                    className="w-full pl-9 pr-3 py-2.5 bg-white border border-border-subtle rounded-lg text-text-primary text-sm placeholder:text-text-muted focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"
+                    className={`w-full pl-9 pr-3 py-2.5 bg-white border rounded-lg text-text-primary text-sm placeholder:text-text-muted focus:ring-2 focus:outline-none transition-all ${
+                      errors.fullName
+                        ? 'border-status-error focus:border-status-error focus:ring-status-error/20'
+                        : 'border-border-subtle focus:border-primary focus:ring-primary/20'
+                    }`}
                     id="fullName"
                     name="fullName"
                     placeholder="Nguyễn Văn Nông"
-                    required
                     type="text"
-                    defaultValue="Nguyễn Văn Nông"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
                   />
                 </div>
+                {errors.fullName && <p className="text-[11px] text-status-error mt-1">{errors.fullName}</p>}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
                 <div>
@@ -82,15 +127,20 @@ export default function RegisterPage() {
                       <span className="material-symbols-outlined text-[18px]">call</span>
                     </div>
                     <input
-                      className="w-full pl-9 pr-3 py-2.5 bg-white border border-border-subtle rounded-lg text-text-primary text-sm placeholder:text-text-muted focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"
+                      className={`w-full pl-9 pr-3 py-2.5 bg-white border rounded-lg text-text-primary text-sm placeholder:text-text-muted focus:ring-2 focus:outline-none transition-all ${
+                        errors.contact
+                          ? 'border-status-error focus:border-status-error focus:ring-status-error/20'
+                          : 'border-border-subtle focus:border-primary focus:ring-primary/20'
+                      }`}
                       id="regContact"
                       name="contact"
                       placeholder="0912 345 678"
-                      required
                       type="text"
-                      defaultValue="0912 345 678"
+                      value={contact}
+                      onChange={(e) => setContact(e.target.value)}
                     />
                   </div>
+                  {errors.contact && <p className="text-[11px] text-status-error mt-1">{errors.contact}</p>}
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-1" htmlFor="farmRegion">
@@ -125,13 +175,17 @@ export default function RegisterPage() {
                       <span className="material-symbols-outlined text-[18px]">lock</span>
                     </div>
                     <input
-                      className="w-full pl-9 pr-8 py-2.5 bg-white border border-border-subtle rounded-lg text-text-primary text-sm placeholder:text-text-muted focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"
+                      className={`w-full pl-9 pr-8 py-2.5 bg-white border rounded-lg text-text-primary text-sm placeholder:text-text-muted focus:ring-2 focus:outline-none transition-all ${
+                        errors.password
+                          ? 'border-status-error focus:border-status-error focus:ring-status-error/20'
+                          : 'border-border-subtle focus:border-primary focus:ring-primary/20'
+                      }`}
                       id="regPassword"
                       name="password"
                       placeholder="Tối thiểu 8 ký tự"
-                      required
                       type={showPassword ? 'text' : 'password'}
-                      defaultValue="NongDan@2024"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                     <button
                       type="button"
@@ -143,6 +197,7 @@ export default function RegisterPage() {
                       </span>
                     </button>
                   </div>
+                  {errors.password && <p className="text-[11px] text-status-error mt-1">{errors.password}</p>}
                 </div>
                 <div>
                   <label
@@ -156,13 +211,17 @@ export default function RegisterPage() {
                       <span className="material-symbols-outlined text-[18px]">verified_user</span>
                     </div>
                     <input
-                      className="w-full pl-9 pr-8 py-2.5 bg-white border border-border-subtle rounded-lg text-text-primary text-sm placeholder:text-text-muted focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"
+                      className={`w-full pl-9 pr-8 py-2.5 bg-white border rounded-lg text-text-primary text-sm placeholder:text-text-muted focus:ring-2 focus:outline-none transition-all ${
+                        errors.confirmPassword
+                          ? 'border-status-error focus:border-status-error focus:ring-status-error/20'
+                          : 'border-border-subtle focus:border-primary focus:ring-primary/20'
+                      }`}
                       id="regConfirmPassword"
                       name="confirmPassword"
                       placeholder="Nhập lại mật khẩu"
-                      required
                       type={showConfirmPassword ? 'text' : 'password'}
-                      defaultValue="NongDan@2024"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                     <button
                       type="button"
@@ -174,11 +233,21 @@ export default function RegisterPage() {
                       </span>
                     </button>
                   </div>
+                  {errors.confirmPassword && (
+                    <p className="text-[11px] text-status-error mt-1">{errors.confirmPassword}</p>
+                  )}
                 </div>
               </div>
               <div className="pt-1">
                 <label className="group flex items-start gap-2 cursor-pointer select-none text-left">
-                  <input defaultChecked id="termsCheck" name="terms" type="checkbox" className="mt-1" />
+                  <input
+                    checked={terms}
+                    onChange={(e) => setTerms(e.target.checked)}
+                    id="termsCheck"
+                    name="terms"
+                    type="checkbox"
+                    className="mt-1"
+                  />
                   <span className="text-xs text-text-secondary leading-snug">
                     Tôi đồng ý với{' '}
                     <a href="#" className="text-primary font-semibold hover:underline">
@@ -191,6 +260,7 @@ export default function RegisterPage() {
                     của AgriSage.
                   </span>
                 </label>
+                {errors.terms && <p className="text-[11px] text-status-error mt-1">{errors.terms}</p>}
               </div>
               <div className="pt-2">
                 <button

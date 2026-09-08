@@ -1,8 +1,17 @@
+export type ProductGroup =
+  | 'Thuốc BVTV & Trừ nấm'
+  | 'Phân bón NPK & Vi lượng'
+  | 'Phân hữu cơ vi sinh'
+  | 'Hạt giống & Cây giống'
+  | 'Thuốc trừ sâu sinh học'
+  | 'Tưới nhỏ giọt & Thiết bị'
+
 export interface Product {
   slug: string
   name: string
   brand: string
   category: string
+  group: ProductGroup
   activeIngredient: string
   packaging: string
   image: string
@@ -15,6 +24,7 @@ export interface Product {
   rating?: number
   reviewCount?: number
   soldCount?: number
+  diseaseTags?: string[]
 }
 
 export interface CartItem {

@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom'
 import { products } from '../../data/mockProducts'
+import { articles } from '../../data/mockArticles'
 import ProductCard from '../../components/ui/ProductCard'
+import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { handleImageError } from '../../utils/image'
 
 const categories = [
   {
@@ -64,31 +67,8 @@ const commitments = [
   },
 ]
 
-const newsArticles = [
-  {
-    badge: { label: 'Cảnh báo dịch hại', icon: 'warning', className: 'bg-status-warning-surface text-status-warning' },
-    title: 'Cảnh báo bùng phát bệnh thán thư sầu riêng mùa mưa dầm tại Tây Nguyên',
-    summary:
-      'Độ ẩm trên 85% là điều kiện nấm Colletotrichum phát triển mạnh. Kỹ sư khuyến cáo bà con cắt tỉa cành thông thoáng và luân phiên hoạt chất Azoxystrobin.',
-    date: '12/10/2024 · 5 phút đọc',
-  },
-  {
-    badge: { label: 'Kỹ thuật canh tác', icon: 'eco', className: 'bg-primary-light text-primary' },
-    title: 'Quy trình bón thúc đón hoa & tăng tỷ lệ đậu trái cho cây sầu riêng 5 năm tuổi',
-    summary:
-      'Thời điểm tạo mầm hoa quyết định 70% sản lượng. Hướng dẫn phối hợp phân lân nung chảy kết hợp Kali Sunfat để cây ra hoa đồng loạt, cuống hoa mập.',
-    date: '10/10/2024 · 7 phút đọc',
-  },
-  {
-    badge: { label: 'Dành cho đại lý', icon: 'store', className: 'bg-blue-50 text-status-info' },
-    title: 'Giải pháp quản lý sổ nợ gối vụ & xuất kho tự động không lo thất thoát',
-    summary:
-      'Phần mềm AgriSage POS giúp chủ cửa hàng theo dõi hạn mức tín dụng của từng nông hộ, gửi SMS nhắc nợ thân thiện và kiểm soát hạn sử dụng thuốc theo lô.',
-    date: '08/10/2024 · 4 phút đọc',
-  },
-]
-
 export default function HomePage() {
+  useDocumentTitle()
   const featured = products.slice(0, 4)
 
   return (
@@ -161,15 +141,15 @@ export default function HomePage() {
                   </span>
                   <span>Khám phá sản phẩm ngay</span>
                 </Link>
-                <a
-                  href="#ai-diagnosis"
+                <Link
+                  to="/ai-doctor"
                   className="px-6 py-3 bg-white/15 hover:bg-white/25 border border-white/25 text-white text-sm font-semibold rounded-lg backdrop-blur-[1px] transition-all flex items-center gap-2"
                 >
                   <span className="material-symbols-outlined text-[20px] text-emerald-300">
                     photo_camera
                   </span>
                   <span>Bác sĩ cây trồng AI (Quét lá bệnh)</span>
-                </a>
+                </Link>
               </div>
             </div>
             <div className="lg:col-span-5 relative">
@@ -178,6 +158,7 @@ export default function HomePage() {
                   alt="Đồng hành cùng nhà nông mùa vụ"
                   className="w-full h-80 sm:h-96 object-cover transform scale-105 group-hover:scale-100 transition-transform duration-700 brightness-90"
                   src="https://lh3.googleusercontent.com/aida/AEtjO1XGezutwBLujRfYYW-Oq6ctBIapuCwRvY30-mP-XpcHzfzN7wBQeDVLZdeim9H7kj9EprfP5hiU2nLcLyKAds_HQRuePA4DT_1x7K6ofveh7v1TTLK-IoCAbKulEm0z8StHrLQWLK_F-VbNXV4G2nQJOGwbMU8YjrcJcCoKq2mrskEC_d1Fq6XxL0Sut3ouArJ14wPGJlLJ_AlQ7pKrIlRlLPhl1YsFBxjGuqFANU0NE_ZNXVA8zcnkCbjs"
+                  onError={handleImageError}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary-dark via-primary-dark/40 to-transparent"></div>
                 <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-xl shadow-lg border border-border-subtle flex items-center gap-2.5 text-text-primary">
@@ -273,10 +254,13 @@ export default function HomePage() {
                     Hoàn toàn miễn phí cho bà con nông dân
                   </p>
                 </div>
-                <button className="w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white rounded-lg font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2">
+                <Link
+                  to="/ai-doctor"
+                  className="w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white rounded-lg font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2"
+                >
                   <span className="material-symbols-outlined text-[20px]">add_a_photo</span>
                   <span>Tải ảnh quét bệnh ngay</span>
-                </button>
+                </Link>
                 <div className="text-[11px] text-text-muted pt-1 flex items-center gap-1.5 justify-center">
                   <span className="w-2 h-2 rounded-full bg-status-success"></span>
                   <span>Vừa chẩn đoán: Sầu riêng đốm mắt cua (Lâm Đồng)</span>
@@ -317,6 +301,7 @@ export default function HomePage() {
                 <img
                   src={cat.image}
                   alt={cat.name}
+                  onError={handleImageError}
                   className="w-16 h-16 object-contain mb-3 group-hover:scale-110 transition-transform duration-300"
                 />
                 <h3 className="text-xs sm:text-sm font-bold text-text-primary group-hover:text-primary transition-colors leading-snug">
@@ -378,6 +363,7 @@ export default function HomePage() {
                 <img
                   src={item.image}
                   alt={item.title}
+                  onError={handleImageError}
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent flex items-end justify-center pb-5 px-3 text-center">
@@ -403,16 +389,16 @@ export default function HomePage() {
                 Cập Nhật Kỹ Thuật Mùa Vụ Mới Nhất
               </h2>
             </div>
-            <a
-              href="#news"
+            <Link
+              to="/knowledge"
               className="text-sm font-semibold text-primary hover:text-primary-dark flex items-center gap-1 hover:underline"
             >
               <span>Xem tất cả bài viết</span>
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-            </a>
+            </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {newsArticles.map((article) => (
+            {articles.slice(0, 3).map((article) => (
               <div
                 key={article.title}
                 className="bg-surface-subtle rounded-xl border border-border-subtle overflow-hidden hover:shadow-card transition-all group flex flex-col justify-between"

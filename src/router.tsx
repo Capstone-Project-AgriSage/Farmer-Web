@@ -9,6 +9,12 @@ import ProductDetailPage from './features/products/ProductDetailPage'
 import CartPage from './features/cart/CartPage'
 import CheckoutPage from './features/checkout/CheckoutPage'
 import OrderSuccessPage from './features/order/OrderSuccessPage'
+import AboutPage from './features/about/AboutPage'
+import KnowledgePage from './features/knowledge/KnowledgePage'
+import ContactPage from './features/contact/ContactPage'
+import AccountPage from './features/account/AccountPage'
+import AiDoctorPage from './features/ai-doctor/AiDoctorPage'
+import NotFoundPage from './features/misc/NotFoundPage'
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +30,12 @@ export const router = createBrowserRouter([
       { path: 'cart', element: <CartPage /> },
       { path: 'checkout', element: <CheckoutPage /> },
       { path: 'order-success', element: <OrderSuccessPage /> },
+      { path: 'about', element: <AboutPage /> },
+      { path: 'knowledge', element: <KnowledgePage /> },
+      { path: 'contact', element: <ContactPage /> },
+      { path: 'account', element: <AccountPage /> },
+      { path: 'ai-doctor', element: <AiDoctorPage /> },
+      { path: '*', element: <NotFoundPage /> },
     ],
   },
 ])

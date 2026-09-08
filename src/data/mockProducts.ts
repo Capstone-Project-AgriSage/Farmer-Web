@@ -1,0 +1,138 @@
+import type { Product } from '../types'
+
+export const products: Product[] = [
+  {
+    slug: 'ridomil-gold-68wg',
+    name: 'Ridomil Gold 68WG - Trừ nấm thán thư, xì mủ',
+    brand: 'Syngenta Thụy Sĩ',
+    category: 'Thuốc đặc trị nấm bệnh',
+    activeIngredient: 'Metalaxyl-M + Mancozeb',
+    packaging: 'Gói 100g (Thùng 100 gói)',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuD_5FIcz2O0dDytA9vTzGZb_VKTEEDB3WS5iLNHAK2BcrzS7BMTA70GqGkR3aM19-ExbhofQ87a-eLkAd1UI7J1_2_7ee5pTymW8R9Yn9Yu7L5k1Rc7bZSRSvnST7kOOiZxRuQ41Tl289JDgeHTn-fgmMM_hvTtbx3aAv_TI55Q7AC9s_oXCfLKWZrGNfJG-DmfnB0KGt1UsdmXXrpDAzSrEse36GmBafZilH_JB-tNzrXUcd1jsa8OAQ',
+    price: 48000,
+    originalPrice: 55000,
+    wholesalePrice: 4600000,
+    wholesaleUnit: 'Thùng 100 gói',
+    stockLabel: 'Sẵn kho Di Linh (428 gói)',
+    tag: 'Hỗ trợ nợ vụ',
+    rating: 4.9,
+    reviewCount: 186,
+    soldCount: 4850,
+  },
+  {
+    slug: 'nativo-750wg',
+    name: 'Nativo 750WG - Sạch lem lép hạt, rỉ sắt',
+    brand: 'Bayer CropScience',
+    category: 'Thuốc trừ nấm lưu dẫn',
+    activeIngredient: 'Trifloxystrobin + Tebuconazole',
+    packaging: 'Gói 120g (Thùng 80 gói)',
+    image:
+      'https://lh3.googleusercontent.com/aida/AEtjO1VMQ80DqtBvwxbaVC7CKSU9AJDINHmSJtvBSEQTh-wiy1v_A03agdh1Z2VV8l0yrJAODhmVMq-Xh0A5S1y_KpBwhxKBfT3JTjxZUJVAI4-4GZqbLAp56vE7yBpMue6UCQfqGhc080bNe4o53vwZIteIYCvv_SCuX5kSisZgqYyzd1KSllRJWvNUBqniuatgxswnVD1rxir9rkgP_15eqKfn-mKagLJkCbUNLVPRRSU1_9CjOBHRs2IX5pw',
+    price: 195000,
+    originalPrice: 215000,
+    stockLabel: 'Sẵn kho Di Linh',
+    tag: 'Freeship tận vườn',
+  },
+  {
+    slug: 'dau-trau-npk-20-20-15',
+    name: 'Đầu Trâu NPK 20-20-15 + TE Nuôi Trái Lớn',
+    brand: 'Bình Điền',
+    category: 'Phân bón gốc cao cấp',
+    activeIngredient: 'Đạm, Lân, Kali + Vi lượng chelate',
+    packaging: 'Bao 50kg chính hãng',
+    image:
+      'https://lh3.googleusercontent.com/aida/AEtjO1VyUR4caPslBl6jI6FQdgZk8sJs3TpBIlWETFj7fujhnl8ZZnV1V4G_p3tLqKU5KSghYF8sytvS-sKVHT6QsYZ8fZCMvoOzW4_0WfGJuWNzoa-7nIPYh5lhEztMJQ3ptGsqK3kHi733e7njGmhBtVD631gY3XdyEPCkwRvjHfzYaYwklEhODLHqSZdyGg8IeA-he7bTlAFQUieGlSw6GHMHlmIFTESYsnUc2X3ZRcncQDZurQqNC9y4KZMD',
+    price: 920000,
+    stockLabel: 'Còn 150 bao',
+    tag: 'Bảo lãnh nợ mùa vụ',
+  },
+  {
+    slug: 'humic-king-root-1l',
+    name: 'Humic Đậm Đặc King Root 1L - Tái sinh rễ tơ',
+    brand: 'Lộc Trời Group',
+    category: 'Kích rễ & Phục hồi cây',
+    activeIngredient: 'Axit Humic 85% + Fulvic + Amino Acid',
+    packaging: 'Chai 1 lít (Thùng 20 chai)',
+    image:
+      'https://lh3.googleusercontent.com/aida/AEtjO1UA8gqLROoo_CAD4F9G4ZQijG54DhEECC9YhW7P3bb7ZWMhWvqVjNwGpfSPQPxWUYGpHy7DHSvdTUAoV4i8JYzihaL5xuEXmfEJdvUtl3Xfa00_rBFizaWuP6vOeGBN93PgOnhUTxK6HIOI448TLeRtu96dsD6K27Qp0RFLOABcDVNKGCX4CpiqxRZD3x6BBMEPY_4Yc2dDKN9hFEctQwTx3zAztjLPZc2cuG7mIQ_2TzXaXqmh-dmn55Ws',
+    price: 125000,
+    originalPrice: 145000,
+    stockLabel: 'Sẵn kho Di Linh',
+    tag: 'Giao trong 2 giờ',
+  },
+  {
+    slug: 'score-250ec',
+    name: 'Score 250EC - Trị đốm lá & phấn trắng',
+    brand: 'Syngenta Thụy Sĩ',
+    category: 'Thuốc trừ bệnh phổ rộng',
+    activeIngredient: 'Difenoconazole 250g/L',
+    packaging: 'Chai 250ml',
+    image:
+      'https://lh3.googleusercontent.com/aida/AEtjO1XpIH2nz2ItWaG2uvCp6pe1rB3T9H2KL7q73xVV2LhnluANEPLNf6ja95_cF3qAM9bfgNJljb4eMMUYVCQ1cRCGkRw4YErSThP5W-zxucoUiexdfSOGWC4d4WQOBq8Bzvetwwwoh7YPOxwJ7_ZYlLcgaEY6txh4MZmuES6H9JHsCJHDEgeHUaL5Nx9WSUHkZrYQIPOXsgdwC37DhB8hvwOOVFdocFH3OiEjrsyZg6XO5ethabVmcTFuKQsQ',
+    price: 210000,
+    originalPrice: 230000,
+    stockLabel: 'Sẵn kho Di Linh',
+    tag: 'Hỗ trợ nợ vụ',
+  },
+  {
+    slug: 'aliette-800wg',
+    name: 'Aliette 800WG - Lưu dẫn hai chiều đặc trị nấm',
+    brand: 'Bayer CropScience',
+    category: 'Thuốc trị thối rễ & xì mủ',
+    activeIngredient: 'Fosetyl-Aluminium 800g/kg',
+    packaging: 'Gói 100g (Thùng 100 gói)',
+    image:
+      'https://lh3.googleusercontent.com/aida/AEtjO1VMQ80DqtBvwxbaVC7CKSU9AJDINHmSJtvBSEQTh-wiy1v_A03agdh1Z2VV8l0yrJAODhmVMq-Xh0A5S1y_KpBwhxKBfT3JTjxZUJVAI4-4GZqbLAp56vE7yBpMue6UCQfqGhc080bNe4o53vwZIteIYCvv_SCuX5kSisZgqYyzd1KSllRJWvNUBqniuatgxswnVD1rxir9rkgP_15eqKfn-mKagLJkCbUNLVPRRSU1_9CjOBHRs2IX5pw',
+    price: 68000,
+    originalPrice: 75000,
+    stockLabel: 'Sẵn kho Di Linh',
+    tag: 'Chính hãng VAT',
+  },
+  {
+    slug: 'bounce-back-huu-co',
+    name: 'Phân Hữu Cơ Úc Bounce Back - Cải tạo đất',
+    brand: 'Úc Nhập Khẩu',
+    category: 'Phân hữu cơ vi sinh',
+    activeIngredient: 'Chất hữu cơ 45% + NPK hữu cơ',
+    packaging: 'Bao 25kg viên nở tan chậm',
+    image:
+      'https://lh3.googleusercontent.com/aida/AEtjO1VyUR4caPslBl6jI6FQdgZk8sJs3TpBIlWETFj7fujhnl8ZZnV1V4G_p3tLqKU5KSghYF8sytvS-sKVHT6QsYZ8fZCMvoOzW4_0WfGJuWNzoa-7nIPYh5lhEztMJQ3ptGsqK3kHi733e7njGmhBtVD631gY3XdyEPCkwRvjHfzYaYwklEhODLHqSZdyGg8IeA-he7bTlAFQUieGlSw6GHMHlmIFTESYsnUc2X3ZRcncQDZurQqNC9y4KZMD',
+    price: 340000,
+    originalPrice: 380000,
+    stockLabel: 'Sẵn kho Di Linh',
+    tag: 'Hỗ trợ nợ vụ',
+  },
+  {
+    slug: 'anvil-5sc',
+    name: 'Anvil 5SC - Trừ nấm hồng rỉ sắt cà phê',
+    brand: 'Syngenta Thụy Sĩ',
+    category: 'Thuốc trừ nấm bệnh',
+    activeIngredient: 'Hexaconazole 50g/L',
+    packaging: 'Chai 1 Lít',
+    image:
+      'https://lh3.googleusercontent.com/aida/AEtjO1UA8gqLROoo_CAD4F9G4ZQijG54DhEECC9YhW7P3bb7ZWMhWvqVjNwGpfSPQPxWUYGpHy7DHSvdTUAoV4i8JYzihaL5xuEXmfEJdvUtl3Xfa00_rBFizaWuP6vOeGBN93PgOnhUTxK6HIOI448TLeRtu96dsD6K27Qp0RFLOABcDVNKGCX4CpiqxRZD3x6BBMEPY_4Yc2dDKN9hFEctQwTx3zAztjLPZc2cuG7mIQ_2TzXaXqmh-dmn55Ws',
+    price: 215000,
+    originalPrice: 240000,
+    stockLabel: 'Sẵn kho Di Linh',
+    tag: 'Giao trong 2 giờ',
+  },
+  {
+    slug: 'dam-phu-my-hat-duc',
+    name: 'Đạm Phú Mỹ Hạt Đục 46.3% N (Bao 50kg)',
+    brand: 'Đạm Phú Mỹ',
+    category: 'Phân đạm Urê cao cấp',
+    activeIngredient: 'Nitơ 46.3% tan nhanh chống thất thoát',
+    packaging: 'Bao 50kg chuẩn nhà máy',
+    image:
+      'https://lh3.googleusercontent.com/aida/AEtjO1VyUR4caPslBl6jI6FQdgZk8sJs3TpBIlWETFj7fujhnl8ZZnV1V4G_p3tLqKU5KSghYF8sytvS-sKVHT6QsYZ8fZCMvoOzW4_0WfGJuWNzoa-7nIPYh5lhEztMJQ3ptGsqK3kHi733e7njGmhBtVD631gY3XdyEPCkwRvjHfzYaYwklEhODLHqSZdyGg8IeA-he7bTlAFQUieGlSw6GHMHlmIFTESYsnUc2X3ZRcncQDZurQqNC9y4KZMD',
+    price: 545000,
+    originalPrice: 590000,
+    stockLabel: 'Sẵn kho Di Linh',
+    tag: 'Bảo lãnh nợ vụ',
+  },
+]
+
+export function getProductBySlug(slug: string): Product | undefined {
+  return products.find((p) => p.slug === slug)
+}

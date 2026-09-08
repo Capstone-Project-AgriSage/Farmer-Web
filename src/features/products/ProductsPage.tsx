@@ -1,28 +1,11 @@
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import ProductCard from '../../components/ui/ProductCard'
+import Pagination from '../../components/ui/Pagination'
+import AiDiagnosisCallout from '../../components/ui/AiDiagnosisCallout'
 import { products } from '../../data/mockProducts'
-import type { ProductGroup } from '../../types'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
-
-const groupOptions: ProductGroup[] = [
-  'Thuốc BVTV & Trừ nấm',
-  'Phân bón NPK & Vi lượng',
-  'Phân hữu cơ vi sinh',
-  'Hạt giống & Cây giống',
-  'Thuốc trừ sâu sinh học',
-  'Tưới nhỏ giọt & Thiết bị',
-]
-
-const diseaseOptions = [
-  'Thán thư, xì mủ sầu riêng',
-  'Rỉ sắt, nấm hồng cà phê',
-  'Rệp sáp & Tuyến trùng rễ',
-  'Vàng lá, thối rễ mùa mưa',
-]
-
-const brandOptions = Array.from(new Set(products.map((p) => p.brand))).sort()
+import FilterSidebar from './components/FilterSidebar'
 
 type SortOption = 'best-selling' | 'newest' | 'price-asc' | 'price-desc'
 
@@ -209,136 +192,27 @@ export default function ProductsPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <aside className="lg:col-span-3 space-y-5">
-            <div className="bg-white rounded-xl border border-border-subtle p-4 shadow-sm">
-              <div className="flex items-center justify-between pb-3 border-b border-border-subtle mb-3">
-                <h2 className="text-sm font-bold text-text-primary flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-primary text-[18px]">filter_alt</span>
-                  <span>Bộ lọc tìm kiếm</span>
-                </h2>
-                <button onClick={resetFilters} className="text-[11px] text-primary hover:underline font-semibold">
-                  Thiết lập lại
-                </button>
-              </div>
-              <div className="space-y-5">
-                <div className="space-y-2">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-text-primary">
-                    Danh mục sản phẩm
-                  </h3>
-                  <div className="space-y-1.5 text-xs text-text-secondary">
-                    {groupOptions.map((label) => (
-                      <label key={label} className="flex items-center justify-between hover:text-primary cursor-pointer">
-                        <div className="flex items-center gap-2">
-                          <input
-                            checked={selectedGroups.has(label)}
-                            onChange={() => updateAndResetPage(setSelectedGroups)(toggleInSet(selectedGroups, label))}
-                            className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
-                            type="checkbox"
-                          />
-                          <span>{label}</span>
-                        </div>
-                        <span className="text-[11px] text-text-muted">({groupCounts.get(label) ?? 0})</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                <div className="pt-3 border-t border-border-subtle space-y-2">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-text-primary">
-                    Thương hiệu nổi bật
-                  </h3>
-                  <div className="space-y-1.5 text-xs text-text-secondary">
-                    {brandOptions.map((label) => (
-                      <label key={label} className="flex items-center justify-between hover:text-primary cursor-pointer">
-                        <div className="flex items-center gap-2">
-                          <input
-                            checked={selectedBrands.has(label)}
-                            onChange={() => updateAndResetPage(setSelectedBrands)(toggleInSet(selectedBrands, label))}
-                            className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
-                            type="checkbox"
-                          />
-                          <span>{label}</span>
-                        </div>
-                        <span className="text-[11px] text-text-muted">({brandCounts.get(label) ?? 0})</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                <div className="pt-3 border-t border-border-subtle space-y-2">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-text-primary">
-                    Phòng trị bệnh cây trồng
-                  </h3>
-                  <div className="space-y-1.5 text-xs text-text-secondary">
-                    {diseaseOptions.map((label) => (
-                      <label key={label} className="flex items-center gap-2 hover:text-primary cursor-pointer">
-                        <input
-                          checked={selectedDiseases.has(label)}
-                          onChange={() => updateAndResetPage(setSelectedDiseases)(toggleInSet(selectedDiseases, label))}
-                          className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
-                          type="checkbox"
-                        />
-                        <span>{label}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                <div className="pt-3 border-t border-border-subtle space-y-2">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-text-primary">
-                    Khoảng giá (VND)
-                  </h3>
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <input
-                      className="w-full px-2 py-1.5 rounded border border-border-subtle bg-surface-subtle text-text-primary focus:outline-none focus:border-primary"
-                      placeholder="0 đ"
-                      type="text"
-                      value={minPriceInput}
-                      onChange={(e) => updateAndResetPage(setMinPriceInput)(e.target.value)}
-                    />
-                    <input
-                      className="w-full px-2 py-1.5 rounded border border-border-subtle bg-surface-subtle text-text-primary focus:outline-none focus:border-primary"
-                      placeholder="1.500.000 đ"
-                      type="text"
-                      value={maxPriceInput}
-                      onChange={(e) => updateAndResetPage(setMaxPriceInput)(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="pt-3 border-t border-border-subtle space-y-2">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-text-primary">
-                    Tiện ích &amp; Dịch vụ
-                  </h3>
-                  <div className="space-y-1.5 text-xs text-text-secondary">
-                    <label className="flex items-center gap-2 hover:text-primary cursor-pointer">
-                      <input
-                        checked={onlyWarehouse}
-                        onChange={(e) => updateAndResetPage(setOnlyWarehouse)(e.target.checked)}
-                        className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
-                        type="checkbox"
-                      />
-                      <span>Sẵn hàng tại kho Di Linh</span>
-                    </label>
-                    <label className="flex items-center gap-2 hover:text-primary cursor-pointer">
-                      <input
-                        checked={onlyCredit}
-                        onChange={(e) => updateAndResetPage(setOnlyCredit)(e.target.checked)}
-                        className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
-                        type="checkbox"
-                      />
-                      <span>Hỗ trợ nợ vụ (AgriCredit)</span>
-                    </label>
-                    <label className="flex items-center gap-2 hover:text-primary cursor-pointer">
-                      <input
-                        checked={onlyExpress}
-                        onChange={(e) => updateAndResetPage(setOnlyExpress)(e.target.checked)}
-                        className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
-                        type="checkbox"
-                      />
-                      <span>Giao hỏa tốc 2-4h</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </aside>
+          <FilterSidebar
+            selectedGroups={selectedGroups}
+            onToggleGroup={(v) => updateAndResetPage(setSelectedGroups)(toggleInSet(selectedGroups, v))}
+            selectedBrands={selectedBrands}
+            onToggleBrand={(v) => updateAndResetPage(setSelectedBrands)(toggleInSet(selectedBrands, v))}
+            selectedDiseases={selectedDiseases}
+            onToggleDisease={(v) => updateAndResetPage(setSelectedDiseases)(toggleInSet(selectedDiseases, v))}
+            minPriceInput={minPriceInput}
+            onMinPriceChange={updateAndResetPage(setMinPriceInput)}
+            maxPriceInput={maxPriceInput}
+            onMaxPriceChange={updateAndResetPage(setMaxPriceInput)}
+            onlyWarehouse={onlyWarehouse}
+            onOnlyWarehouseChange={updateAndResetPage(setOnlyWarehouse)}
+            onlyCredit={onlyCredit}
+            onOnlyCreditChange={updateAndResetPage(setOnlyCredit)}
+            onlyExpress={onlyExpress}
+            onOnlyExpressChange={updateAndResetPage(setOnlyExpress)}
+            groupCounts={groupCounts}
+            brandCounts={brandCounts}
+            onReset={resetFilters}
+          />
 
           <div className="lg:col-span-9">
             {pageItems.length > 0 ? (
@@ -365,78 +239,22 @@ export default function ProductsPage() {
               </div>
             )}
 
-            <div className="mt-10 bg-white rounded-xl border border-border-subtle p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-2 text-xs text-text-muted">
-                <span>Hiển thị</span>
-                <select
-                  className="text-xs font-medium text-text-primary bg-surface-subtle border border-border-subtle rounded px-2 py-1 focus:outline-none focus:border-primary"
-                  value={pageSize}
-                  onChange={(e) => {
-                    setPageSize(Number(e.target.value))
-                    setPage(1)
-                  }}
-                >
-                  {PAGE_SIZE_OPTIONS.map((size) => (
-                    <option key={size} value={size}>
-                      {size} sản phẩm / trang
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <button
-                  disabled={currentPage <= 1}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="w-8 h-8 rounded-lg border border-border-subtle flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-subtle transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  <span className="material-symbols-outlined text-[18px]">chevron_left</span>
-                </button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => setPage(p)}
-                    className={`w-8 h-8 rounded-lg font-bold text-xs flex items-center justify-center transition-colors ${
-                      p === currentPage
-                        ? 'bg-primary text-white shadow-sm'
-                        : 'border border-border-subtle text-text-primary hover:bg-surface-subtle font-medium'
-                    }`}
-                  >
-                    {p}
-                  </button>
-                ))}
-                <button
-                  disabled={currentPage >= totalPages}
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  className="w-8 h-8 rounded-lg border border-border-subtle flex items-center justify-center text-text-primary hover:bg-surface-subtle transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                >
-                  <span className="material-symbols-outlined text-[18px]">chevron_right</span>
-                </button>
-              </div>
-            </div>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setPage}
+              pageSize={pageSize}
+              onPageSizeChange={(size) => {
+                setPageSize(size)
+                setPage(1)
+              }}
+              pageSizeOptions={PAGE_SIZE_OPTIONS}
+            />
 
-            <div className="mt-8 rounded-2xl bg-gradient-to-r from-emerald-50 via-surface-secondary to-primary-light border border-primary/20 p-6 flex flex-col sm:flex-row items-center justify-between gap-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center shadow-md flex-shrink-0">
-                  <span className="material-symbols-outlined text-[26px]">psychology</span>
-                </div>
-                <div>
-                  <h4 className="text-sm sm:text-base font-bold text-text-primary">
-                    Chưa rõ cây trồng bị bệnh gì để chọn thuốc?
-                  </h4>
-                  <p className="text-xs text-text-secondary mt-0.5">
-                    Chụp ảnh lá gửi Bác sĩ AI chẩn đoán bệnh tức thì trong 3 giây và nhận ngay đơn
-                    thuốc chuẩn xác.
-                  </p>
-                </div>
-              </div>
-              <Link
-                to="/ai-doctor"
-                className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-lg shadow-sm transition-all flex items-center gap-2 whitespace-nowrap"
-              >
-                <span className="material-symbols-outlined text-[18px]">photo_camera</span>
-                <span>Quét lá cây với AI</span>
-              </Link>
-            </div>
+            <AiDiagnosisCallout
+              title="Chưa rõ cây trồng bị bệnh gì để chọn thuốc?"
+              subtitle="Chụp ảnh lá gửi Bác sĩ AI chẩn đoán bệnh tức thì trong 3 giây và nhận ngay đơn thuốc chuẩn xác."
+            />
           </div>
         </div>
       </div>

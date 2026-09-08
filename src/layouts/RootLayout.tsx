@@ -1,8 +1,10 @@
+import { Suspense } from 'react'
 import { Outlet } from 'react-router-dom'
 import Header from '../components/layout/Header'
 import Footer from '../components/layout/Footer'
 import Toast from '../components/ui/Toast'
 import ScrollToTop from '../components/ScrollToTop'
+import PageLoader from '../components/PageLoader'
 import { useCart } from '../context/CartContext'
 
 export default function RootLayout() {
@@ -13,7 +15,9 @@ export default function RootLayout() {
       <ScrollToTop />
       <Header cartCount={itemCount} />
       <main className="flex-1 w-full bg-surface-subtle">
-        <Outlet />
+        <Suspense fallback={<PageLoader />}>
+          <Outlet />
+        </Suspense>
       </main>
       <Footer />
       <Toast />

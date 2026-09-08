@@ -3,6 +3,38 @@ export interface DiagnosisCandidate {
   confidence: number
 }
 
+export interface ConfidenceTone {
+  bar: string
+  text: string
+  badgeBg: string
+  label: string
+}
+
+export function confidenceTone(confidence: number): ConfidenceTone {
+  if (confidence >= 85) {
+    return {
+      bar: 'bg-status-success',
+      text: 'text-status-success',
+      badgeBg: 'bg-status-success-surface',
+      label: 'Độ tin cậy cao',
+    }
+  }
+  if (confidence >= 60) {
+    return {
+      bar: 'bg-status-warning',
+      text: 'text-status-warning',
+      badgeBg: 'bg-status-warning-surface',
+      label: 'Độ tin cậy trung bình',
+    }
+  }
+  return {
+    bar: 'bg-status-error',
+    text: 'text-status-error',
+    badgeBg: 'bg-status-error-surface',
+    label: 'Độ tin cậy thấp',
+  }
+}
+
 export interface DiagnosisScenario {
   diseaseName: string
   pathogen: string

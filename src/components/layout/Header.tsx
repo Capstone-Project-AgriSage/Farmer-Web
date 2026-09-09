@@ -52,10 +52,9 @@ export default function Header({ cartCount }: HeaderProps) {
                 to={link.to}
                 end={link.to === '/'}
                 className={({ isActive }) =>
-                  `flex items-center gap-1 whitespace-nowrap transition-colors ${
-                    isActive
-                      ? 'text-white font-semibold px-2.5 py-1.5 rounded-full bg-white/15 border border-white/20 shadow-sm'
-                      : 'hover:text-white'
+                  `flex items-center gap-1 whitespace-nowrap transition-colors ${isActive
+                    ? 'text-white font-semibold px-2.5 py-1.5 rounded-full bg-white/15 border border-white/20 shadow-sm'
+                    : 'hover:text-white'
                   }`
                 }
               >
@@ -128,10 +127,9 @@ export default function Header({ cartCount }: HeaderProps) {
               to={link.to}
               end={link.to === '/'}
               className={({ isActive }) =>
-                `flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'bg-white/15 text-white font-semibold'
-                    : 'text-emerald-100/90 hover:bg-white/10 hover:text-white'
+                `flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive
+                  ? 'bg-white/15 text-white font-semibold'
+                  : 'text-emerald-100/90 hover:bg-white/10 hover:text-white'
                 }`
               }
             >

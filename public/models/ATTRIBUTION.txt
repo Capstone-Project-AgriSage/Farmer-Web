@@ -1,0 +1,4 @@
+Rice plant GLB sourced from MakeIt3D community model:
+https://makeit3d.app/m/8vs6amov
+
+Optimized for wireframe display (textures removed, mesh simplified).

@@ -1,6 +1,7 @@
 import { lazy } from 'react'
 import { createBrowserRouter } from 'react-router-dom'
 import RootLayout from './layouts/RootLayout'
+import RouteErrorBoundary from './components/RouteErrorBoundary'
 
 const HomePage = lazy(() => import('./features/home/HomePage'))
 const LoginPage = lazy(() => import('./features/auth/LoginPage'))
@@ -18,26 +19,29 @@ const AccountPage = lazy(() => import('./features/account/AccountPage'))
 const AiDoctorPage = lazy(() => import('./features/ai-doctor/AiDoctorPage'))
 const NotFoundPage = lazy(() => import('./features/misc/NotFoundPage'))
 
+const routes = [
+  { index: true, element: <HomePage /> },
+  { path: 'login', element: <LoginPage /> },
+  { path: 'register', element: <RegisterPage /> },
+  { path: 'forgot-password', element: <ForgotPasswordPage /> },
+  { path: 'products', element: <ProductsPage /> },
+  { path: 'products/:slug', element: <ProductDetailPage /> },
+  { path: 'cart', element: <CartPage /> },
+  { path: 'checkout', element: <CheckoutPage /> },
+  { path: 'order-success', element: <OrderSuccessPage /> },
+  { path: 'about', element: <AboutPage /> },
+  { path: 'knowledge', element: <KnowledgePage /> },
+  { path: 'contact', element: <ContactPage /> },
+  { path: 'account', element: <AccountPage /> },
+  { path: 'ai-doctor', element: <AiDoctorPage /> },
+  { path: '*', element: <NotFoundPage /> },
+].map((route) => ({ ...route, errorElement: <RouteErrorBoundary /> }))
+
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
-    children: [
-      { index: true, element: <HomePage /> },
-      { path: 'login', element: <LoginPage /> },
-      { path: 'register', element: <RegisterPage /> },
-      { path: 'forgot-password', element: <ForgotPasswordPage /> },
-      { path: 'products', element: <ProductsPage /> },
-      { path: 'products/:slug', element: <ProductDetailPage /> },
-      { path: 'cart', element: <CartPage /> },
-      { path: 'checkout', element: <CheckoutPage /> },
-      { path: 'order-success', element: <OrderSuccessPage /> },
-      { path: 'about', element: <AboutPage /> },
-      { path: 'knowledge', element: <KnowledgePage /> },
-      { path: 'contact', element: <ContactPage /> },
-      { path: 'account', element: <AccountPage /> },
-      { path: 'ai-doctor', element: <AiDoctorPage /> },
-      { path: '*', element: <NotFoundPage /> },
-    ],
+    errorElement: <RouteErrorBoundary />,
+    children: routes,
   },
 ])

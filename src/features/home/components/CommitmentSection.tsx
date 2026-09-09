@@ -44,7 +44,7 @@ export default function CommitmentSection() {
           {commitments.map((item) => (
             <div
               key={item.title}
-              className="relative w-32 h-32 sm:w-48 sm:h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full overflow-hidden shadow-lg border-4 border-white mx-auto group"
+              className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-36 md:h-36 lg:w-44 lg:h-44 xl:w-56 xl:h-56 rounded-full overflow-hidden shadow-lg border-4 border-white mx-auto group"
             >
               <img
                 src={item.image}

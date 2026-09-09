@@ -61,6 +61,7 @@ export default function CrossSellSection({ products, onAddToCart }: CrossSellSec
                 onClick={() => onAddToCart(p)}
                 className="p-1.5 rounded-lg bg-primary hover:bg-primary-hover text-white transition-colors"
                 title="Thêm"
+                aria-label={`Thêm ${p.name} vào giỏ hàng`}
               >
                 <span className="material-symbols-outlined text-[16px]">add</span>
               </button>

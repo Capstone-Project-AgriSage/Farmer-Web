@@ -37,6 +37,7 @@ export default function Pagination({
         <button
           disabled={currentPage <= 1}
           onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+          aria-label="Trang trước"
           className="w-8 h-8 rounded-lg border border-border-subtle flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-subtle transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <span className="material-symbols-outlined text-[18px]">chevron_left</span>
@@ -45,6 +46,8 @@ export default function Pagination({
           <button
             key={p}
             onClick={() => onPageChange(p)}
+            aria-label={`Trang ${p}`}
+            aria-current={p === currentPage ? 'page' : undefined}
             className={`w-8 h-8 rounded-lg font-bold text-xs flex items-center justify-center transition-colors ${
               p === currentPage
                 ? 'bg-primary text-white shadow-sm'
@@ -57,6 +60,7 @@ export default function Pagination({
         <button
           disabled={currentPage >= totalPages}
           onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+          aria-label="Trang sau"
           className="w-8 h-8 rounded-lg border border-border-subtle flex items-center justify-center text-text-primary hover:bg-surface-subtle transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <span className="material-symbols-outlined text-[18px]">chevron_right</span>

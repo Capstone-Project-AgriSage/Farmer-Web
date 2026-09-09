@@ -69,6 +69,7 @@ export default function ProductCard({ product }: { product: Product }) {
               onClick={() => addToCart(product)}
               className="p-2 rounded-lg bg-primary hover:bg-primary-hover text-white shadow-sm transition-colors flex items-center justify-center"
               title="Thêm vào giỏ"
+              aria-label={`Thêm ${product.name} vào giỏ hàng`}
             >
               <span className="material-symbols-outlined text-[18px]">add_shopping_cart</span>
             </button>

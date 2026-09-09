@@ -152,12 +152,14 @@ export default function PurchasePanel({
             <div className="flex items-center border border-border-subtle rounded-lg bg-white overflow-hidden w-full sm:w-36 justify-between">
               <button
                 onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
+                aria-label={`Giảm số lượng ${product.name}`}
                 className="px-3.5 py-2.5 text-text-secondary hover:bg-surface-subtle font-bold text-sm transition-colors"
               >
                 -
               </button>
               <input
                 className="w-12 text-center text-xs font-bold text-text-primary border-none focus:outline-none focus:ring-0 p-0"
+                aria-label={`Số lượng ${product.name}`}
                 min={1}
                 type="number"
                 value={quantity}
@@ -165,6 +167,7 @@ export default function PurchasePanel({
               />
               <button
                 onClick={() => onQuantityChange(quantity + 1)}
+                aria-label={`Tăng số lượng ${product.name}`}
                 className="px-3.5 py-2.5 text-text-secondary hover:bg-surface-subtle font-bold text-sm transition-colors"
               >
                 +

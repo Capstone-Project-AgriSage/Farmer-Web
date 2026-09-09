@@ -51,6 +51,7 @@ export default function CartItemRow({ item, alternate, onQuantityChange, onRemov
         <div className="flex items-center border border-border-subtle rounded-lg bg-white overflow-hidden shadow-sm">
           <button
             onClick={() => onQuantityChange(item.quantity - 1)}
+            aria-label={`Giảm số lượng ${item.product.name}`}
             className="px-2.5 py-1 text-text-secondary hover:bg-surface-subtle font-bold text-xs transition-colors"
           >
             -
@@ -58,6 +59,7 @@ export default function CartItemRow({ item, alternate, onQuantityChange, onRemov
           <span className="w-8 text-center text-xs font-bold text-text-primary">{item.quantity}</span>
           <button
             onClick={() => onQuantityChange(item.quantity + 1)}
+            aria-label={`Tăng số lượng ${item.product.name}`}
             className="px-2.5 py-1 text-text-secondary hover:bg-surface-subtle font-bold text-xs transition-colors"
           >
             +
@@ -73,6 +75,7 @@ export default function CartItemRow({ item, alternate, onQuantityChange, onRemov
           onClick={onRemove}
           className="text-text-muted hover:text-status-error p-1 rounded transition-colors ml-1"
           title="Xóa sản phẩm"
+          aria-label={`Xóa ${item.product.name} khỏi giỏ hàng`}
         >
           <span className="material-symbols-outlined text-[18px]">delete</span>
         </button>

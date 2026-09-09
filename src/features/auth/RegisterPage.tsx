@@ -162,6 +162,7 @@ export default function RegisterPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
                 className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-text-muted cursor-pointer hover:text-text-primary"
               >
                 <span className="material-symbols-outlined text-[18px]">
@@ -198,6 +199,7 @@ export default function RegisterPage() {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword((v) => !v)}
+                aria-label={showConfirmPassword ? 'Ẩn mật khẩu xác nhận' : 'Hiện mật khẩu xác nhận'}
                 className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-text-muted cursor-pointer hover:text-text-primary"
               >
                 <span className="material-symbols-outlined text-[18px]">

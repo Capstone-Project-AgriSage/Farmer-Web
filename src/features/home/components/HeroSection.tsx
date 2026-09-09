@@ -1,9 +1,19 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { handleImageError } from '../../../utils/image'
 
 const suggestedKeywords = ['NPK 20-20-15', 'Trừ thán thư sầu riêng', 'Ridomil Gold', 'Tuyến trùng cà phê']
 
 export default function HeroSection() {
+  const navigate = useNavigate()
+  const [searchTerm, setSearchTerm] = useState('')
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const query = searchTerm.trim()
+    navigate(query ? `/products?q=${encodeURIComponent(query)}` : '/products')
+  }
+
   return (
     <section className="relative w-full bg-gradient-to-b from-primary-dark via-[#1a5b22] to-primary overflow-hidden text-white py-12 lg:py-20">
       <div className="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-white/10 blur-3xl pointer-events-none"></div>
@@ -27,7 +37,7 @@ export default function HeroSection() {
             <div className="pt-2">
               <form
                 className="bg-white p-2 rounded-xl shadow-xl flex flex-col sm:flex-row items-center gap-2 border border-border-subtle max-w-2xl"
-                onSubmit={(e) => e.preventDefault()}
+                onSubmit={handleSearchSubmit}
               >
                 <div className="flex items-center flex-1 w-full px-3 gap-2">
                   <span className="material-symbols-outlined text-[22px] text-text-muted">
@@ -37,6 +47,8 @@ export default function HeroSection() {
                     className="w-full text-sm text-text-primary placeholder:text-text-muted focus:outline-none bg-transparent py-2"
                     placeholder="Tìm phân bón, thuốc BVTV, hoạt chất hoặc bệnh cây..."
                     type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
                 <button
@@ -52,7 +64,7 @@ export default function HeroSection() {
                 {suggestedKeywords.map((keyword) => (
                   <Link
                     key={keyword}
-                    to="/products"
+                    to={`/products?q=${encodeURIComponent(keyword)}`}
                     className="px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-colors"
                   >
                     {keyword}

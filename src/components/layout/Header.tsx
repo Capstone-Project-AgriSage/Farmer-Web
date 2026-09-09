@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 
 interface HeaderProps {
@@ -17,10 +17,12 @@ const navLinks = [
 export default function Header({ cartCount }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const location = useLocation()
+  const [lastPathname, setLastPathname] = useState(location.pathname)
 
-  useEffect(() => {
+  if (location.pathname !== lastPathname) {
+    setLastPathname(location.pathname)
     setIsMenuOpen(false)
-  }, [location.pathname])
+  }
 
   return (
     <header className="w-full bg-primary-dark border-b border-white/10 sticky top-0 z-50 shadow-md">

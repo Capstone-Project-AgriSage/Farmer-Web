@@ -4,6 +4,7 @@ interface CartSummarySidebarProps {
   itemCount: number
   subtotal: number
   discount: number
+  appliedVoucher: string | null
   shippingFee: number
   total: number
   onCheckout: () => void
@@ -13,6 +14,7 @@ export default function CartSummarySidebar({
   itemCount,
   subtotal,
   discount,
+  appliedVoucher,
   shippingFee,
   total,
   onCheckout,
@@ -32,9 +34,11 @@ export default function CartSummarySidebar({
           <div className="flex items-center justify-between text-text-secondary">
             <span className="flex items-center gap-1">
               <span>Giảm giá Voucher mùa vụ:</span>
-              <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-50 text-status-success font-bold">
-                VUMUA2024
-              </span>
+              {appliedVoucher && (
+                <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-50 text-status-success font-bold">
+                  {appliedVoucher}
+                </span>
+              )}
             </span>
             <span className="font-bold text-status-success">-{formatVnd(discount)}</span>
           </div>

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import ProductCard from '../../components/ui/ProductCard'
 import Pagination from '../../components/ui/Pagination'
@@ -25,9 +26,13 @@ function toggleInSet(set: Set<string>, value: string): Set<string> {
 
 export default function ProductsPage() {
   useDocumentTitle('Sản phẩm vật tư nông nghiệp')
-  const [search, setSearch] = useState('')
+  const [searchParams] = useSearchParams()
+  const [search, setSearch] = useState(() => searchParams.get('q') ?? '')
   const [sort, setSort] = useState<SortOption>('best-selling')
-  const [selectedGroups, setSelectedGroups] = useState<Set<string>>(new Set())
+  const [selectedGroups, setSelectedGroups] = useState<Set<string>>(() => {
+    const group = searchParams.get('group')
+    return group ? new Set([group]) : new Set()
+  })
   const [selectedBrands, setSelectedBrands] = useState<Set<string>>(new Set())
   const [selectedDiseases, setSelectedDiseases] = useState<Set<string>>(new Set())
   const [minPriceInput, setMinPriceInput] = useState('')
@@ -65,14 +70,14 @@ export default function ProductsPage() {
   }
 
   const filtered = useMemo(() => {
-    const query = search.trim().toLowerCase()
+    const queryWords = search.trim().toLowerCase().split(/\s+/).filter(Boolean)
     const minPrice = parsePriceInput(minPriceInput)
     const maxPrice = parsePriceInput(maxPriceInput)
 
     let result = products.filter((p) => {
-      if (query) {
-        const haystack = `${p.name} ${p.activeIngredient} ${p.brand}`.toLowerCase()
-        if (!haystack.includes(query)) return false
+      if (queryWords.length > 0) {
+        const haystack = `${p.name} ${p.activeIngredient} ${p.brand} ${p.category} ${(p.diseaseTags ?? []).join(' ')}`.toLowerCase()
+        if (!queryWords.every((word) => haystack.includes(word))) return false
       }
       if (selectedGroups.size > 0 && !selectedGroups.has(p.group)) return false
       if (selectedBrands.size > 0 && !selectedBrands.has(p.brand)) return false

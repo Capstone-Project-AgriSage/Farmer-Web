@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import { useCart } from '../../context/CartContext'
@@ -7,6 +8,7 @@ import VoucherBar from './components/VoucherBar'
 import CartPerksGrid from './components/CartPerksGrid'
 import CartSummarySidebar from './components/CartSummarySidebar'
 
+const VALID_VOUCHER_CODE = 'VUMUA2024'
 const VOUCHER_DISCOUNT = 50000
 const FREE_SHIPPING_THRESHOLD = 2000000
 
@@ -15,7 +17,22 @@ export default function CartPage() {
   const navigate = useNavigate()
   useDocumentTitle('Giỏ hàng của tôi')
 
-  const discount = items.length > 0 ? VOUCHER_DISCOUNT : 0
+  const [voucherInput, setVoucherInput] = useState(VALID_VOUCHER_CODE)
+  const [appliedVoucher, setAppliedVoucher] = useState<string | null>(VALID_VOUCHER_CODE)
+  const [voucherError, setVoucherError] = useState('')
+
+  const handleApplyVoucher = () => {
+    const code = voucherInput.trim().toUpperCase()
+    if (code === VALID_VOUCHER_CODE) {
+      setAppliedVoucher(code)
+      setVoucherError('')
+    } else {
+      setAppliedVoucher(null)
+      setVoucherError('Mã ưu đãi không hợp lệ hoặc đã hết hạn')
+    }
+  }
+
+  const discount = items.length > 0 && appliedVoucher ? VOUCHER_DISCOUNT : 0
   const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : 30000
   const total = subtotal - discount + shippingFee
 
@@ -79,7 +96,14 @@ export default function CartPage() {
               </div>
             </div>
 
-            <VoucherBar voucherCode="VUMUA2024" discount={VOUCHER_DISCOUNT} />
+            <VoucherBar
+              voucherInput={voucherInput}
+              onVoucherInputChange={setVoucherInput}
+              onApply={handleApplyVoucher}
+              appliedVoucher={appliedVoucher}
+              voucherError={voucherError}
+              discount={VOUCHER_DISCOUNT}
+            />
 
             <CartPerksGrid />
           </div>
@@ -88,6 +112,7 @@ export default function CartPage() {
             itemCount={items.length}
             subtotal={subtotal}
             discount={discount}
+            appliedVoucher={appliedVoucher}
             shippingFee={shippingFee}
             total={total}
             onCheckout={() => navigate('/checkout')}

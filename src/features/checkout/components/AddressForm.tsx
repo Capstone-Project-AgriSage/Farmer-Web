@@ -1,11 +1,69 @@
 export type DeliveryMode = 'garden' | 'pickup'
 
+export interface AddressFormValues {
+  recipientName: string
+  phone: string
+  province: string
+  district: string
+  ward: string
+  addressDetail: string
+  note: string
+}
+
+export type AddressFormErrors = Partial<Record<keyof AddressFormValues, string>>
+
+export const addressFormDefaults: AddressFormValues = {
+  recipientName: 'Nguyễn Văn Hùng',
+  phone: '0918 234 567',
+  province: 'Lâm Đồng',
+  district: 'Huyện Di Linh',
+  ward: 'Xã Đinh Lạc',
+  addressDetail: 'Số 45 Thôn Tân Lạc (gần dốc ngã ba vườn sầu riêng Chú Năm)',
+  note: 'Đường bê tông xe tải 5 tấn vào được tận sân kho, vui lòng liên hệ Chú Năm trước khi xuất bến 30 phút.',
+}
+
+const PHONE_REGEX = /^(0|\+84)\d{9,10}$/
+
+export function validateAddressForm(values: AddressFormValues): AddressFormErrors {
+  const errors: AddressFormErrors = {}
+
+  if (!values.recipientName.trim()) {
+    errors.recipientName = 'Vui lòng nhập họ và tên người nhận'
+  }
+
+  const normalizedPhone = values.phone.replace(/\s/g, '')
+  if (!values.phone.trim()) {
+    errors.phone = 'Vui lòng nhập số điện thoại liên hệ'
+  } else if (!PHONE_REGEX.test(normalizedPhone)) {
+    errors.phone = 'Số điện thoại không hợp lệ'
+  }
+
+  if (!values.addressDetail.trim()) {
+    errors.addressDetail = 'Vui lòng nhập địa chỉ cụ thể / vị trí vườn'
+  }
+
+  return errors
+}
+
 interface AddressFormProps {
   deliveryMode: DeliveryMode
   onDeliveryModeChange: (mode: DeliveryMode) => void
+  values: AddressFormValues
+  onChange: (field: keyof AddressFormValues, value: string) => void
+  errors: AddressFormErrors
 }
 
-export default function AddressForm({ deliveryMode, onDeliveryModeChange }: AddressFormProps) {
+const errorInputClass =
+  'border-status-error focus:border-status-error focus:ring-1 focus:ring-status-error/20'
+const normalInputClass = 'border-border-subtle focus:border-primary'
+
+export default function AddressForm({
+  deliveryMode,
+  onDeliveryModeChange,
+  values,
+  onChange,
+  errors,
+}: AddressFormProps) {
   return (
     <div className="bg-white rounded-2xl border border-border-subtle p-5 sm:p-6 shadow-sm">
       <div className="flex items-center justify-between pb-4 border-b border-border-subtle mb-5">
@@ -57,20 +115,28 @@ export default function AddressForm({ deliveryMode, onDeliveryModeChange }: Addr
               Họ và tên người nhận <span className="text-status-error">*</span>
             </label>
             <input
-              className="w-full px-3.5 py-2 text-xs font-medium bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary text-text-primary"
+              className={`w-full px-3.5 py-2 text-xs font-medium bg-surface-subtle border rounded-lg focus:outline-none text-text-primary ${
+                errors.recipientName ? errorInputClass : normalInputClass
+              }`}
               type="text"
-              defaultValue="Nguyễn Văn Hùng"
+              value={values.recipientName}
+              onChange={(e) => onChange('recipientName', e.target.value)}
             />
+            {errors.recipientName && <p className="text-[11px] text-status-error mt-1">{errors.recipientName}</p>}
           </div>
           <div>
             <label className="block text-xs font-bold text-text-secondary mb-1.5">
               Số điện thoại liên hệ <span className="text-status-error">*</span>
             </label>
             <input
-              className="w-full px-3.5 py-2 text-xs font-medium bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary text-text-primary"
+              className={`w-full px-3.5 py-2 text-xs font-medium bg-surface-subtle border rounded-lg focus:outline-none text-text-primary ${
+                errors.phone ? errorInputClass : normalInputClass
+              }`}
               type="tel"
-              defaultValue="0918 234 567"
+              value={values.phone}
+              onChange={(e) => onChange('phone', e.target.value)}
             />
+            {errors.phone && <p className="text-[11px] text-status-error mt-1">{errors.phone}</p>}
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -78,7 +144,11 @@ export default function AddressForm({ deliveryMode, onDeliveryModeChange }: Addr
             <label className="block text-xs font-bold text-text-secondary mb-1.5">
               Tỉnh / Thành phố <span className="text-status-error">*</span>
             </label>
-            <select className="w-full px-3 py-2 text-xs font-medium bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary text-text-primary">
+            <select
+              className="w-full px-3 py-2 text-xs font-medium bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary text-text-primary"
+              value={values.province}
+              onChange={(e) => onChange('province', e.target.value)}
+            >
               <option>Lâm Đồng</option>
               <option>Đắk Lắk</option>
               <option>Đồng Nai</option>
@@ -89,7 +159,11 @@ export default function AddressForm({ deliveryMode, onDeliveryModeChange }: Addr
             <label className="block text-xs font-bold text-text-secondary mb-1.5">
               Huyện / Thị xã <span className="text-status-error">*</span>
             </label>
-            <select className="w-full px-3 py-2 text-xs font-medium bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary text-text-primary">
+            <select
+              className="w-full px-3 py-2 text-xs font-medium bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary text-text-primary"
+              value={values.district}
+              onChange={(e) => onChange('district', e.target.value)}
+            >
               <option>Huyện Di Linh</option>
               <option>Huyện Đức Trọng</option>
               <option>TP. Bảo Lộc</option>
@@ -99,7 +173,11 @@ export default function AddressForm({ deliveryMode, onDeliveryModeChange }: Addr
             <label className="block text-xs font-bold text-text-secondary mb-1.5">
               Xã / Thị trấn <span className="text-status-error">*</span>
             </label>
-            <select className="w-full px-3 py-2 text-xs font-medium bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary text-text-primary">
+            <select
+              className="w-full px-3 py-2 text-xs font-medium bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary text-text-primary"
+              value={values.ward}
+              onChange={(e) => onChange('ward', e.target.value)}
+            >
               <option>Xã Đinh Lạc</option>
               <option>Xã Gia Hiệp</option>
               <option>Thị trấn Di Linh</option>
@@ -111,10 +189,14 @@ export default function AddressForm({ deliveryMode, onDeliveryModeChange }: Addr
             Địa chỉ cụ thể / Vị trí vườn sầu riêng <span className="text-status-error">*</span>
           </label>
           <input
-            className="w-full px-3.5 py-2 text-xs font-medium bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary text-text-primary"
+            className={`w-full px-3.5 py-2 text-xs font-medium bg-surface-subtle border rounded-lg focus:outline-none text-text-primary ${
+              errors.addressDetail ? errorInputClass : normalInputClass
+            }`}
             type="text"
-            defaultValue="Số 45 Thôn Tân Lạc (gần dốc ngã ba vườn sầu riêng Chú Năm)"
+            value={values.addressDetail}
+            onChange={(e) => onChange('addressDetail', e.target.value)}
           />
+          {errors.addressDetail && <p className="text-[11px] text-status-error mt-1">{errors.addressDetail}</p>}
         </div>
         <div>
           <label className="block text-xs font-bold text-text-secondary mb-1.5 flex items-center gap-1">
@@ -124,7 +206,8 @@ export default function AddressForm({ deliveryMode, onDeliveryModeChange }: Addr
           <textarea
             className="w-full px-3.5 py-2 text-xs font-medium bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary text-text-primary"
             rows={2}
-            defaultValue="Đường bê tông xe tải 5 tấn vào được tận sân kho, vui lòng liên hệ Chú Năm trước khi xuất bến 30 phút."
+            value={values.note}
+            onChange={(e) => onChange('note', e.target.value)}
           />
         </div>
       </div>

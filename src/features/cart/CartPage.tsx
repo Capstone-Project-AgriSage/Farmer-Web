@@ -3,13 +3,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import { useCart } from '../../context/CartContext'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { validateVoucherCode, type VoucherValidationResult } from '../../data/vouchers'
 import CartItemRow from './components/CartItemRow'
 import VoucherBar from './components/VoucherBar'
 import CartPerksGrid from './components/CartPerksGrid'
 import CartSummarySidebar from './components/CartSummarySidebar'
 
-const VALID_VOUCHER_CODE = 'VUMUA2024'
-const VOUCHER_DISCOUNT = 50000
+const DEFAULT_VOUCHER_INPUT = 'VUMUA2024'
 const FREE_SHIPPING_THRESHOLD = 2000000
 
 export default function CartPage() {
@@ -17,22 +17,19 @@ export default function CartPage() {
   const navigate = useNavigate()
   useDocumentTitle('Giỏ hàng của tôi')
 
-  const [voucherInput, setVoucherInput] = useState(VALID_VOUCHER_CODE)
-  const [appliedVoucher, setAppliedVoucher] = useState<string | null>(VALID_VOUCHER_CODE)
+  const [voucherInput, setVoucherInput] = useState(DEFAULT_VOUCHER_INPUT)
+  const [voucherResult, setVoucherResult] = useState<VoucherValidationResult | null>(() =>
+    validateVoucherCode(DEFAULT_VOUCHER_INPUT),
+  )
   const [voucherError, setVoucherError] = useState('')
 
   const handleApplyVoucher = () => {
-    const code = voucherInput.trim().toUpperCase()
-    if (code === VALID_VOUCHER_CODE) {
-      setAppliedVoucher(code)
-      setVoucherError('')
-    } else {
-      setAppliedVoucher(null)
-      setVoucherError('Mã ưu đãi không hợp lệ hoặc đã hết hạn')
-    }
+    const result = validateVoucherCode(voucherInput)
+    setVoucherResult(result)
+    setVoucherError(result ? '' : 'Mã ưu đãi không hợp lệ hoặc đã hết hạn')
   }
 
-  const discount = items.length > 0 && appliedVoucher ? VOUCHER_DISCOUNT : 0
+  const discount = items.length > 0 && voucherResult ? voucherResult.discount : 0
   const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : 30000
   const total = subtotal - discount + shippingFee
 
@@ -100,9 +97,9 @@ export default function CartPage() {
               voucherInput={voucherInput}
               onVoucherInputChange={setVoucherInput}
               onApply={handleApplyVoucher}
-              appliedVoucher={appliedVoucher}
+              appliedVoucher={voucherResult?.code ?? null}
               voucherError={voucherError}
-              discount={VOUCHER_DISCOUNT}
+              discount={voucherResult?.discount ?? 0}
             />
 
             <CartPerksGrid />
@@ -112,7 +109,7 @@ export default function CartPage() {
             itemCount={items.length}
             subtotal={subtotal}
             discount={discount}
-            appliedVoucher={appliedVoucher}
+            appliedVoucher={voucherResult?.code ?? null}
             shippingFee={shippingFee}
             total={total}
             onCheckout={() => navigate('/checkout')}

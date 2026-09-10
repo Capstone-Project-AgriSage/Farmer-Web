@@ -144,6 +144,50 @@ export const products: Product[] = [
     stockLabel: 'Sẵn kho Di Linh',
     tag: 'Bảo lãnh nợ vụ',
   },
+  {
+    slug: 'hat-giong-bap-lai-nk7328',
+    name: 'Hạt Giống Bắp Lai NK7328 - Kháng bệnh, năng suất cao',
+    brand: 'Syngenta Thụy Sĩ',
+    category: 'Hạt giống ngũ cốc',
+    group: 'Hạt giống & Cây giống',
+    activeIngredient: 'Giống lai F1 thuần chủng, tỷ lệ nảy mầm 95%',
+    packaging: 'Túi 1kg (đủ gieo 1.000m²)',
+    image:
+      'https://lh3.googleusercontent.com/aida/AEtjO1VyUR4caPslBl6jI6FQdgZk8sJs3TpBIlWETFj7fujhnl8ZZnV1V4G_p3tLqKU5KSghYF8sytvS-sKVHT6QsYZ8fZCMvoOzW4_0WfGJuWNzoa-7nIPYh5lhEztMJQ3ptGsqK3kHi733e7njGmhBtVD631gY3XdyEPCkwRvjHfzYaYwklEhODLHqSZdyGg8IeA-he7bTlAFQUieGlSw6GHMHlmIFTESYsnUc2X3ZRcncQDZurQqNC9y4KZMD',
+    price: 165000,
+    stockLabel: 'Sẵn kho Di Linh',
+    tag: 'Giống thuần chủng',
+  },
+  {
+    slug: 'bo-tuoi-nho-giot-netafim-1000m2',
+    name: 'Bộ Tưới Nhỏ Giọt Netafim 1000m² - Tiết kiệm 40% nước',
+    brand: 'Netafim Israel',
+    category: 'Thiết bị tưới tiết kiệm',
+    group: 'Tưới nhỏ giọt & Thiết bị',
+    activeIngredient: 'Dây nhỏ giọt bù áp, đầu tưới chống nghẹt',
+    packaging: 'Bộ trọn gói cho 1.000m² (dây + van + phụ kiện)',
+    image:
+      'https://lh3.googleusercontent.com/aida/AEtjO1UA8gqLROoo_CAD4F9G4ZQijG54DhEECC9YhW7P3bb7ZWMhWvqVjNwGpfSPQPxWUYGpHy7DHSvdTUAoV4i8JYzihaL5xuEXmfEJdvUtl3Xfa00_rBFizaWuP6vOeGBN93PgOnhUTxK6HIOI448TLeRtu96dsD6K27Qp0RFLOABcDVNKGCX4CpiqxRZD3x6BBMEPY_4Yc2dDKN9hFEctQwTx3zAztjLPZc2cuG7mIQ_2TzXaXqmh-dmn55Ws',
+    price: 3200000,
+    originalPrice: 3600000,
+    stockLabel: 'Sẵn kho Di Linh',
+    tag: 'Hỗ trợ nợ vụ',
+  },
+  {
+    slug: 'actimax-50wp',
+    name: 'Actimax 50WP - Trừ rệp sáp, tuyến trùng rễ sinh học',
+    brand: 'Bio-Care',
+    category: 'Chế phẩm sinh học',
+    group: 'Thuốc trừ sâu sinh học',
+    diseaseTags: ['Rệp sáp & Tuyến trùng rễ'],
+    activeIngredient: 'Nấm Metarhizium + Paecilomyces lilacinus',
+    packaging: 'Gói 500g',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuD_5FIcz2O0dDytA9vTzGZb_VKTEEDB3WS5iLNHAK2BcrzS7BMTA70GqGkR3aM19-ExbhofQ87a-eLkAd1UI7J1_2_7ee5pTymW8R9Yn9Yu7L5k1Rc7bZSRSvnST7kOOiZxRuQ41Tl289JDgeHTn-fgmMM_hvTtbx3aAv_TI55Q7AC9s_oXCfLKWZrGNfJG-DmfnB0KGt1UsdmXXrpDAzSrEse36GmBafZilH_JB-tNzrXUcd1jsa8OAQ',
+    price: 88000,
+    stockLabel: 'Sẵn kho Di Linh',
+    tag: 'An toàn sinh học',
+  },
 ]
 
 export function getProductBySlug(slug: string): Product | undefined {

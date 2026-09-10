@@ -20,12 +20,19 @@ export default function AiDoctorPage() {
   const [result, setResult] = useState<DiagnosisScenario | null>(null)
   const [showAlternatives, setShowAlternatives] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const analyzeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl)
     }
   }, [previewUrl])
+
+  useEffect(() => {
+    return () => {
+      if (analyzeTimeoutRef.current) clearTimeout(analyzeTimeoutRef.current)
+    }
+  }, [])
 
   const applyFile = (file: File | undefined) => {
     if (!file || !file.type.startsWith('image/')) return
@@ -38,17 +45,24 @@ export default function AiDoctorPage() {
     if (!previewUrl) return
     setIsAnalyzing(true)
     setShowAlternatives(false)
-    setTimeout(() => {
+    if (analyzeTimeoutRef.current) clearTimeout(analyzeTimeoutRef.current)
+    analyzeTimeoutRef.current = setTimeout(() => {
       setResult(diagnosisScenarios[crop])
       setIsAnalyzing(false)
+      analyzeTimeoutRef.current = null
     }, 1800)
   }
 
   const handleReset = () => {
+    if (analyzeTimeoutRef.current) {
+      clearTimeout(analyzeTimeoutRef.current)
+      analyzeTimeoutRef.current = null
+    }
     if (previewUrl) URL.revokeObjectURL(previewUrl)
     setPreviewUrl(null)
     setResult(null)
     setSymptomText('')
+    setIsAnalyzing(false)
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 

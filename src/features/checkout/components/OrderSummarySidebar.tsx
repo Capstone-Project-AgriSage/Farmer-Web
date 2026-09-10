@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { formatVnd } from '../../../data/format'
 import { handleImageError } from '../../../utils/image'
+import OrderTotalSummary from '../../../components/ui/OrderTotalSummary'
 import type { CartItem } from '../../../types'
 
 interface OrderSummarySidebarProps {
@@ -86,16 +87,7 @@ export default function OrderSummarySidebar({
             <span className="text-text-muted font-medium">Đã bao gồm</span>
           </div>
         </div>
-        <div className="pt-4 border-t border-border-subtle">
-          <div className="flex items-baseline justify-between mb-1">
-            <span className="text-sm font-bold text-text-primary">Tổng tiền thanh toán:</span>
-            <span className="text-2xl font-extrabold text-primary tracking-tight">{formatVnd(total)}</span>
-          </div>
-          <div className="text-right text-[11px] text-status-success font-medium flex items-center justify-end gap-1">
-            <span className="material-symbols-outlined text-[13px]">trending_down</span>
-            Tiết kiệm {formatVnd(discount)} cho mùa vụ này
-          </div>
-        </div>
+        <OrderTotalSummary total={total} discount={discount} />
         <button
           onClick={onConfirm}
           type="button"

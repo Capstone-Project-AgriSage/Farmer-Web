@@ -19,45 +19,48 @@ export const diseaseOptions = [
 
 export const brandOptions = Array.from(new Set(products.map((p) => p.brand))).sort()
 
-interface FilterSidebarProps {
-  selectedGroups: Set<string>
-  onToggleGroup: (value: string) => void
-  selectedBrands: Set<string>
-  onToggleBrand: (value: string) => void
-  selectedDiseases: Set<string>
-  onToggleDisease: (value: string) => void
-  minPriceInput: string
-  onMinPriceChange: (value: string) => void
-  maxPriceInput: string
-  onMaxPriceChange: (value: string) => void
+export interface FilterValues {
+  groups: Set<string>
+  brands: Set<string>
+  diseases: Set<string>
+  minPrice: string
+  maxPrice: string
   onlyWarehouse: boolean
-  onOnlyWarehouseChange: (value: boolean) => void
   onlyCredit: boolean
-  onOnlyCreditChange: (value: boolean) => void
   onlyExpress: boolean
-  onOnlyExpressChange: (value: boolean) => void
+}
+
+export function createEmptyFilterValues(): FilterValues {
+  return {
+    groups: new Set(),
+    brands: new Set(),
+    diseases: new Set(),
+    minPrice: '',
+    maxPrice: '',
+    onlyWarehouse: false,
+    onlyCredit: false,
+    onlyExpress: false,
+  }
+}
+
+function toggleInSet(set: Set<string>, value: string): Set<string> {
+  const next = new Set(set)
+  if (next.has(value)) next.delete(value)
+  else next.add(value)
+  return next
+}
+
+interface FilterSidebarProps {
+  filters: FilterValues
+  onFilterChange: (patch: Partial<FilterValues>) => void
   groupCounts: Map<string, number>
   brandCounts: Map<string, number>
   onReset: () => void
 }
 
 export default function FilterSidebar({
-  selectedGroups,
-  onToggleGroup,
-  selectedBrands,
-  onToggleBrand,
-  selectedDiseases,
-  onToggleDisease,
-  minPriceInput,
-  onMinPriceChange,
-  maxPriceInput,
-  onMaxPriceChange,
-  onlyWarehouse,
-  onOnlyWarehouseChange,
-  onlyCredit,
-  onOnlyCreditChange,
-  onlyExpress,
-  onOnlyExpressChange,
+  filters,
+  onFilterChange,
   groupCounts,
   brandCounts,
   onReset,
@@ -84,8 +87,8 @@ export default function FilterSidebar({
                 <label key={label} className="flex items-center justify-between hover:text-primary cursor-pointer">
                   <div className="flex items-center gap-2">
                     <input
-                      checked={selectedGroups.has(label)}
-                      onChange={() => onToggleGroup(label)}
+                      checked={filters.groups.has(label)}
+                      onChange={() => onFilterChange({ groups: toggleInSet(filters.groups, label) })}
                       className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
                       type="checkbox"
                     />
@@ -105,8 +108,8 @@ export default function FilterSidebar({
                 <label key={label} className="flex items-center justify-between hover:text-primary cursor-pointer">
                   <div className="flex items-center gap-2">
                     <input
-                      checked={selectedBrands.has(label)}
-                      onChange={() => onToggleBrand(label)}
+                      checked={filters.brands.has(label)}
+                      onChange={() => onFilterChange({ brands: toggleInSet(filters.brands, label) })}
                       className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
                       type="checkbox"
                     />
@@ -125,8 +128,8 @@ export default function FilterSidebar({
               {diseaseOptions.map((label) => (
                 <label key={label} className="flex items-center gap-2 hover:text-primary cursor-pointer">
                   <input
-                    checked={selectedDiseases.has(label)}
-                    onChange={() => onToggleDisease(label)}
+                    checked={filters.diseases.has(label)}
+                    onChange={() => onFilterChange({ diseases: toggleInSet(filters.diseases, label) })}
                     className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
                     type="checkbox"
                   />
@@ -144,15 +147,15 @@ export default function FilterSidebar({
                 className="w-full px-2 py-1.5 rounded border border-border-subtle bg-surface-subtle text-text-primary focus:outline-none focus:border-primary"
                 placeholder="0 đ"
                 type="text"
-                value={minPriceInput}
-                onChange={(e) => onMinPriceChange(e.target.value)}
+                value={filters.minPrice}
+                onChange={(e) => onFilterChange({ minPrice: e.target.value })}
               />
               <input
                 className="w-full px-2 py-1.5 rounded border border-border-subtle bg-surface-subtle text-text-primary focus:outline-none focus:border-primary"
                 placeholder="1.500.000 đ"
                 type="text"
-                value={maxPriceInput}
-                onChange={(e) => onMaxPriceChange(e.target.value)}
+                value={filters.maxPrice}
+                onChange={(e) => onFilterChange({ maxPrice: e.target.value })}
               />
             </div>
           </div>
@@ -163,8 +166,8 @@ export default function FilterSidebar({
             <div className="space-y-1.5 text-xs text-text-secondary">
               <label className="flex items-center gap-2 hover:text-primary cursor-pointer">
                 <input
-                  checked={onlyWarehouse}
-                  onChange={(e) => onOnlyWarehouseChange(e.target.checked)}
+                  checked={filters.onlyWarehouse}
+                  onChange={(e) => onFilterChange({ onlyWarehouse: e.target.checked })}
                   className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
                   type="checkbox"
                 />
@@ -172,8 +175,8 @@ export default function FilterSidebar({
               </label>
               <label className="flex items-center gap-2 hover:text-primary cursor-pointer">
                 <input
-                  checked={onlyCredit}
-                  onChange={(e) => onOnlyCreditChange(e.target.checked)}
+                  checked={filters.onlyCredit}
+                  onChange={(e) => onFilterChange({ onlyCredit: e.target.checked })}
                   className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
                   type="checkbox"
                 />
@@ -181,8 +184,8 @@ export default function FilterSidebar({
               </label>
               <label className="flex items-center gap-2 hover:text-primary cursor-pointer">
                 <input
-                  checked={onlyExpress}
-                  onChange={(e) => onOnlyExpressChange(e.target.checked)}
+                  checked={filters.onlyExpress}
+                  onChange={(e) => onFilterChange({ onlyExpress: e.target.checked })}
                   className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
                   type="checkbox"
                 />

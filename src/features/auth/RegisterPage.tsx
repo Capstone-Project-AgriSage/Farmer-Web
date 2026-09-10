@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { isValidPhoneOrEmail } from '../../utils/validation'
+import FieldError from '../../components/ui/FieldError'
 import AuthLayout from './components/AuthLayout'
 import GoogleAuthButton from './components/GoogleAuthButton'
-
-const PHONE_REGEX = /^(0|\+84)\d{9,10}$/
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 interface FormErrors {
   fullName?: string
@@ -31,10 +30,9 @@ export default function RegisterPage() {
     const next: FormErrors = {}
     if (!fullName.trim()) next.fullName = 'Vui lòng nhập họ và tên'
 
-    const normalizedContact = contact.replace(/\s/g, '')
     if (!contact.trim()) {
       next.contact = 'Vui lòng nhập email hoặc số điện thoại'
-    } else if (!PHONE_REGEX.test(normalizedContact) && !EMAIL_REGEX.test(contact.trim())) {
+    } else if (!isValidPhoneOrEmail(contact)) {
       next.contact = 'Email hoặc số điện thoại không hợp lệ'
     }
 
@@ -87,7 +85,7 @@ export default function RegisterPage() {
               onChange={(e) => setFullName(e.target.value)}
             />
           </div>
-          {errors.fullName && <p className="text-[11px] text-status-error mt-1">{errors.fullName}</p>}
+          <FieldError message={errors.fullName} />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
           <div>
@@ -112,7 +110,7 @@ export default function RegisterPage() {
                 onChange={(e) => setContact(e.target.value)}
               />
             </div>
-            {errors.contact && <p className="text-[11px] text-status-error mt-1">{errors.contact}</p>}
+            <FieldError message={errors.contact} />
           </div>
           <div>
             <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-1" htmlFor="farmRegion">
@@ -170,7 +168,7 @@ export default function RegisterPage() {
                 </span>
               </button>
             </div>
-            {errors.password && <p className="text-[11px] text-status-error mt-1">{errors.password}</p>}
+            <FieldError message={errors.password} />
           </div>
           <div>
             <label
@@ -207,9 +205,7 @@ export default function RegisterPage() {
                 </span>
               </button>
             </div>
-            {errors.confirmPassword && (
-              <p className="text-[11px] text-status-error mt-1">{errors.confirmPassword}</p>
-            )}
+            <FieldError message={errors.confirmPassword} />
           </div>
         </div>
         <div className="pt-1">
@@ -234,7 +230,7 @@ export default function RegisterPage() {
               của AgriSage.
             </span>
           </label>
-          {errors.terms && <p className="text-[11px] text-status-error mt-1">{errors.terms}</p>}
+          <FieldError message={errors.terms} />
         </div>
         <div className="pt-2">
           <button

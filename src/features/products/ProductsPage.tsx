@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import ProductCard from '../../components/ui/ProductCard'
@@ -6,42 +6,47 @@ import Pagination from '../../components/ui/Pagination'
 import AiDiagnosisCallout from '../../components/ui/AiDiagnosisCallout'
 import { products } from '../../data/mockProducts'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
-import FilterSidebar from './components/FilterSidebar'
+import FilterSidebar, { createEmptyFilterValues, type FilterValues } from './components/FilterSidebar'
 
 type SortOption = 'best-selling' | 'newest' | 'price-asc' | 'price-desc'
 
 const PAGE_SIZE_OPTIONS = [12, 24, 48]
+
+interface Filters extends FilterValues {
+  search: string
+}
+
+function filtersFromSearchParams(searchParams: URLSearchParams): Filters {
+  const group = searchParams.get('group')
+  return {
+    ...createEmptyFilterValues(),
+    search: searchParams.get('q') ?? '',
+    groups: group ? new Set([group]) : new Set(),
+  }
+}
 
 function parsePriceInput(value: string): number | null {
   const digits = value.replace(/[^\d]/g, '')
   return digits ? Number(digits) : null
 }
 
-function toggleInSet(set: Set<string>, value: string): Set<string> {
-  const next = new Set(set)
-  if (next.has(value)) next.delete(value)
-  else next.add(value)
-  return next
-}
-
 export default function ProductsPage() {
   useDocumentTitle('Sản phẩm vật tư nông nghiệp')
   const [searchParams] = useSearchParams()
-  const [search, setSearch] = useState(() => searchParams.get('q') ?? '')
+  const [filters, setFilters] = useState<Filters>(() => filtersFromSearchParams(searchParams))
   const [sort, setSort] = useState<SortOption>('best-selling')
-  const [selectedGroups, setSelectedGroups] = useState<Set<string>>(() => {
-    const group = searchParams.get('group')
-    return group ? new Set([group]) : new Set()
-  })
-  const [selectedBrands, setSelectedBrands] = useState<Set<string>>(new Set())
-  const [selectedDiseases, setSelectedDiseases] = useState<Set<string>>(new Set())
-  const [minPriceInput, setMinPriceInput] = useState('')
-  const [maxPriceInput, setMaxPriceInput] = useState('')
-  const [onlyWarehouse, setOnlyWarehouse] = useState(false)
-  const [onlyCredit, setOnlyCredit] = useState(false)
-  const [onlyExpress, setOnlyExpress] = useState(false)
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[0])
   const [page, setPage] = useState(1)
+
+  const searchParamsKey = searchParams.toString()
+
+  // Re-sync from the URL whenever it changes (e.g. clicking a category card,
+  // then a plain "Sản phẩm" nav link) — otherwise these stay stale because a
+  // navigation within the same route does not remount this component.
+  useEffect(() => {
+    setFilters(filtersFromSearchParams(searchParams))
+    setPage(1)
+  }, [searchParamsKey])
 
   const groupCounts = useMemo(() => {
     const counts = new Map<string, number>()
@@ -55,42 +60,39 @@ export default function ProductsPage() {
     return counts
   }, [])
 
+  const patchFilters = (patch: Partial<Filters>) => {
+    setFilters((prev) => ({ ...prev, ...patch }))
+    setPage(1)
+  }
+
   const resetFilters = () => {
-    setSearch('')
-    setSelectedGroups(new Set())
-    setSelectedBrands(new Set())
-    setSelectedDiseases(new Set())
-    setMinPriceInput('')
-    setMaxPriceInput('')
-    setOnlyWarehouse(false)
-    setOnlyCredit(false)
-    setOnlyExpress(false)
+    setFilters({ ...createEmptyFilterValues(), search: '' })
     setSort('best-selling')
     setPage(1)
   }
 
   const filtered = useMemo(() => {
-    const queryWords = search.trim().toLowerCase().split(/\s+/).filter(Boolean)
-    const minPrice = parsePriceInput(minPriceInput)
-    const maxPrice = parsePriceInput(maxPriceInput)
+    const queryWords = filters.search.trim().toLowerCase().split(/\s+/).filter(Boolean)
+    const minPrice = parsePriceInput(filters.minPrice)
+    const maxPrice = parsePriceInput(filters.maxPrice)
 
     let result = products.filter((p) => {
       if (queryWords.length > 0) {
         const haystack = `${p.name} ${p.activeIngredient} ${p.brand} ${p.category} ${(p.diseaseTags ?? []).join(' ')}`.toLowerCase()
         if (!queryWords.every((word) => haystack.includes(word))) return false
       }
-      if (selectedGroups.size > 0 && !selectedGroups.has(p.group)) return false
-      if (selectedBrands.size > 0 && !selectedBrands.has(p.brand)) return false
-      if (selectedDiseases.size > 0) {
+      if (filters.groups.size > 0 && !filters.groups.has(p.group)) return false
+      if (filters.brands.size > 0 && !filters.brands.has(p.brand)) return false
+      if (filters.diseases.size > 0) {
         const tags = p.diseaseTags ?? []
-        const matches = tags.some((t) => selectedDiseases.has(t))
+        const matches = tags.some((t) => filters.diseases.has(t))
         if (!matches) return false
       }
       if (minPrice !== null && p.price < minPrice) return false
       if (maxPrice !== null && p.price > maxPrice) return false
-      if (onlyWarehouse && !p.stockLabel.includes('Di Linh')) return false
-      if (onlyCredit && !(p.tag?.includes('nợ') || p.wholesalePrice)) return false
-      if (onlyExpress && !p.tag?.includes('2 giờ')) return false
+      if (filters.onlyWarehouse && !p.stockLabel.includes('Di Linh')) return false
+      if (filters.onlyCredit && !(p.tag?.includes('nợ') || p.wholesalePrice)) return false
+      if (filters.onlyExpress && !p.tag?.includes('2 giờ')) return false
       return true
     })
 
@@ -109,29 +111,13 @@ export default function ProductsPage() {
     })
 
     return result
-  }, [
-    search,
-    selectedGroups,
-    selectedBrands,
-    selectedDiseases,
-    minPriceInput,
-    maxPriceInput,
-    onlyWarehouse,
-    onlyCredit,
-    onlyExpress,
-    sort,
-  ])
+  }, [filters, sort])
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize))
   const currentPage = Math.min(page, totalPages)
   const pageItems = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize)
   const rangeStart = filtered.length === 0 ? 0 : (currentPage - 1) * pageSize + 1
   const rangeEnd = Math.min(currentPage * pageSize, filtered.length)
-
-  const updateAndResetPage = <T,>(setter: (v: T) => void) => (value: T) => {
-    setter(value)
-    setPage(1)
-  }
 
   return (
     <>
@@ -168,11 +154,8 @@ export default function ProductsPage() {
               className="w-full pl-10 pr-4 py-2 text-sm text-text-primary placeholder:text-text-muted bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary"
               placeholder="Tìm theo tên thuốc, hoạt chất (Azoxystrobin, Mancozeb...), thương hiệu (Bayer, Syngenta, Lộc Trời)..."
               type="text"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value)
-                setPage(1)
-              }}
+              value={filters.search}
+              onChange={(e) => patchFilters({ search: e.target.value })}
             />
           </div>
           <div className="flex flex-wrap items-center justify-between lg:justify-end gap-3">
@@ -198,22 +181,8 @@ export default function ProductsPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <FilterSidebar
-            selectedGroups={selectedGroups}
-            onToggleGroup={(v) => updateAndResetPage(setSelectedGroups)(toggleInSet(selectedGroups, v))}
-            selectedBrands={selectedBrands}
-            onToggleBrand={(v) => updateAndResetPage(setSelectedBrands)(toggleInSet(selectedBrands, v))}
-            selectedDiseases={selectedDiseases}
-            onToggleDisease={(v) => updateAndResetPage(setSelectedDiseases)(toggleInSet(selectedDiseases, v))}
-            minPriceInput={minPriceInput}
-            onMinPriceChange={updateAndResetPage(setMinPriceInput)}
-            maxPriceInput={maxPriceInput}
-            onMaxPriceChange={updateAndResetPage(setMaxPriceInput)}
-            onlyWarehouse={onlyWarehouse}
-            onOnlyWarehouseChange={updateAndResetPage(setOnlyWarehouse)}
-            onlyCredit={onlyCredit}
-            onOnlyCreditChange={updateAndResetPage(setOnlyCredit)}
-            onlyExpress={onlyExpress}
-            onOnlyExpressChange={updateAndResetPage(setOnlyExpress)}
+            filters={filters}
+            onFilterChange={patchFilters}
             groupCounts={groupCounts}
             brandCounts={brandCounts}
             onReset={resetFilters}

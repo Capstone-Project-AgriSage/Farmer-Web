@@ -1,3 +1,6 @@
+import FieldError from '../../../components/ui/FieldError'
+import { isValidPhone } from '../../../utils/validation'
+
 export type DeliveryMode = 'garden' | 'pickup'
 
 export interface AddressFormValues {
@@ -22,8 +25,6 @@ export const addressFormDefaults: AddressFormValues = {
   note: 'Đường bê tông xe tải 5 tấn vào được tận sân kho, vui lòng liên hệ Chú Năm trước khi xuất bến 30 phút.',
 }
 
-const PHONE_REGEX = /^(0|\+84)\d{9,10}$/
-
 export function validateAddressForm(values: AddressFormValues): AddressFormErrors {
   const errors: AddressFormErrors = {}
 
@@ -31,10 +32,9 @@ export function validateAddressForm(values: AddressFormValues): AddressFormError
     errors.recipientName = 'Vui lòng nhập họ và tên người nhận'
   }
 
-  const normalizedPhone = values.phone.replace(/\s/g, '')
   if (!values.phone.trim()) {
     errors.phone = 'Vui lòng nhập số điện thoại liên hệ'
-  } else if (!PHONE_REGEX.test(normalizedPhone)) {
+  } else if (!isValidPhone(values.phone)) {
     errors.phone = 'Số điện thoại không hợp lệ'
   }
 
@@ -122,7 +122,7 @@ export default function AddressForm({
               value={values.recipientName}
               onChange={(e) => onChange('recipientName', e.target.value)}
             />
-            {errors.recipientName && <p className="text-[11px] text-status-error mt-1">{errors.recipientName}</p>}
+            <FieldError message={errors.recipientName} />
           </div>
           <div>
             <label className="block text-xs font-bold text-text-secondary mb-1.5">
@@ -136,7 +136,7 @@ export default function AddressForm({
               value={values.phone}
               onChange={(e) => onChange('phone', e.target.value)}
             />
-            {errors.phone && <p className="text-[11px] text-status-error mt-1">{errors.phone}</p>}
+            <FieldError message={errors.phone} />
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -196,7 +196,7 @@ export default function AddressForm({
             value={values.addressDetail}
             onChange={(e) => onChange('addressDetail', e.target.value)}
           />
-          {errors.addressDetail && <p className="text-[11px] text-status-error mt-1">{errors.addressDetail}</p>}
+          <FieldError message={errors.addressDetail} />
         </div>
         <div>
           <label className="block text-xs font-bold text-text-secondary mb-1.5 flex items-center gap-1">

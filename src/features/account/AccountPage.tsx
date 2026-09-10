@@ -8,7 +8,7 @@ const creditPercent = Math.round((creditUsed / creditLimit) * 100)
 
 const orderHistory = [
   {
-    code: '#AGR-8842',
+    code: '#DH-2024-8842',
     date: '08/10/2024',
     status: 'Đang giao',
     statusClass: 'bg-status-info-surface text-status-info',
@@ -16,17 +16,17 @@ const orderHistory = [
     itemsSummary: 'Ridomil Gold 68WG, Đầu Trâu NPK, Humic King Root, Nativo 750WG',
   },
   {
-    code: '#AGR-8791',
+    code: '#DH-2024-8791',
     date: '22/09/2024',
-    status: 'Hoàn tất',
+    status: 'Hoàn thành',
     statusClass: 'bg-status-success-surface text-status-success',
     total: 1450000,
     itemsSummary: 'Score 250EC, Đạm Phú Mỹ Hạt Đục',
   },
   {
-    code: '#AGR-8703',
+    code: '#DH-2024-8703',
     date: '30/08/2024',
-    status: 'Hoàn tất',
+    status: 'Hoàn thành',
     statusClass: 'bg-status-success-surface text-status-success',
     total: 890000,
     itemsSummary: 'Anvil 5SC, Phân Hữu Cơ Úc Bounce Back',

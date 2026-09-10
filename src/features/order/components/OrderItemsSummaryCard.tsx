@@ -46,7 +46,7 @@ export default function OrderItemsSummaryCard() {
     <div className="bg-white rounded-xl p-6 border border-[#E1E8E2] shadow-sm">
       <div className="flex items-center justify-between pb-3 border-b border-[#E1E8E2] mb-4">
         <h2 className="font-bold text-base text-[#172118]">Danh sách vật tư đặt mua (4 sản phẩm)</h2>
-        <span className="font-mono text-xs text-[#7A8A7C]">Mã: #AGR-8842</span>
+        <span className="font-mono text-xs text-[#7A8A7C]">Mã: #DH-2024-8842</span>
       </div>
       <div className="divide-y divide-[#E1E8E2]/70">
         {orderItems.map((item) => (

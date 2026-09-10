@@ -25,7 +25,7 @@ export default function CartSummarySidebar({
       <div className="bg-white rounded-2xl border border-border-subtle p-6 shadow-sm space-y-5">
         <h2 className="text-base font-bold text-text-primary pb-3 border-b border-border-subtle flex items-center justify-between">
           <span>Tóm tắt đơn hàng</span>
-          <span className="text-xs font-normal text-text-muted">Mã đơn tạm: #AGR-8842</span>
+          <span className="text-xs font-normal text-text-muted">Mã đơn tạm: #DH-2024-8842</span>
         </h2>
         <div className="space-y-3 text-xs">
           <div className="flex items-center justify-between text-text-secondary">

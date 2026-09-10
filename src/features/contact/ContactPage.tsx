@@ -9,6 +9,7 @@ export default function ContactPage() {
   useDocumentTitle('Liên hệ')
   const [name, setName] = useState('')
   const [contact, setContact] = useState('')
+  const [area, setArea] = useState('')
   const [requestType, setRequestType] = useState(REQUEST_TYPES[0])
   const [message, setMessage] = useState('')
   const [sent, setSent] = useState(false)
@@ -22,6 +23,7 @@ export default function ContactPage() {
       setSent(true)
       setName('')
       setContact('')
+      setArea('')
       setRequestType(REQUEST_TYPES[0])
       setMessage('')
     }, 1000)
@@ -129,6 +131,19 @@ export default function ContactPage() {
                       placeholder="0912 345 678"
                       value={contact}
                       onChange={(e) => setContact(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-1.5">
+                      Khu vực / Địa chỉ
+                    </label>
+                    <input
+                      required
+                      className="w-full px-4 py-2.5 rounded-lg border border-border-subtle text-text-primary text-sm focus:outline-none focus:border-primary bg-white"
+                      type="text"
+                      placeholder="Xã Đinh Lạc, Huyện Di Linh, Lâm Đồng"
+                      value={area}
+                      onChange={(e) => setArea(e.target.value)}
                     />
                   </div>
                   <div>

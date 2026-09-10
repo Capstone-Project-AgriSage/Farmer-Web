@@ -14,6 +14,7 @@ const CheckoutPage = lazy(() => import('./features/checkout/CheckoutPage'))
 const OrderSuccessPage = lazy(() => import('./features/order/OrderSuccessPage'))
 const AboutPage = lazy(() => import('./features/about/AboutPage'))
 const KnowledgePage = lazy(() => import('./features/knowledge/KnowledgePage'))
+const ArticleDetailPage = lazy(() => import('./features/knowledge/ArticleDetailPage'))
 const ContactPage = lazy(() => import('./features/contact/ContactPage'))
 const AccountPage = lazy(() => import('./features/account/AccountPage'))
 const AiDoctorPage = lazy(() => import('./features/ai-doctor/AiDoctorPage'))
@@ -31,6 +32,7 @@ const routes = [
   { path: 'order-success', element: <OrderSuccessPage /> },
   { path: 'about', element: <AboutPage /> },
   { path: 'knowledge', element: <KnowledgePage /> },
+  { path: 'knowledge/:slug', element: <ArticleDetailPage /> },
   { path: 'contact', element: <ContactPage /> },
   { path: 'account', element: <AccountPage /> },
   { path: 'ai-doctor', element: <AiDoctorPage /> },

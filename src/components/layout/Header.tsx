@@ -46,7 +46,7 @@ export default function Header({ cartCount }: HeaderProps) {
             </span>
           </div>
         </Link>
-        <nav className="hidden xl:flex items-center text-sm font-medium text-emerald-100/90 justify-center flex-1 gap-3 xl:gap-4">
+        <nav className="hidden xl:flex items-center text-[15px] font-medium text-emerald-100/90 justify-center flex-1 gap-5 2xl:gap-7">
           {navLinks.map((link) =>
             link.routed ? (
               <NavLink
@@ -54,14 +54,14 @@ export default function Header({ cartCount }: HeaderProps) {
                 to={link.to}
                 end={link.to === '/'}
                 className={({ isActive }) =>
-                  `flex items-center gap-1 whitespace-nowrap transition-colors ${
+                  `flex items-center gap-1.5 whitespace-nowrap transition-colors ${
                     isActive
-                      ? 'text-white font-semibold px-2.5 py-1.5 rounded-full bg-white/15 border border-white/20 shadow-sm'
+                      ? 'text-white font-semibold px-3 py-1.5 rounded-full bg-white/15 border border-white/20 shadow-sm'
                       : 'hover:text-white'
                   }`
                 }
               >
-                <span className="material-symbols-outlined text-[18px] text-emerald-300">
+                <span className="material-symbols-outlined text-[20px] text-emerald-300">
                   {link.icon}
                 </span>
                 <span>{link.label}</span>
@@ -70,9 +70,9 @@ export default function Header({ cartCount }: HeaderProps) {
               <a
                 key={link.label}
                 href={link.to}
-                className="flex items-center gap-1 whitespace-nowrap hover:text-white transition-colors"
+                className="flex items-center gap-1.5 whitespace-nowrap hover:text-white transition-colors"
               >
-                <span className="material-symbols-outlined text-[18px] text-emerald-300">
+                <span className="material-symbols-outlined text-[20px] text-emerald-300">
                   {link.icon}
                 </span>
                 <span>{link.label}</span>

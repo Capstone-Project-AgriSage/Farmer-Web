@@ -90,7 +90,7 @@ export default function AccountPage() {
             </div>
           </div>
 
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-8 space-y-5">
             <div className="bg-white rounded-2xl border border-border-subtle shadow-sm overflow-hidden">
               <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle">
                 <h2 className="text-sm font-bold text-text-primary">Lịch sử đơn hàng</h2>

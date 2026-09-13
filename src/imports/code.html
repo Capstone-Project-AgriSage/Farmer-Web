@@ -1,0 +1,613 @@
+<!DOCTYPE html><html lang="vi" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Đăng nhập - AgriCARE-AI | Nông nghiệp Thông minh</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link class="" href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              DEFAULT: '#2E7D32',
+              dark: '#1B5E20',
+              hover: '#256628',
+              light: '#E8F5E9',
+              subtle: '#F5FBF4'
+            },
+            surface: {
+              DEFAULT: '#FFFFFF',
+              secondary: '#EDF4EE',
+              subtle: '#F5FBF4',
+              dim: '#D6DCD5'
+            },
+            border: {
+              subtle: '#E1E8E2',
+              strong: '#B0BEB3'
+            },
+            text: {
+              primary: '#172118',
+              secondary: '#465348',
+              muted: '#7A8A7C'
+            },
+            status: {
+              error: '#C62828',
+              'error-surface': '#FFEBEE',
+              success: '#2E7D32',
+              'success-surface': '#E8F5E9',
+              warning: '#E65100',
+              'warning-surface': '#FFF3E0'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+          },
+          boxShadow: {
+            card: '0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02)',
+            floating: '0 20px 40px -10px rgba(46, 125, 50, 0.12)'
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1;
+    }
+    input:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 30px white inset !important;
+      -webkit-text-fill-color: #172118 !important;
+    }
+  </style>
+</head>
+<body class="bg-surface-subtle font-sans text-text-primary min-h-screen antialiased flex flex-col justify-between selection:bg-primary-light selection:text-primary-dark">
+<!-- ================= 1. TOP NAVIGATION HEADER ================= -->
+<header class="w-full bg-primary-dark border-b border-white/10 sticky top-0 z-50 shadow-md"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4"><a class="flex items-center gap-3 group flex-shrink-0" href="#"><div class="w-10 h-10 rounded-lg overflow-hidden border border-white/20 bg-white p-1 flex items-center justify-center group-hover:border-white transition-colors shadow-sm"><img alt="AgriSage Logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UUh_rMaCKAuHaMgW-rlQEybLDC0yLaiBL84lCqf4i75nqLSFCcM7r6LQBPmwpexG33O1HAqBNtf-6Kuq4uo8JRLFBBc7rBCVHQjRNNXid88YHmMN-I_eRlwwwhg4IYza_9zPQQNoCKQFWmkF3lpMBE_qP3eRRDHs6SvsfTutDXagvCKzVz7ohcKlnYNWZUz9o4B9FxP1JGjBLadtPwoHB8oAVVKq2Ywe4vqvFummLb-xtOsuSmo4eTZR8"></div><div class="flex flex-col"><div class="flex items-center gap-1.5"><span class="font-bold text-white text-lg tracking-tight leading-none group-hover:text-emerald-200 transition-colors">AgriSage</span></div><span class="text-[11px] text-emerald-100/80 mt-0.5 leading-none">Nông nghiệp số &amp; Chẩn đoán AI</span></div></a><nav class="hidden lg:flex items-center text-sm font-medium text-emerald-100/90 justify-center flex-1 gap-6"><a class="flex items-center gap-1.5 text-white font-semibold px-3 py-1.5 rounded-full bg-white/15 border border-white/20 transition-colors shadow-sm" href="#"><span class="material-symbols-outlined text-[18px] text-emerald-300">home</span><span class="">Trang chủ</span></a><a class="flex items-center gap-1.5 hover:text-white transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">info</span><span class="">Giới thiệu</span></a><a class="flex items-center gap-1.5 hover:text-white transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">inventory_2</span><span class="">Sản phẩm</span></a><a class="flex items-center gap-1.5 hover:text-white transition-colors font-medium" href="#"><span class="material-symbols-outlined text-[18px] text-emerald-300">psychology</span><span class="">Bác sĩ AI</span></a><a class="flex items-center gap-1.5 hover:text-white transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">menu_book</span><span class="">Kiến thức</span></a><a class="flex items-center gap-1.5 hover:text-white transition-colors" href="#"><span class="material-symbols-outlined text-[18px]">mail</span><span class="">Liên hệ</span></a></nav><div class="flex items-center gap-3 sm:gap-4 flex-shrink-0"><a class="relative inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:text-white bg-white/10 hover:bg-white/20 border border-white/15 rounded-md transition-all" href="#cart" title="Giỏ hàng nông nghiệp"><span class="material-symbols-outlined text-[18px]">shopping_cart</span><span class="hidden sm:inline">Giỏ hàng</span><span class="inline-flex items-center justify-center px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-white text-primary-dark ml-0.5">2</span></a><a class="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-primary-dark bg-white hover:bg-emerald-50 rounded-md transition-all shadow-sm" href="#login"><span class="material-symbols-outlined text-[16px] text-primary">login</span><span class="">Đăng nhập</span></a></div></div></header>
+<!-- ================= 2. MAIN LOGIN CONTAINER ================= -->
+<main class="flex-1 w-full bg-surface-subtle"><!-- 1. HERO SECTION & SMART SEARCH -->
+<section class="relative w-full bg-gradient-to-b from-primary-dark via-[#1a5b22] to-primary overflow-hidden text-white py-12 lg:py-20">
+<!-- Decorative background shapes -->
+<div class="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-white/10 blur-3xl pointer-events-none"></div>
+<div class="absolute left-1/3 -bottom-20 w-80 h-80 rounded-full bg-emerald-400/10 blur-3xl pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+<!-- Left: Value Proposition & Search -->
+<div class="lg:col-span-7 space-y-6 text-left">
+<div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-semibold text-emerald-200 backdrop-blur-[1px]">
+<span class="material-symbols-outlined text-[16px] text-emerald-300 animate-pulse">eco</span>
+<span class="">Nền tảng Nông nghiệp Số 4.0 Hàng Đầu Việt Nam</span>
+</div>
+<h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight text-white">
+          Đồng hành cùng nhà nông nâng tầm năng suất &amp; Số hóa mùa vụ
+        </h1>
+<p class="text-emerald-100/90 text-base sm:text-lg leading-relaxed font-normal max-w-2xl">
+          Hệ sinh thái vật tư nông nghiệp chính hãng, bảo lãnh công nợ mùa vụ linh hoạt và trợ lý Trí tuệ Nhân tạo (AI) nhận diện bệnh hại cây trồng qua ảnh chụp tức thì.
+        </p>
+<!-- Smart Search Bar -->
+<div class="pt-2">
+<form class="bg-white p-2 rounded-xl shadow-xl flex flex-col sm:flex-row items-center gap-2 border border-border-subtle max-w-2xl" onsubmit="event.preventDefault();">
+<div class="flex items-center flex-1 w-full px-3 gap-2">
+<span class="material-symbols-outlined text-[22px] text-text-muted">search</span>
+<input class="w-full text-sm text-text-primary placeholder:text-text-muted focus:outline-none bg-transparent py-2" placeholder="Tìm phân bón, thuốc BVTV, hoạt chất hoặc bệnh cây..." type="text">
+</div>
+<button class="w-full sm:w-auto px-6 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-semibold rounded-lg flex items-center justify-center gap-2 transition-all shadow-sm flex-shrink-0" type="submit">
+<span class="">Tìm kiếm</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</form>
+<!-- Hot keywords tag bar -->
+<div class="flex flex-wrap items-center gap-2 pt-3 text-xs text-emerald-100/80">
+<span class="font-medium text-emerald-200">Gợi ý tìm kiếm:</span>
+<a class="px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-colors" href="#">NPK 20-20-15</a>
+<a class="px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-colors" href="#">Trừ thán thư sầu riêng</a>
+<a class="px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-colors" href="#">Ridomil Gold</a>
+<a class="px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-colors" href="#">Tuyến trùng cà phê</a>
+</div>
+</div>
+<!-- CTA Action Buttons -->
+<div class="flex flex-wrap items-center gap-3 pt-2">
+<a class="px-6 py-3 bg-white text-primary-dark hover:bg-emerald-50 text-sm font-bold rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2" href="#products">
+<span class="material-symbols-outlined text-[20px] text-primary">shopping_bag</span>
+<span class="">Khám phá sản phẩm ngay</span>
+</a>
+<a class="px-6 py-3 bg-white/15 hover:bg-white/25 border border-white/25 text-white text-sm font-semibold rounded-lg backdrop-blur-[1px] transition-all flex items-center gap-2" href="#ai-diagnosis">
+<span class="material-symbols-outlined text-[20px] text-emerald-300">photo_camera</span>
+<span class="">Bác sĩ cây trồng AI (Quét lá bệnh)</span>
+</a>
+</div>
+</div>
+<!-- Right: Interactive Brand Hero Visual Card -->
+<div class="lg:col-span-5 relative">
+<div class="relative rounded-2xl overflow-hidden shadow-2xl border border-white/20 bg-primary-dark/80 group">
+<img alt="Đồng hành cùng nhà nông mùa vụ" class="w-full h-80 sm:h-96 object-cover transform scale-105 group-hover:scale-100 transition-transform duration-700 brightness-90" src="https://lh3.googleusercontent.com/aida/AEtjO1XGezutwBLujRfYYW-Oq6ctBIapuCwRvY30-mP-XpcHzfzN7wBQeDVLZdeim9H7kj9EprfP5hiU2nLcLyKAds_HQRuePA4DT_1x7K6ofveh7v1TTLK-IoCAbKulEm0z8StHrLQWLK_F-VbNXV4G2nQJOGwbMU8YjrcJcCoKq2mrskEC_d1Fq6XxL0Sut3ouArJ14wPGJlLJ_AlQ7pKrIlRlLPhl1YsFBxjGuqFANU0NE_ZNXVA8zcnkCbjs">
+<div class="absolute inset-0 bg-gradient-to-t from-primary-dark via-primary-dark/40 to-transparent"></div>
+<!-- Floating Badge 1: AI Accuracy -->
+<div class="absolute top-4 right-4 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-xl shadow-lg border border-border-subtle flex items-center gap-2.5 text-text-primary">
+<div class="w-8 h-8 rounded-lg bg-primary-light flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">verified</span>
+</div>
+<div>
+<div class="text-xs font-bold text-primary">98% AI chính xác</div>
+<div class="text-[10px] text-text-muted">Chẩn đoán hơn 120 bệnh</div>
+</div>
+</div>
+<!-- Floating Badge 2: Delivery -->
+<div class="absolute bottom-20 left-4 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-xl shadow-lg border border-border-subtle flex items-center gap-2.5 text-text-primary">
+<div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-primary-dark">
+<span class="material-symbols-outlined text-[20px]">local_shipping</span>
+</div>
+<div>
+<div class="text-xs font-bold text-text-primary">Giao vật tư tận vườn</div>
+<div class="text-[10px] text-text-muted">Nhanh chóng trong 2-4h</div>
+</div>
+</div>
+<!-- Floating Bottom Banner: Credit Support -->
+<div class="absolute bottom-4 inset-x-4 bg-primary/90 backdrop-blur-md p-3 rounded-xl border border-white/20 text-white flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-emerald-300 text-[22px]">credit_score</span>
+<div>
+<div class="text-xs font-bold text-white">Bảo lãnh công nợ mùa vụ</div>
+<div class="text-[11px] text-emerald-100/90">Hạn mức lên tới 200 triệu / nhà vườn</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-emerald-300 text-[18px]">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. AI DIAGNOSIS BANNER SECTION -->
+<section class="w-full py-12 bg-white border-b border-border-subtle" id="ai-diagnosis">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="rounded-2xl bg-gradient-to-r from-surface-subtle via-emerald-50/50 to-surface-secondary border border-primary/20 p-6 sm:p-10 relative overflow-hidden shadow-sm">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+<!-- Left description & 3 steps -->
+<div class="lg:col-span-8 space-y-4">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px]">psychology</span>
+<span class="">Đột phá Trí Tuệ Nhân Tạo</span>
+</div>
+<h2 class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">
+            Bác sĩ cây trồng AI - Chẩn đoán bệnh trong 3 giây
+          </h2>
+<p class="text-text-secondary text-sm leading-relaxed max-w-2xl">
+            Không còn lo lắng cây trồng suy thoái. Chỉ cần chụp ảnh vùng lá, cành hoặc rễ bị tổn thương, hệ thống AI của AgriSage sẽ lập tức phân tích mầm bệnh và gợi ý đơn thuốc điều trị chuẩn xác.
+          </p>
+<!-- 3 Steps Visual -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3">
+<div class="flex items-start gap-3 p-3 bg-white rounded-xl border border-border-subtle shadow-sm">
+<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
+<div>
+<div class="text-xs font-bold text-text-primary">Chụp ảnh cây trồng</div>
+<div class="text-[11px] text-text-muted mt-0.5">Chụp rõ nét vị trí lá đốm, cháy bìa hay rễ thối</div>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 bg-white rounded-xl border border-border-subtle shadow-sm">
+<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
+<div>
+<div class="text-xs font-bold text-text-primary">AI phân tích mẫu</div>
+<div class="text-[11px] text-text-muted mt-0.5">Nhận diện chủng nấm, sâu bệnh hại và mức độ</div>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 bg-white rounded-xl border border-border-subtle shadow-sm">
+<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
+<div>
+<div class="text-xs font-bold text-text-primary">Nhận phác đồ ngay</div>
+<div class="text-[11px] text-text-muted mt-0.5">Kê đơn thuốc chính xác &amp; chỉ định cách phun</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right CTA Box & Recent Scans -->
+<div class="lg:col-span-4 flex flex-col items-center justify-center bg-white p-6 rounded-xl border border-border-subtle shadow-md text-center space-y-4">
+<div class="w-16 h-16 rounded-full bg-primary-light flex items-center justify-center text-primary ring-8 ring-primary-light/50">
+<span class="material-symbols-outlined text-[32px]">document_scanner</span>
+</div>
+<div>
+<h3 class="font-bold text-text-primary text-base">Bắt đầu khám bệnh cho vườn</h3>
+<p class="text-xs text-text-muted mt-1">Hoàn toàn miễn phí cho bà con nông dân</p>
+</div>
+<button class="w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white rounded-lg font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">add_a_photo</span>
+<span class="">Tải ảnh quét bệnh ngay</span>
+</button>
+<div class="text-[11px] text-text-muted pt-1 flex items-center gap-1.5 justify-center">
+<span class="w-2 h-2 rounded-full bg-status-success"></span>
+<span class="">Vừa chẩn đoán: Sầu riêng đốm mắt cua (Lâm Đồng)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. MAIN CATEGORIES SECTION -->
+<section class="w-full py-12 bg-surface-subtle border-b border-border-subtle">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4">
+<div>
+<div class="text-xs font-bold uppercase tracking-wider text-primary mb-1">DANH MỤC VẬT TƯ CHỦ LỰC</div>
+<h2 class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">Trang Bị Toàn Diện Cho Mọi Mùa Vụ</h2>
+</div>
+<a class="text-sm font-semibold text-primary hover:text-primary-dark flex items-center gap-1 hover:underline" href="#all-categories">
+<span class="">Xem tất cả danh mục</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+<!-- Cat 1 -->
+<a class="group bg-white p-5 rounded-xl border border-border-subtle hover:border-primary transition-all duration-300 shadow-sm hover:shadow-md text-center flex flex-col items-center justify-between" href="#">
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYmybezoPoW8Q0kw6qlNb7qmrnn81U2mlCdY-5moBP8pZ0oPAFNioXvUSiqET75q9YjH6p7QE_iyePkrq2EPZDNgK0nbajjAhCzLTG3hjwICpkR9H7C_UADkxgClolZ1Kx8CwfEQbrIKDZTA9kNAxQYKN-sXY0qaemwpRdsm7jb361K9E1F4swV59f3cpeoOkzWj4JtuXs4pPvLJ7lWb5IeqxWz0mf4vYOauQYGuDl14onnIN_aqGtYA" alt="Phân bón NPK" class="w-16 h-16 object-contain mb-3 group-hover:scale-110 transition-transform duration-300">
+<h3 class="text-xs sm:text-sm font-bold text-text-primary group-hover:text-primary transition-colors leading-snug">Phân bón NPK &amp; Vi lượng</h3>
+<span class="text-[11px] text-text-muted mt-1">240+ sản phẩm</span>
+</a>
+<!-- Cat 2 -->
+<a class="group bg-white p-5 rounded-xl border border-border-subtle hover:border-primary transition-all duration-300 shadow-sm hover:shadow-md text-center flex flex-col items-center justify-between" href="#">
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdvH_lxZg8MmWyHRofuVOl3EBjF2COAfJmFymc8iX0I3ymk4lw3RVVZI82ldIJ8N6tnkpvDQRuiEts5mdK0n7rpQpVvxNPwse1mjYEfdmowMM3GxwNIAM1K_ZdTCfmrHw765nj0QwnCTr587TA238Nzhf8E2TB2tYat0XPtxHNGej9J8Fo397GlhLwhBSZlIWlRnVHK0p5lQxHWWXKr5iW62TNlhy7NdZivu69o1ZFeu2Inc1aQ9rQKg" alt="Thuốc BVTV &amp; Diệt nấm" class="w-16 h-16 object-contain mb-3 group-hover:scale-110 transition-transform duration-300">
+<h3 class="text-xs sm:text-sm font-bold text-text-primary group-hover:text-primary transition-colors leading-snug">Thuốc BVTV &amp; Diệt nấm</h3>
+<span class="text-[11px] text-text-muted mt-1">180+ sản phẩm</span>
+</a>
+<!-- Cat 3 -->
+<a class="group bg-white p-5 rounded-xl border border-border-subtle hover:border-primary transition-all duration-300 shadow-sm hover:shadow-md text-center flex flex-col items-center justify-between" href="#">
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6xHTmGPYX6eOH405EBRdW8GpVLU3-WhPklDiOB4lj_l66DgdttXUdGfigbeXsRH2voR1eRvPpfDlby8L6CiTv_3PWW_l0FRh90oOPqZ5vJ4mzPz1IU-rr9w4rNqRQyIr8sR-gyl0qcnlqYampHcFoYl0thcasTehjH1PAQBQrpl5wj_ixa90N8TzQ16_kecJkdW2qPAFLRSWXyCtmdLr7hw57hlM6nsGvaPqRmdncd9sGiA9Il9FBog" alt="Phân hữu cơ vi sinh" class="w-16 h-16 object-contain mb-3 group-hover:scale-110 transition-transform duration-300">
+<h3 class="text-xs sm:text-sm font-bold text-text-primary group-hover:text-primary transition-colors leading-snug">Phân hữu cơ vi sinh</h3>
+<span class="text-[11px] text-text-muted mt-1">95+ sản phẩm</span>
+</a>
+<!-- Cat 4 -->
+<a class="group bg-white p-5 rounded-xl border border-border-subtle hover:border-primary transition-all duration-300 shadow-sm hover:shadow-md text-center flex flex-col items-center justify-between" href="#">
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxZLqcP4I86jommObcgqLggCaJKZJ76ZenDeNuaD1OaDK7uMadQo0D0uMK6zTJkNu3sgyd0nwxgzn4lIhD9TaSI42sRMOUmG_xZ9mjhyFRa-sXzeiVbZLxS0t5xHxnp91v1gJbr6noR75jHUjk-GIwFifs1oM4rG9p8S_-Gw-ZctjebQmT5MSbopHtakySZeQvxO_whz2o6ACOA-5PAUivmpaT4Hu1ewx3ONTiS5mGW6OeU4idRwVJQQ" alt="Hạt giống &amp; Cây giống" class="w-16 h-16 object-contain mb-3 group-hover:scale-110 transition-transform duration-300">
+<h3 class="text-xs sm:text-sm font-bold text-text-primary group-hover:text-primary transition-colors leading-snug">Hạt giống &amp; Cây giống</h3>
+<span class="text-[11px] text-text-muted mt-1">120+ loại</span>
+</a>
+<!-- Cat 5 -->
+<a class="group bg-white p-5 rounded-xl border border-border-subtle hover:border-primary transition-all duration-300 shadow-sm hover:shadow-md text-center flex flex-col items-center justify-between" href="#">
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxwj_jTVWCDREkFcAO0KUE40gsvX5LON-58qg4XaqWOKBvE3QZ5nqyr7pIPEsR2coLU8SxJ_ShNUj_IkGjJI57yarc5kBfYgX97m0eSiZyB0Jzc8ZkpwZTnNfJlNT2D7v0-i9OFO8s3O8eSvqjG338yHJYqA3OpOdYLEEvhY4JcXS70vqovOxBbclRYz7mOMV68RaKLaBci4K-K-SByr_13CT2CXCIDe0VV-gvpb-JSe97nEV_iT8u4g" alt="Tưới nhỏ giọt &amp; Thiết bị" class="w-16 h-16 object-contain mb-3 group-hover:scale-110 transition-transform duration-300">
+<h3 class="text-xs sm:text-sm font-bold text-text-primary group-hover:text-primary transition-colors leading-snug">Tưới nhỏ giọt &amp; Thiết bị</h3>
+<span class="text-[11px] text-text-muted mt-1">70+ phụ kiện</span>
+</a>
+<!-- Cat 6 -->
+<a class="group bg-white p-5 rounded-xl border border-border-subtle hover:border-primary transition-all duration-300 shadow-sm hover:shadow-md text-center flex flex-col items-center justify-between" href="#">
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAN1PbFltd1JOOqMkpL3EGwZsT0ac-hByg8MSXeI6Pt0DELvx-cVUB-QHYb4EPpMMeLdK3-OcDYajiu6lif0uAVM2iYxNTj96kFLe8z9DgxZn4gAckRVaCgI7o2ifXX59e47CTEJSjXhVv3NzZuHX5-coltgWtlnrpShV6mwwUojMkBWKRVgUBy3qyaqCOe3hUoHEICLh9CDwpKd0dQgvhGA-Ng1myS0EWoQ-bc6cTuPz1dEMowQzBtmw" alt="Thuốc trừ sâu sinh học" class="w-16 h-16 object-contain mb-3 group-hover:scale-110 transition-transform duration-300">
+<h3 class="text-xs sm:text-sm font-bold text-text-primary group-hover:text-primary transition-colors leading-snug">Thuốc trừ sâu sinh học</h3>
+<span class="text-[11px] text-text-muted mt-1">110+ sản phẩm</span>
+</a>
+</div>
+</div>
+</section>
+<!-- 4. FEATURED PRODUCTS GRID (4 COLS) -->
+<section class="w-full py-12 bg-white border-b border-border-subtle" id="products">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4">
+<div>
+<div class="text-xs font-bold uppercase tracking-wider text-primary mb-1">SẢN PHẨM CHÍNH HÃNG</div>
+<h2 class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">Vật Tư &amp; Nông Dược Bán Chạy Nhất</h2>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs text-text-muted font-medium">Cam kết 100% hóa đơn VAT &amp; tem chống hàng giả</span>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Product 1 -->
+<div class="bg-white rounded-xl border border-border-subtle hover:border-primary hover:shadow-card transition-all duration-300 overflow-hidden flex flex-col justify-between group">
+<div class="relative p-4 bg-white flex items-center justify-center h-48 border-border-subtle overflow-hidden"><span class="absolute top-2.5 left-2.5 px-2 py-0.5 bg-primary text-white text-[10px] font-bold rounded z-10">Syngenta Thụy Sĩ</span><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFaX9geWihE92Sqb3Uv--Z9grL8_suBycb3LTib2BLKSq944HXyTEHNzAcli8P9maTPJPkaKjme2oW2uaxHht52Sy8WimpPPjTQfKiAcFYGRc30Q3OUUpKQyDxbXRrSXMQ7mO8LrVNS5tKkxBqHHiKMpXG3taE5UHHLDhnV__lQkEYFAs-1pzQfWbij3ktg4Xf2A83MbmbgP30sfIPDarPgREWXh8CBF_Hx6jo4nGqd71oJXY4F82WFQ" alt="Ridomil Gold 68WG" class="w-full h-full object-contain p-2 mix-blend-multiply group-hover:scale-105 transition-transform duration-300"><span class="absolute bottom-2 right-2 px-2 py-0.5 bg-status-success-surface text-status-success text-[10px] font-semibold rounded flex items-center gap-1 z-10"><span class="w-1.5 h-1.5 rounded-full bg-status-success"></span> Còn hàng</span></div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="text-[11px] text-text-muted uppercase font-semibold tracking-wider mb-1">Thuốc đặc trị nấm bệnh</div>
+<h3 class="text-sm font-bold text-text-primary group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+              Ridomil Gold 68WG - Trừ nấm thán thư, xì mủ
+            </h3>
+<p class="text-xs text-text-secondary mt-1">Hoạt chất: Metalaxyl-M + Mancozeb</p>
+<p class="text-xs text-text-muted mt-0.5">Quy cách: Gói 100g (Thùng 100 gói)</p>
+</div>
+<div class="pt-4 border-t border-border-subtle mt-4 flex items-center justify-between">
+<div>
+<div class="text-xs text-text-muted line-through">55.000 đ</div>
+<div class="text-base font-bold text-primary">48.000 đ</div>
+</div>
+<button class="p-2 rounded-lg bg-primary hover:bg-primary-hover text-white shadow-sm transition-colors flex items-center justify-center" title="Thêm vào giỏ">
+<span class="material-symbols-outlined text-[18px]">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="bg-white rounded-xl border border-border-subtle hover:border-primary hover:shadow-card transition-all duration-300 overflow-hidden flex flex-col justify-between group">
+<div class="relative p-4 bg-white flex items-center justify-center h-48 border-border-subtle overflow-hidden"><span class="absolute top-2.5 left-2.5 px-2 py-0.5 bg-primary-dark text-white text-[10px] font-bold rounded z-10">Bình Điền</span><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIJRMDcGAPWGywpLSXudP5IofmsFo-AHtWQCJMoaY7aFQ61PqvSal7kjBCg67QF3skFdWe0PCVV1Oa-pskS-2SIEemRXmjzEAknkScoCyQVf94o-d8_TUBj9okhVylEt9fZ_cNAZiyhESsUR0TeMIOJJhMPZ5WjmM4eZG4JkvW4yJgSFUeM3GTiKWfcJuhNOt3rBo8ZVKzAYmOe_WFHHAiZNebiC9kuCmVb8R5T5ow_JPu5oxHHSATsQ" alt="Đầu Trâu NPK 20-20-15" class="w-full h-full object-contain p-2 mix-blend-multiply group-hover:scale-105 transition-transform duration-300"><span class="absolute bottom-2 right-2 px-2 py-0.5 bg-status-success-surface text-status-success text-[10px] font-semibold rounded flex items-center gap-1 z-10"><span class="w-1.5 h-1.5 rounded-full bg-status-success"></span> Còn hàng</span></div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="text-[11px] text-text-muted uppercase font-semibold tracking-wider mb-1">Phân bón gốc cao cấp</div>
+<h3 class="text-sm font-bold text-text-primary group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+              Đầu Trâu NPK 20-20-15 + TE Nuôi Trái Lớn
+            </h3>
+<p class="text-xs text-text-secondary mt-1">Hoạt chất: Đạm, Lân, Kali kết hợp vi lượng chelate</p>
+<p class="text-xs text-text-muted mt-0.5">Quy cách: Bao 50kg chính hãng</p>
+</div>
+<div class="pt-4 border-t border-border-subtle mt-4 flex items-center justify-between">
+<div>
+<div class="text-xs text-text-muted">Hỗ trợ nợ vụ</div>
+<div class="text-base font-bold text-primary">920.000 đ</div>
+</div>
+<button class="p-2 rounded-lg bg-primary hover:bg-primary-hover text-white shadow-sm transition-colors flex items-center justify-center" title="Thêm vào giỏ">
+<span class="material-symbols-outlined text-[18px]">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="bg-white rounded-xl border border-border-subtle hover:border-primary hover:shadow-card transition-all duration-300 overflow-hidden flex flex-col justify-between group">
+<div class="relative p-4 bg-white flex items-center justify-center h-48 border-border-subtle overflow-hidden"><span class="absolute top-2.5 left-2.5 px-2 py-0.5 bg-primary text-white text-[10px] font-bold rounded z-10">Bayer CropScience</span><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyheWf6HpAuLp0c2kf-8RjXcOKNgCQ1K2f8x4COv176vGWDPgtKgjAqEeDXS8lociOxvbtfRw9Voz1i4yByNwjPml4FZuJT0xwiieFI8jT89oOh_aZgNV0MFBmN4t_e5bKSkDeJgPTEVI16cjGxMT5kH6rtiCwPCiByBkcpHLSGQGFd3fVgV7e-G3IiiQnIDU3SYTA8COSSJoFJw71Oxf2iHddRxAdNEg9T80s1eikQlWtMO-dqukaJw" alt="Nativo 750WG" class="w-full h-full object-contain p-2 mix-blend-multiply group-hover:scale-105 transition-transform duration-300"><span class="absolute bottom-2 right-2 px-2 py-0.5 bg-status-success-surface text-status-success text-[10px] font-semibold rounded flex items-center gap-1 z-10"><span class="w-1.5 h-1.5 rounded-full bg-status-success"></span> Còn hàng</span></div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="text-[11px] text-text-muted uppercase font-semibold tracking-wider mb-1">Thuốc trừ nấm lưu dẫn</div>
+<h3 class="text-sm font-bold text-text-primary group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+              Nativo 750WG - Sạch bệnh lem lép, phấn trắng
+            </h3>
+<p class="text-xs text-text-secondary mt-1">Hoạt chất: Trifloxystrobin + Tebuconazole</p>
+<p class="text-xs text-text-muted mt-0.5">Quy cách: Gói 120g</p>
+</div>
+<div class="pt-4 border-t border-border-subtle mt-4 flex items-center justify-between">
+<div>
+<div class="text-xs text-text-muted line-through">215.000 đ</div>
+<div class="text-base font-bold text-primary">195.000 đ</div>
+</div>
+<button class="p-2 rounded-lg bg-primary hover:bg-primary-hover text-white shadow-sm transition-colors flex items-center justify-center" title="Thêm vào giỏ">
+<span class="material-symbols-outlined text-[18px]">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product 4 -->
+<div class="bg-white rounded-xl border border-border-subtle hover:border-primary hover:shadow-card transition-all duration-300 overflow-hidden flex flex-col justify-between group">
+<div class="relative p-4 bg-white flex items-center justify-center h-48 border-border-subtle overflow-hidden"><span class="absolute top-2.5 left-2.5 px-2 py-0.5 bg-primary-dark text-white text-[10px] font-bold rounded z-10">Lộc Trời Group</span><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOi79nL6X0ZBkqfu4eRoXJz2fPz53z7Z9qw3Mepq50AjyeVuAJb3BjIY03nECwGbfFUXLtOKqSKU66dR-SZPjAeNnkPk6nDVi93Ouh0LNm3dsvtLDBpsU5Ds0Led2XXa-saRx0M83IPlKLu7hfjWkxuMhQQSu6mN5VcFqE7LEnxFReL8Hx9Agvp_Kz0KWtG6fmEy_kbnmHnofdVDb4JnSXBwggy4UdDTtwreIF1FRu9n1XPFZ-xVDCJg" alt="King Root Humic 1L" class="w-full h-full object-contain p-2 mix-blend-multiply group-hover:scale-105 transition-transform duration-300"><span class="absolute bottom-2 right-2 px-2 py-0.5 bg-status-success-surface text-status-success text-[10px] font-semibold rounded flex items-center gap-1 z-10"><span class="w-1.5 h-1.5 rounded-full bg-status-success"></span> Còn hàng</span></div>
+<div class="p-4 flex-1 flex flex-col justify-between">
+<div>
+<div class="text-[11px] text-text-muted uppercase font-semibold tracking-wider mb-1">Kích rễ &amp; Phục hồi cây</div>
+<h3 class="text-sm font-bold text-text-primary group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+              Humic Đậm Đặc King Root 1L - Tái sinh rễ tơ
+            </h3>
+<p class="text-xs text-text-secondary mt-1">Hoạt chất: Axit Humic 85% + Fulvic + Amino Acid</p>
+<p class="text-xs text-text-muted mt-0.5">Quy cách: Chai 1 lít</p>
+</div>
+<div class="pt-4 border-t border-border-subtle mt-4 flex items-center justify-between">
+<div>
+<div class="text-xs text-text-muted line-through">145.000 đ</div>
+<div class="text-base font-bold text-primary">125.000 đ</div>
+</div>
+<button class="p-2 rounded-lg bg-primary hover:bg-primary-hover text-white shadow-sm transition-colors flex items-center justify-center" title="Thêm vào giỏ">
+<span class="material-symbols-outlined text-[18px]">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. COMMITMENT & PARTNERSHIP VALUE CARDS -->
+<section class="w-full py-12 bg-surface-subtle border-b border-border-subtle">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="text-center max-w-4xl mx-auto mb-10"><h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-text-primary uppercase tracking-tight mb-2">CAM KẾT VỚI NGƯỜI TIÊU DÙNG</h2><div class="text-sm sm:text-base font-bold text-text-primary tracking-wider uppercase mb-3">KHÔNG PHẢI LÀ TỐT - MÀ LÀ TỐT NHẤT</div><p class="text-sm sm:text-base text-text-secondary leading-relaxed font-normal">Chúng tôi luôn tâm niệm: không ngừng cải thiện chất lượng sản phẩm, để sản phẩm ngày càng tốt hơn. Đáp ứng tốt nhất nhu cầu cũng như tiêu chí: Năng suất - An toàn - Tiết Kiệm của bà con.</p></div><div class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 justify-items-center items-center max-w-6xl mx-auto"><!-- Item 1 -->
+<div class="relative w-56 h-56 sm:w-60 sm:h-60 md:w-64 md:h-64 rounded-full overflow-hidden shadow-lg border-4 border-white group transition-transform duration-300 hover:scale-105">
+  <img src="https://lh3.googleusercontent.com/aida/AEtjO1XgZ7DLtWlYgMhh9WINlbSPHx-PT5tCrn9siVvaQfzJS671Ur0e7bX6B3WOa0LNawIMRO5fcAm37JdZH-vnNjP7caTGFbkZxu5srBAQIL4O5f2JkxBhCwdocGbMvvnOstwKf-LYwf3zifftx0KOeRv3rw9Ke1dYKBwJ7L5rp4f1Upsgqu_Y1BgUpc0qO68vqIyLpAYMDuy4H68oUlHIGX83GBszJIEri0396SMHZLjf0RzBfpot0UtoEkI" alt="Tăng năng suất đạt 60-70%" class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700">
+  <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/85 via-black/50 to-transparent flex items-center justify-center text-center px-4 pb-2">
+    <span class="font-bold text-white text-base md:text-lg leading-snug drop-shadow-md text-center">Tăng năng suất<br>đạt 60-70%</span>
+  </div>
+</div>
+<!-- Item 2 -->
+<div class="relative w-56 h-56 sm:w-60 sm:h-60 md:w-64 md:h-64 rounded-full overflow-hidden shadow-lg border-4 border-white group transition-transform duration-300 hover:scale-105">
+  <img src="https://lh3.googleusercontent.com/aida/AEtjO1Uf9i7Tco-GWZVZdcp3f8hyddCRymsPSTL2ckJ8E6WBJIOVk8Y5COvQUuJ9ZGhWAQ5wQR9FESZmYMkRG13H7JJ3jBI7qhL-xO5O2JW32IRAR2xU7jIYIKp4zJXwJcoOl0MBpqqoen83yK19cKxarJP1kazufYjQjwQsuE_L28MypzBViCeJ1V9wMU5eHH3h0b3p2bEKSi-Rob57Lf98oPSRIiwCJWtFHndRofNRasNsoet9Zy3PHn5nqcM-" alt="Sản phẩm hữu cơ An Toàn Tuyệt Đối" class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700">
+  <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/85 via-black/50 to-transparent flex items-center justify-center text-center px-4 pb-2">
+    <span class="font-bold text-white text-base md:text-lg leading-snug drop-shadow-md text-center">Sản phẩm hữu cơ<br>An Toàn Tuyệt Đối</span>
+  </div>
+</div>
+<!-- Item 3 -->
+<div class="relative w-56 h-56 sm:w-60 sm:h-60 md:w-64 md:h-64 rounded-full overflow-hidden shadow-lg border-4 border-white group transition-transform duration-300 hover:scale-105">
+  <img src="https://lh3.googleusercontent.com/aida/AEtjO1VRA05tP7UFl5TbHAD5H5WgkbXGONH7EqnwUNe4AXW3nRN-wkqPaPHGIqPtQaDukH8pnqYXm2y6QMedDuBDLBRFUuDxl7mb8gTgLbu92Xo5Mu3fEQhwiL0Nt9TO7bfP9L80EigSGVd2R3gwADd6tVlfFxWarx8SI5U_8KC6e1AGgw1-T__AkapDsSJc7YJaYa7ni_724FMtl-C8tqYXRjOV43XfSRyoobG0s0X3RRd3TWe1KLmi5-hR4Q6A" alt="Tăng giá bán nông sản 4-6 giá" class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700">
+  <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/85 via-black/50 to-transparent flex items-center justify-center text-center px-4 pb-2">
+    <span class="font-bold text-white text-base md:text-lg leading-snug drop-shadow-md text-center">Tăng giá bán nông sản<br>4-6 giá</span>
+  </div>
+</div>
+<!-- Item 4 -->
+<div class="relative w-56 h-56 sm:w-60 sm:h-60 md:w-64 md:h-64 rounded-full overflow-hidden shadow-lg border-4 border-white group transition-transform duration-300 hover:scale-105">
+  <img src="https://lh3.googleusercontent.com/aida/AEtjO1Wgs9o0X-zKJQ0fZzRAIifV_5oZW5aivn_HMJ6TLz0zdqmmynuxkX_9O_LL15KLj1E1yjBqbB5_nKfI63nFnqKQ4cc12tGdGvXikUq1_Qx7Rq-nSgpuu-YM2YO9TbGDXHBX0_dSUgWVukZRm-48sgGxZpTmdipzF4Nwws5rBLIdipO_IPR8La9oCGck6edVM7Uc9xsUS4edcdjjUtXBc43NY3Ei2YoPSg1GwmPOFtcRRboDaFCmrNz4PXE-" alt="Hỗ Trợ kỹ thuật 24/7" class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700">
+  <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/85 via-black/50 to-transparent flex items-center justify-center text-center px-4 pb-2">
+    <span class="font-bold text-white text-base md:text-lg leading-snug drop-shadow-md text-center">Hỗ Trợ kỹ thuật<br>24/7</span>
+  </div>
+</div></div></div>
+</section>
+<!-- 6. NEWS & PEST WARNINGS SECTION -->
+<section class="w-full py-12 bg-white">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4">
+<div>
+<div class="text-xs font-bold uppercase tracking-wider text-primary mb-1">BẢN TIN NÔNG NGHIỆP &amp; DỊCH BỆNH VÙNG</div>
+<h2 class="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">Cập Nhật Kỹ Thuật Mùa Vụ Mới Nhất</h2>
+</div>
+<a class="text-sm font-semibold text-primary hover:text-primary-dark flex items-center gap-1 hover:underline" href="#news">
+<span class="">Xem tất cả bài viết</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Article 1 -->
+<div class="bg-surface-subtle rounded-xl border border-border-subtle overflow-hidden hover:shadow-card transition-all group flex flex-col justify-between"><div class="w-full h-48 overflow-hidden"><img src="https://lh3.googleusercontent.com/aida/AEtjO1X4PNGtFdGdTKuP_q5b4AxicP1QuZ5rEfbRjSKcjG2Cau2keKYL7yK6vxf3bWj4B7RBcVkEYhAnX19LtgqmiRIJnkcPEYgL6UjJDWzBVEqxCesa9A3M6R-zplqVJ_ZSgDC1N3HrzfOouUsYU6BOv43eC6pPG6ldp0OYrMnWWA2AdI2Z83DoW7pyWDjoBjC9KQ7GJ4jBuJC8_nyE9ElFzykX9Pj4_KAJ5qTFPXbPpvFNMQFrvw934RML9tGd" alt="Thán thư sầu riêng" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"></div><div class="p-5 flex-1 flex flex-col justify-between"><div><div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-status-warning-surface text-status-warning text-xs font-semibold mb-3"><span class="material-symbols-outlined text-[14px]">warning</span><span class="">Cảnh báo dịch hại</span></div><h3 class="text-base font-bold text-text-primary group-hover:text-primary transition-colors leading-snug mb-2">Cảnh báo bùng phát bệnh thán thư sầu riêng mùa mưa dầm tại Tây Nguyên</h3><p class="text-xs text-text-secondary leading-relaxed">Độ ẩm trên 85% là điều kiện nấm Colletotrichum phát triển mạnh. Kỹ sư khuyến cáo bà con cắt tỉa cành thông thoáng và luân phiên hoạt chất Azoxystrobin.</p></div></div><div class="px-5 py-3 border-t border-border-subtle flex items-center justify-between text-xs text-text-muted mt-auto"><span class="">12/10/2024 · 5 phút đọc</span><span class="text-primary font-semibold flex items-center gap-0.5 group-hover:underline">Chi tiết <span class="material-symbols-outlined text-[14px]">arrow_forward</span></span></div></div>
+<!-- Article 2 -->
+<div class="bg-surface-subtle rounded-xl border border-border-subtle overflow-hidden hover:shadow-card transition-all group flex flex-col justify-between"><div class="w-full h-48 overflow-hidden"><img src="https://lh3.googleusercontent.com/aida/AEtjO1XgMdBKYJhsBAjdgb9NiGSR9AC4gK7W2hUT-LS4MbKbXOeIZYX-j0uZiFtKiWTbQXu0qCNA2Kc16HESCijed47dy7CgQEBbFhwH2yOpSx-37zLiXfEkUEFK1vcQ_q7IPS7lkY8CfAlfP7e8d1B-R8Tf56aMqd1ZCUQbBM88UQrhhdmjRmLFVRV2LCf7ZCnllvCFNukpoyanY0YJbQnHqmlpYEX3P3vt9TTmFgTm_azXjr51tJGjBcrFUMPI" alt="Hoa và trái sầu riêng" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"></div><div class="p-5 flex-1 flex flex-col justify-between"><div><div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-primary-light text-primary text-xs font-semibold mb-3"><span class="material-symbols-outlined text-[14px]">eco</span><span class="">Kỹ thuật canh tác</span></div><h3 class="text-base font-bold text-text-primary group-hover:text-primary transition-colors leading-snug mb-2">Quy trình bón thúc đón hoa &amp; tăng tỷ lệ đậu trái cho cây sầu riêng 5 năm tuổi</h3><p class="text-xs text-text-secondary leading-relaxed">Thời điểm tạo mầm hoa quyết định 70% sản lượng. Hướng dẫn phối hợp phân lân nung chảy kết hợp Kali Sunfat để cây ra hoa đồng loạt, cuống hoa mập.</p></div></div><div class="px-5 py-3 border-t border-border-subtle flex items-center justify-between text-xs text-text-muted mt-auto"><span class="">10/10/2024 · 7 phút đọc</span><span class="text-primary font-semibold flex items-center gap-0.5 group-hover:underline">Chi tiết <span class="material-symbols-outlined text-[14px]">arrow_forward</span></span></div></div>
+<!-- Article 3 -->
+<div class="bg-surface-subtle rounded-xl border border-border-subtle overflow-hidden hover:shadow-card transition-all group flex flex-col justify-between"><div class="w-full h-48 overflow-hidden"><img src="https://lh3.googleusercontent.com/aida/AEtjO1UcasajcWUG5lt9IMzzkZCfizSzonIKrqFlpjVjdhn9JRbKHdnb3gO8h7UdmBrBwCuw5z47VUQ9F-7nCFZaKqgmFpWLV0TtvPwVEVKe6wJ6lPNKUL2XMMsWsbS7BtNm6zwNhPfh0ijguD7fArU0o6SIzm2aooI4JY4dLT0BX25HHA-S6NwiKtFK2a_SoOkdgO-zG37LfUUEtCsumjl3Q311AIKijaYTOr3oAhFGvPZQ01DbZ-Rd1kMJtFOj" alt="Quản lý đại lý nông nghiệp" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"></div><div class="p-5 flex-1 flex flex-col justify-between"><div><div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-blue-50 text-status-info text-xs font-semibold mb-3"><span class="material-symbols-outlined text-[14px]">store</span><span class="">Dành cho đại lý</span></div><h3 class="text-base font-bold text-text-primary group-hover:text-primary transition-colors leading-snug mb-2">Giải pháp quản lý sổ nợ gối vụ &amp; xuất kho tự động không lo thất thoát</h3><p class="text-xs text-text-secondary leading-relaxed">Phần mềm AgriSage POS giúp chủ cửa hàng theo dõi hạn mức tín dụng của từng nông hộ, gửi SMS nhắc nợ thân thiện và kiểm soát hạn sử dụng thuốc theo lô.</p></div></div><div class="px-5 py-3 border-t border-border-subtle flex items-center justify-between text-xs text-text-muted mt-auto"><span class="">08/10/2024 · 4 phút đọc</span><span class="text-primary font-semibold flex items-center gap-0.5 group-hover:underline">Chi tiết <span class="material-symbols-outlined text-[14px]">arrow_forward</span></span></div></div>
+</div>
+</div>
+</section></main>
+<!-- ================= 3. COMPLETE FULL-WIDTH FOOTER ================= -->
+<footer class="w-full bg-[#144d1a] border-t border-white/10 mt-auto text-white">
+<!-- Main 3-Column Footer Grid -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-12">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12">
+<!-- Column 1: System Info & Brand (5 Cols) -->
+<div class="md:col-span-5 space-y-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg border border-white/20 bg-white p-1 flex items-center justify-center shadow-sm">
+<img alt="AgriCARE-AI" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UUh_rMaCKAuHaMgW-rlQEybLDC0yLaiBL84lCqf4i75nqLSFCcM7r6LQBPmwpexG33O1HAqBNtf-6Kuq4uo8JRLFBBc7rBCVHQjRNNXid88YHmMN-I_eRlwwwhg4IYza_9zPQQNoCKQFWmkF3lpMBE_qP3eRRDHs6SvsfTutDXagvCKzVz7ohcKlnYNWZUz9o4B9FxP1JGjBLadtPwoHB8oAVVKq2Ywe4vqvFummLb-xtOsuSmo4eTZR8">
+</div>
+<div>
+<span class="font-bold text-white text-base tracking-tight leading-none block">AgriSage</span>
+<span class="text-xs text-emerald-200/80">Hệ sinh thái Nông nghiệp Thông minh</span>
+</div>
+</div>
+<p class="text-sm text-emerald-100/80 leading-relaxed">
+            Nền tảng quản trị vật tư nông nghiệp toàn diện và trợ lý AI nhận diện bệnh hại cây trồng qua ảnh chụp. Giúp đại lý quản lý tồn kho, sổ nợ mùa vụ minh bạch và hỗ trợ nông dân canh tác hiệu quả.
+          </p>
+<div class="space-y-2 text-xs text-emerald-100/90 pt-1">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-emerald-300 mt-0.5 flex-shrink-0">location_on</span>
+<span class=""><strong class="text-white">Trung tâm điều hành:</strong> Tòa nhà AgriTech, Khu Công nghệ cao, TP. Hồ Chí Minh.</span>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-emerald-300 mt-0.5 flex-shrink-0">store</span>
+<span class=""><strong class="text-white">Chi nhánh Lâm Đồng:</strong> 142 Hùng Vương, TT. Di Linh, Tỉnh Lâm Đồng.</span>
+</div>
+</div>
+</div>
+<!-- Column 2: Categories & Solutions (3 Cols) -->
+<div class="md:col-span-3 space-y-3">
+<h3 class="text-sm font-bold text-emerald-300 uppercase tracking-wider">
+            Danh mục &amp; Giải pháp
+          </h3>
+<ul class="space-y-2.5 text-xs text-emerald-100/80">
+<li class="">
+<a class="hover:text-white transition-colors flex items-center gap-1.5" href="#">
+<span class="material-symbols-outlined text-[14px] text-emerald-300/60">chevron_right</span>
+<span class="">Vật tư phân bón NPK &amp; Hữu cơ</span>
+</a>
+</li>
+<li class="">
+<a class="hover:text-white transition-colors flex items-center gap-1.5" href="#">
+<span class="material-symbols-outlined text-[14px] text-emerald-300/60">chevron_right</span>
+<span class="">Thuốc bảo vệ thực vật sinh học</span>
+</a>
+</li>
+<li class="">
+<a class="hover:text-white transition-colors flex items-center gap-1.5" href="#">
+<span class="material-symbols-outlined text-[14px] text-emerald-300 font-medium">psychology</span>
+<span class="font-medium text-white">Chẩn đoán AI bệnh lá cây</span>
+</a>
+</li>
+<li class="">
+<a class="hover:text-white transition-colors flex items-center gap-1.5" href="#">
+<span class="material-symbols-outlined text-[14px] text-emerald-300/60">chevron_right</span>
+<span class="">Quản lý hạn mức công nợ mùa vụ</span>
+</a>
+</li>
+<li class="">
+<a class="hover:text-white transition-colors flex items-center gap-1.5" href="#">
+<span class="material-symbols-outlined text-[14px] text-emerald-300/60">chevron_right</span>
+<span class="">Lô hàng &amp; cảnh báo hạn dùng tự động</span>
+</a>
+</li>
+</ul>
+</div>
+<!-- Column 3: Customer & Farmer Support (4 Cols) -->
+<div class="md:col-span-4 space-y-3">
+<h3 class="text-sm font-bold text-emerald-300 uppercase tracking-wider">
+            Hỗ trợ khách hàng &amp; Nông dân
+          </h3>
+<ul class="space-y-2.5 text-xs text-emerald-100/80">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-emerald-300">support_agent</span>
+<span class="">Tổng đài kỹ sư tư vấn mùa vụ: <strong class="text-white font-semibold">1900 6828</strong> (7:00 - 20:00)</span>
+</li>
+<li class="">
+<a class="hover:text-white transition-colors flex items-center gap-1.5" href="#">
+<span class="material-symbols-outlined text-[14px] text-emerald-300/60">chevron_right</span>
+<span class="">Quy trình giao nhận vật tư tận vườn</span>
+</a>
+</li>
+<li class="">
+<a class="hover:text-white transition-colors flex items-center gap-1.5" href="#">
+<span class="material-symbols-outlined text-[14px] text-emerald-300/60">chevron_right</span>
+<span class="">Chính sách bảo mật dữ liệu nông hộ</span>
+</a>
+</li>
+<li class="">
+<a class="hover:text-white transition-colors flex items-center gap-1.5" href="#">
+<span class="material-symbols-outlined text-[14px] text-emerald-300/60">chevron_right</span>
+<span class="">Điều khoản sử dụng nền tảng AgriSage</span>
+</a>
+</li>
+<li class="">
+<a class="hover:text-white transition-colors flex items-center gap-1.5" href="#">
+<span class="material-symbols-outlined text-[14px] text-emerald-300/60">chevron_right</span>
+<span class="">Tài liệu hướng dẫn đại lý tích hợp POS</span>
+</a>
+</li>
+</ul>
+<div class="pt-2">
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 border border-white/15 text-xs text-emerald-100">
+<span class="w-2 h-2 rounded-full bg-status-success animate-pulse"></span>
+<span class="">Hệ thống chi nhánh Lâm Đồng &amp; ĐBSCL đang trực tuyến</span>
+</div>
+</div>
+</div>
+</div>
+</div><div class="border-t border-white/10 py-4"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-emerald-100/70 gap-2"><p class="">© 2024 AgriSage. Bản quyền kỹ thuật.</p><p class="text-emerald-200/60">Phát triển vì nền nông nghiệp số Việt Nam</p></div></div>
+<!-- Bottom Copyright Bar -->
+</footer>
+<!-- Interactive JavaScript Logic -->
+<script>
+    // Password Visibility Toggle
+    function togglePasswordVisibility() {
+      const passInput = document.getElementById('passwordInput');
+      const toggleIcon = document.getElementById('toggleEyeIcon');
+      
+      if (passInput.type === 'password') {
+        passInput.type = 'text';
+        toggleIcon.textContent = 'visibility_off';
+      } else {
+        passInput.type = 'password';
+        toggleIcon.textContent = 'visibility';
+      }
+    }
+
+    // Quick Fill demo accounts for convenience
+    function fillAccount(role) {
+      const emailInput = document.getElementById('emailInput');
+      const passInput = document.getElementById('passwordInput');
+
+      if (role === 'staff') {
+        emailInput.value = 'pos.ductrong@agricare.vn';
+        passInput.value = 'AgriStaff@2024';
+      } else if (role === 'farmer') {
+        emailInput.value = '0918234567';
+        passInput.value = 'NongDanDiLinh@88';
+      }
+    }
+
+    // Handle standard submission
+    function handleFormSubmit(event) {
+      event.preventDefault();
+      const submitBtn = document.getElementById('submitBtn');
+      const btnText = document.getElementById('btnText');
+      const btnSpinner = document.getElementById('btnSpinner');
+
+      btnText.classList.add('hidden');
+      btnSpinner.classList.remove('hidden');
+      submitBtn.disabled = true;
+
+      setTimeout(() => {
+        btnText.classList.remove('hidden');
+        btnSpinner.classList.add('hidden');
+        submitBtn.disabled = false;
+        alert('Đăng nhập thành công! Đang chuyển hướng vào hệ sinh thái AgriCARE-AI...');
+      }, 1200);
+    }
+  </script>
+
+
+
+
+</body></html>

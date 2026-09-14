@@ -48,7 +48,7 @@ export default function PaymentMethodSelector({
                   <img
                     alt="VietQR Thanh toán AgriSage"
                     className="w-full h-full object-contain"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuALx-dVVzRnd72-ROkUelIQqlcBUHtPe-3DzHWyRw77ufNGnWzWAIrsM6PFWAuFnV1rtfELNZYQfQhvrAR4Q69tVVB3VQD2MfcvhZx4Dj-hQIkyHYdpZgTlIJSMEkK-tAMYAg2Fg2LSwpZtPJBgK8pIBIQS8WYNst_HvcQoiH0HjT-_BGK8EstV07FRKN4w5QZGz5ul9w-3IwWgvSh9fWvE86YovMWC_wSiR6PEAcBqgbRdw73R4x1XRg"
+                    src="/images/misc/vietqr-demo.png"
                   />
                 </div>
                 <span className="text-[10px] font-bold text-primary mt-1.5 flex items-center gap-1">

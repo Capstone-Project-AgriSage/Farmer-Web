@@ -9,7 +9,7 @@ export default function Footer() {
                 <img
                   alt="AgriCARE-AI"
                   className="w-full h-full object-contain"
-                  src="https://lh3.googleusercontent.com/aida/AEtjO1UUh_rMaCKAuHaMgW-rlQEybLDC0yLaiBL84lCqf4i75nqLSFCcM7r6LQBPmwpexG33O1HAqBNtf-6Kuq4uo8JRLFBBc7rBCVHQjRNNXid88YHmMN-I_eRlwwwhg4IYza_9zPQQNoCKQFWmkF3lpMBE_qP3eRRDHs6SvsfTutDXagvCKzVz7ohcKlnYNWZUz9o4B9FxP1JGjBLadtPwoHB8oAVVKq2Ywe4vqvFummLb-xtOsuSmo4eTZR8"
+                  src="https://placehold.co/80x80/2F7D3A/FFFFFF?text=AS"
                 />
               </div>
               <div>

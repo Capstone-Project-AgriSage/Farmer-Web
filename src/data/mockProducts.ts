@@ -10,8 +10,7 @@ export const products: Product[] = [
     diseaseTags: ['Thán thư, xì mủ sầu riêng'],
     activeIngredient: 'Metalaxyl-M + Mancozeb',
     packaging: 'Gói 100g (Thùng 100 gói)',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuD_5FIcz2O0dDytA9vTzGZb_VKTEEDB3WS5iLNHAK2BcrzS7BMTA70GqGkR3aM19-ExbhofQ87a-eLkAd1UI7J1_2_7ee5pTymW8R9Yn9Yu7L5k1Rc7bZSRSvnST7kOOiZxRuQ41Tl289JDgeHTn-fgmMM_hvTtbx3aAv_TI55Q7AC9s_oXCfLKWZrGNfJG-DmfnB0KGt1UsdmXXrpDAzSrEse36GmBafZilH_JB-tNzrXUcd1jsa8OAQ',
+    image: '/images/products/fungicide-spray.jpg',
     price: 48000,
     originalPrice: 55000,
     wholesalePrice: 4600000,
@@ -31,8 +30,7 @@ export const products: Product[] = [
     diseaseTags: ['Rỉ sắt, nấm hồng cà phê'],
     activeIngredient: 'Trifloxystrobin + Tebuconazole',
     packaging: 'Gói 120g (Thùng 80 gói)',
-    image:
-      'https://lh3.googleusercontent.com/aida/AEtjO1VMQ80DqtBvwxbaVC7CKSU9AJDINHmSJtvBSEQTh-wiy1v_A03agdh1Z2VV8l0yrJAODhmVMq-Xh0A5S1y_KpBwhxKBfT3JTjxZUJVAI4-4GZqbLAp56vE7yBpMue6UCQfqGhc080bNe4o53vwZIteIYCvv_SCuX5kSisZgqYyzd1KSllRJWvNUBqniuatgxswnVD1rxir9rkgP_15eqKfn-mKagLJkCbUNLVPRRSU1_9CjOBHRs2IX5pw',
+    image: '/images/products/fungicide-spray.jpg',
     price: 195000,
     originalPrice: 215000,
     stockLabel: 'Sẵn kho Di Linh',
@@ -46,8 +44,7 @@ export const products: Product[] = [
     group: 'Phân bón NPK & Vi lượng',
     activeIngredient: 'Đạm, Lân, Kali + Vi lượng chelate',
     packaging: 'Bao 50kg chính hãng',
-    image:
-      'https://lh3.googleusercontent.com/aida/AEtjO1VyUR4caPslBl6jI6FQdgZk8sJs3TpBIlWETFj7fujhnl8ZZnV1V4G_p3tLqKU5KSghYF8sytvS-sKVHT6QsYZ8fZCMvoOzW4_0WfGJuWNzoa-7nIPYh5lhEztMJQ3ptGsqK3kHi733e7njGmhBtVD631gY3XdyEPCkwRvjHfzYaYwklEhODLHqSZdyGg8IeA-he7bTlAFQUieGlSw6GHMHlmIFTESYsnUc2X3ZRcncQDZurQqNC9y4KZMD',
+    image: '/images/products/npk-fertilizer.jpg',
     price: 920000,
     stockLabel: 'Còn 150 bao',
     tag: 'Bảo lãnh nợ mùa vụ',
@@ -60,8 +57,7 @@ export const products: Product[] = [
     group: 'Phân hữu cơ vi sinh',
     activeIngredient: 'Axit Humic 85% + Fulvic + Amino Acid',
     packaging: 'Chai 1 lít (Thùng 20 chai)',
-    image:
-      'https://lh3.googleusercontent.com/aida/AEtjO1UA8gqLROoo_CAD4F9G4ZQijG54DhEECC9YhW7P3bb7ZWMhWvqVjNwGpfSPQPxWUYGpHy7DHSvdTUAoV4i8JYzihaL5xuEXmfEJdvUtl3Xfa00_rBFizaWuP6vOeGBN93PgOnhUTxK6HIOI448TLeRtu96dsD6K27Qp0RFLOABcDVNKGCX4CpiqxRZD3x6BBMEPY_4Yc2dDKN9hFEctQwTx3zAztjLPZc2cuG7mIQ_2TzXaXqmh-dmn55Ws',
+    image: '/images/products/organic-fertilizer.jpg',
     price: 125000,
     originalPrice: 145000,
     stockLabel: 'Sẵn kho Di Linh',
@@ -75,8 +71,7 @@ export const products: Product[] = [
     group: 'Thuốc BVTV & Trừ nấm',
     activeIngredient: 'Difenoconazole 250g/L',
     packaging: 'Chai 250ml',
-    image:
-      'https://lh3.googleusercontent.com/aida/AEtjO1XpIH2nz2ItWaG2uvCp6pe1rB3T9H2KL7q73xVV2LhnluANEPLNf6ja95_cF3qAM9bfgNJljb4eMMUYVCQ1cRCGkRw4YErSThP5W-zxucoUiexdfSOGWC4d4WQOBq8Bzvetwwwoh7YPOxwJ7_ZYlLcgaEY6txh4MZmuES6H9JHsCJHDEgeHUaL5Nx9WSUHkZrYQIPOXsgdwC37DhB8hvwOOVFdocFH3OiEjrsyZg6XO5ethabVmcTFuKQsQ',
+    image: '/images/products/fungicide-spray.jpg',
     price: 210000,
     originalPrice: 230000,
     stockLabel: 'Sẵn kho Di Linh',
@@ -91,8 +86,7 @@ export const products: Product[] = [
     diseaseTags: ['Thán thư, xì mủ sầu riêng', 'Vàng lá, thối rễ mùa mưa'],
     activeIngredient: 'Fosetyl-Aluminium 800g/kg',
     packaging: 'Gói 100g (Thùng 100 gói)',
-    image:
-      'https://lh3.googleusercontent.com/aida/AEtjO1VMQ80DqtBvwxbaVC7CKSU9AJDINHmSJtvBSEQTh-wiy1v_A03agdh1Z2VV8l0yrJAODhmVMq-Xh0A5S1y_KpBwhxKBfT3JTjxZUJVAI4-4GZqbLAp56vE7yBpMue6UCQfqGhc080bNe4o53vwZIteIYCvv_SCuX5kSisZgqYyzd1KSllRJWvNUBqniuatgxswnVD1rxir9rkgP_15eqKfn-mKagLJkCbUNLVPRRSU1_9CjOBHRs2IX5pw',
+    image: '/images/products/fungicide-spray.jpg',
     price: 68000,
     originalPrice: 75000,
     stockLabel: 'Sẵn kho Di Linh',
@@ -106,8 +100,7 @@ export const products: Product[] = [
     group: 'Phân hữu cơ vi sinh',
     activeIngredient: 'Chất hữu cơ 45% + NPK hữu cơ',
     packaging: 'Bao 25kg viên nở tan chậm',
-    image:
-      'https://lh3.googleusercontent.com/aida/AEtjO1VyUR4caPslBl6jI6FQdgZk8sJs3TpBIlWETFj7fujhnl8ZZnV1V4G_p3tLqKU5KSghYF8sytvS-sKVHT6QsYZ8fZCMvoOzW4_0WfGJuWNzoa-7nIPYh5lhEztMJQ3ptGsqK3kHi733e7njGmhBtVD631gY3XdyEPCkwRvjHfzYaYwklEhODLHqSZdyGg8IeA-he7bTlAFQUieGlSw6GHMHlmIFTESYsnUc2X3ZRcncQDZurQqNC9y4KZMD',
+    image: '/images/products/organic-fertilizer.jpg',
     price: 340000,
     originalPrice: 380000,
     stockLabel: 'Sẵn kho Di Linh',
@@ -122,8 +115,7 @@ export const products: Product[] = [
     diseaseTags: ['Rỉ sắt, nấm hồng cà phê'],
     activeIngredient: 'Hexaconazole 50g/L',
     packaging: 'Chai 1 Lít',
-    image:
-      'https://lh3.googleusercontent.com/aida/AEtjO1UA8gqLROoo_CAD4F9G4ZQijG54DhEECC9YhW7P3bb7ZWMhWvqVjNwGpfSPQPxWUYGpHy7DHSvdTUAoV4i8JYzihaL5xuEXmfEJdvUtl3Xfa00_rBFizaWuP6vOeGBN93PgOnhUTxK6HIOI448TLeRtu96dsD6K27Qp0RFLOABcDVNKGCX4CpiqxRZD3x6BBMEPY_4Yc2dDKN9hFEctQwTx3zAztjLPZc2cuG7mIQ_2TzXaXqmh-dmn55Ws',
+    image: '/images/products/fungicide-spray.jpg',
     price: 215000,
     originalPrice: 240000,
     stockLabel: 'Sẵn kho Di Linh',
@@ -137,8 +129,7 @@ export const products: Product[] = [
     group: 'Phân bón NPK & Vi lượng',
     activeIngredient: 'Nitơ 46.3% tan nhanh chống thất thoát',
     packaging: 'Bao 50kg chuẩn nhà máy',
-    image:
-      'https://lh3.googleusercontent.com/aida/AEtjO1VyUR4caPslBl6jI6FQdgZk8sJs3TpBIlWETFj7fujhnl8ZZnV1V4G_p3tLqKU5KSghYF8sytvS-sKVHT6QsYZ8fZCMvoOzW4_0WfGJuWNzoa-7nIPYh5lhEztMJQ3ptGsqK3kHi733e7njGmhBtVD631gY3XdyEPCkwRvjHfzYaYwklEhODLHqSZdyGg8IeA-he7bTlAFQUieGlSw6GHMHlmIFTESYsnUc2X3ZRcncQDZurQqNC9y4KZMD',
+    image: '/images/products/npk-fertilizer.jpg',
     price: 545000,
     originalPrice: 590000,
     stockLabel: 'Sẵn kho Di Linh',
@@ -152,8 +143,7 @@ export const products: Product[] = [
     group: 'Hạt giống & Cây giống',
     activeIngredient: 'Giống lai F1 thuần chủng, tỷ lệ nảy mầm 95%',
     packaging: 'Túi 1kg (đủ gieo 1.000m²)',
-    image:
-      'https://lh3.googleusercontent.com/aida/AEtjO1VyUR4caPslBl6jI6FQdgZk8sJs3TpBIlWETFj7fujhnl8ZZnV1V4G_p3tLqKU5KSghYF8sytvS-sKVHT6QsYZ8fZCMvoOzW4_0WfGJuWNzoa-7nIPYh5lhEztMJQ3ptGsqK3kHi733e7njGmhBtVD631gY3XdyEPCkwRvjHfzYaYwklEhODLHqSZdyGg8IeA-he7bTlAFQUieGlSw6GHMHlmIFTESYsnUc2X3ZRcncQDZurQqNC9y4KZMD',
+    image: '/images/products/corn-seeds.jpg',
     price: 165000,
     stockLabel: 'Sẵn kho Di Linh',
     tag: 'Giống thuần chủng',
@@ -166,8 +156,7 @@ export const products: Product[] = [
     group: 'Tưới nhỏ giọt & Thiết bị',
     activeIngredient: 'Dây nhỏ giọt bù áp, đầu tưới chống nghẹt',
     packaging: 'Bộ trọn gói cho 1.000m² (dây + van + phụ kiện)',
-    image:
-      'https://lh3.googleusercontent.com/aida/AEtjO1UA8gqLROoo_CAD4F9G4ZQijG54DhEECC9YhW7P3bb7ZWMhWvqVjNwGpfSPQPxWUYGpHy7DHSvdTUAoV4i8JYzihaL5xuEXmfEJdvUtl3Xfa00_rBFizaWuP6vOeGBN93PgOnhUTxK6HIOI448TLeRtu96dsD6K27Qp0RFLOABcDVNKGCX4CpiqxRZD3x6BBMEPY_4Yc2dDKN9hFEctQwTx3zAztjLPZc2cuG7mIQ_2TzXaXqmh-dmn55Ws',
+    image: '/images/products/drip-irrigation.jpg',
     price: 3200000,
     originalPrice: 3600000,
     stockLabel: 'Sẵn kho Di Linh',
@@ -182,8 +171,7 @@ export const products: Product[] = [
     diseaseTags: ['Rệp sáp & Tuyến trùng rễ'],
     activeIngredient: 'Nấm Metarhizium + Paecilomyces lilacinus',
     packaging: 'Gói 500g',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuD_5FIcz2O0dDytA9vTzGZb_VKTEEDB3WS5iLNHAK2BcrzS7BMTA70GqGkR3aM19-ExbhofQ87a-eLkAd1UI7J1_2_7ee5pTymW8R9Yn9Yu7L5k1Rc7bZSRSvnST7kOOiZxRuQ41Tl289JDgeHTn-fgmMM_hvTtbx3aAv_TI55Q7AC9s_oXCfLKWZrGNfJG-DmfnB0KGt1UsdmXXrpDAzSrEse36GmBafZilH_JB-tNzrXUcd1jsa8OAQ',
+    image: '/images/products/biopesticide-spray.jpg',
     price: 88000,
     stockLabel: 'Sẵn kho Di Linh',
     tag: 'An toàn sinh học',

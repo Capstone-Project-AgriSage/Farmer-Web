@@ -3,23 +3,19 @@ import { handleImageError } from '../../../utils/image'
 const commitments = [
   {
     title: 'Tăng năng suất đạt 60-70%',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDnD1zNIWCtZGr-GT2cIHN-qWTree5rhLe7e11fKvg8lUwoMJFXovfpiKNPYqThIKUbBJElGhc8kCQvvgwiuWkXNpKP2ZSWBdehNNkYwmTtX_ltKZCyCFd1bSV1j306tYLTC-PzDui3BQ9IB62NNKVrcwpeCRRkoIHpg-ZHZFuQuYFW_mztKu07edFj1nNKO_cuU-Bb1ffLscBgBP3V3QRu4cGe_O9FVxM_aqvVwHP-iv1jOLpLcDLsgQ',
+    image: '/images/commitments/nang-suat.jpg',
   },
   {
     title: 'Sản phẩm hữu cơ An Toàn Tuyệt Đối',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDKO2yryFUM7PQyK6WkylC1tYxrHYP3alhrIoTvV2JnNJRsgC8Mz86x7Q3yqFPIzTL4J9wK50Pn-HNxvhZJcY3f36GX9aWz30mLXBNjrAE1V4QVn9AUydKUGbjCK8DoSrDVsEVLO3AW_UGwt7dOOyA4faCa943GHi6c2oeI_LhjFZh3xjdzZR8AZSckuTCILf2g0h2c1kmFUyAVmkM1v0Q2-D-uNSmWVC2XEaGEkye9U-YcOQa1Yc-VBQ',
+    image: '/images/commitments/huu-co-an-toan.jpg',
   },
   {
     title: 'Tăng giá bán nông sản 4-6 giá',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDOTpgpFjTqUURu0p_dyMWrtJ8VBJazv2frIbmAn2qLl8ovfqAfcc7NeKnXbSOpi0IWKOdZyzexZ74kXG17st_Rbl420KKRhzPdBZPvcmF1QB-3Lizr4DqAdhzhyucpM2Aay4Ova81NcPLeCpJRRu8H9-brLU_thU7jiitvBDor8_uXqW2Ei-PrZ93Hno9f2YsCtRgb7N5-grANyc0ebeDS1BFPMSgUz94vOcEbMa6FYKQWvOC1TuhTYw',
+    image: '/images/commitments/gia-ban.jpg',
   },
   {
     title: 'Hỗ Trợ kỹ thuật 24/7',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuC2WI5zu9f5QIWiVbmNlGkuYPhlme17fZaDCuXmKwD-KQj3nFDr2Hv9QN_xljioXgNy4NR7-KnyhYPEezw5K7qzoPFyJfaYknUYmL_rA9cSeW3qwyXERWXvYQJFe4EUhrwx3lF7LL6rh4LmhIpSLl6Oa0EZFKT6fT_DwC-RnL4LGMksB8IQ8Iwy9kVF0bptBsoJQ98g4A4hNR9o13npVOg7oGXgGMvL_G56AoK72uPnATyBOE1EpmcdCg',
+    image: '/images/commitments/ho-tro.jpg',
   },
 ]
 

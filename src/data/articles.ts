@@ -1,25 +1,27 @@
 export interface Article {
-  id: string;
-  slug: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  category: string;
-  categoryColor: string;
-  categoryIcon: string;
-  image: string;
-  date: string;
-  readTime: number;
-  author: string;
-  tags: string[];
+  id: string
+  slug: string
+  title: string
+  excerpt: string
+  content: string
+  category: string
+  categoryColor: string
+  categoryIcon: string
+  image: string
+  date: string
+  readTime: number
+  author: string
+  tags: string[]
 }
 
 export const articles: Article[] = [
   {
     id: "a1",
     slug: "canh-bao-than-thu-sau-rieng-tay-nguyen",
-    title: "Cảnh báo bùng phát bệnh thán thư sầu riêng mùa mưa dầm tại Tây Nguyên",
-    excerpt: "Độ ẩm trên 85% là điều kiện nấm Colletotrichum phát triển mạnh. Kỹ sư khuyến cáo bà con cắt tỉa cành thông thoáng và luân phiên hoạt chất Azoxystrobin.",
+    title:
+      "Cảnh báo bùng phát bệnh thán thư sầu riêng mùa mưa dầm tại Tây Nguyên",
+    excerpt:
+      "Độ ẩm trên 85% là điều kiện nấm Colletotrichum phát triển mạnh. Kỹ sư khuyến cáo bà con cắt tỉa cành thông thoáng và luân phiên hoạt chất Azoxystrobin.",
     content: `
 Trong những tuần gần đây, tình trạng bệnh thán thư trên cây sầu riêng tại khu vực Tây Nguyên (Lâm Đồng, Đắk Lắk, Đắk Nông) đang có xu hướng bùng phát mạnh do điều kiện thời tiết mưa nhiều, độ ẩm không khí cao liên tục trên 85%.
 
@@ -56,7 +58,8 @@ Phun 2-3 lần liên tiếp, mỗi lần cách nhau 7-10 ngày.
     category: "Cảnh báo dịch hại",
     categoryColor: "warning",
     categoryIcon: "warning",
-    image: "https://lh3.googleusercontent.com/aida/AEtjO1X4PNGtFdGdTKuP_q5b4AxicP1QuZ5rEfbRjSKcjG2Cau2keKYL7yK6vxf3bWj4B7RBcVkEYhAnX19LtgqmiRIJnkcPEYgL6UjJDWzBVEqxCesa9A3M6R-zplqVJ_ZSgDC1N3HrzfOouUsYU6BOv43eC6pPG6ldp0OYrMnWWA2AdI2Z83DoW7pyWDjoBjC9KQ7GJ4jBuJC8_nyE9ElFzykX9Pj4_KAJ5qTFPXbPpvFNMQFrvw934RML9tGd",
+    image:
+      "https://lh3.googleusercontent.com/aida/AEtjO1X4PNGtFdGdTKuP_q5b4AxicP1QuZ5rEfbRjSKcjG2Cau2keKYL7yK6vxf3bWj4B7RBcVkEYhAnX19LtgqmiRIJnkcPEYgL6UjJDWzBVEqxCesa9A3M6R-zplqVJ_ZSgDC1N3HrzfOouUsYU6BOv43eC6pPG6ldp0OYrMnWWA2AdI2Z83DoW7pyWDjoBjC9KQ7GJ4jBuJC8_nyE9ElFzykX9Pj4_KAJ5qTFPXbPpvFNMQFrvw934RML9tGd",
     date: "12/10/2024",
     readTime: 5,
     author: "KS. Nguyễn Văn Minh",
@@ -65,8 +68,10 @@ Phun 2-3 lần liên tiếp, mỗi lần cách nhau 7-10 ngày.
   {
     id: "a2",
     slug: "quy-trinh-bon-thuc-sau-rieng-5-tuoi",
-    title: "Quy trình bón thúc đón hoa & tăng tỷ lệ đậu trái cho cây sầu riêng 5 năm tuổi",
-    excerpt: "Thời điểm tạo mầm hoa quyết định 70% sản lượng. Hướng dẫn phối hợp phân lân nung chảy kết hợp Kali Sunfat để cây ra hoa đồng loạt, cuống hoa mập.",
+    title:
+      "Quy trình bón thúc đón hoa & tăng tỷ lệ đậu trái cho cây sầu riêng 5 năm tuổi",
+    excerpt:
+      "Thời điểm tạo mầm hoa quyết định 70% sản lượng. Hướng dẫn phối hợp phân lân nung chảy kết hợp Kali Sunfat để cây ra hoa đồng loạt, cuống hoa mập.",
     content: `
 Giai đoạn ra hoa và đậu trái là quyết định nhất trong chu kỳ sản xuất sầu riêng. Với cây sầu riêng 5 năm tuổi, quản lý dinh dưỡng đúng cách có thể giúp tăng năng suất lên 40-60%.
 
@@ -101,7 +106,8 @@ Sau khi hoa nở và thụ phấn thành công (3-4 tuần), chuyển sang giai 
     category: "Kỹ thuật canh tác",
     categoryColor: "success",
     categoryIcon: "eco",
-    image: "https://lh3.googleusercontent.com/aida/AEtjO1XgMdBKYJhsBAjdgb9NiGSR9AC4gK7W2hUT-LS4MbKbXOeIZYX-j0uZiFtKiWTbQXu0qCNA2Kc16HESCijed47dy7CgQEBbFhwH2yOpSx-37zLiXfEkUEFK1vcQ_q7IPS7lkY8CfAlfP7e8d1B-R8Tf56aMqd1ZCUQbBM88UQrhhdmjRmLFVRV2LCf7ZCnllvCFNukpoyanY0YJbQnHqmlpYEX3P3vt9TTmFgTm_azXjr51tJGjBcrFUMPI",
+    image:
+      "https://lh3.googleusercontent.com/aida/AEtjO1XgMdBKYJhsBAjdgb9NiGSR9AC4gK7W2hUT-LS4MbKbXOeIZYX-j0uZiFtKiWTbQXu0qCNA2Kc16HESCijed47dy7CgQEBbFhwH2yOpSx-37zLiXfEkUEFK1vcQ_q7IPS7lkY8CfAlfP7e8d1B-R8Tf56aMqd1ZCUQbBM88UQrhhdmjRmLFVRV2LCf7ZCnllvCFNukpoyanY0YJbQnHqmlpYEX3P3vt9TTmFgTm_azXjr51tJGjBcrFUMPI",
     date: "10/10/2024",
     readTime: 7,
     author: "TS. Lê Thị Hương",
@@ -110,8 +116,10 @@ Sau khi hoa nở và thụ phấn thành công (3-4 tuần), chuyển sang giai 
   {
     id: "a3",
     slug: "quan-ly-so-no-goi-vu-agrisage",
-    title: "Giải pháp quản lý sổ nợ gối vụ & xuất kho tự động không lo thất thoát",
-    excerpt: "Phần mềm AgriSage POS giúp chủ cửa hàng theo dõi hạn mức tín dụng của từng nông hộ, gửi SMS nhắc nợ thân thiện và kiểm soát hạn sử dụng thuốc theo lô.",
+    title:
+      "Giải pháp quản lý sổ nợ gối vụ & xuất kho tự động không lo thất thoát",
+    excerpt:
+      "Phần mềm AgriSage POS giúp chủ cửa hàng theo dõi hạn mức tín dụng của từng nông hộ, gửi SMS nhắc nợ thân thiện và kiểm soát hạn sử dụng thuốc theo lô.",
     content: `
 Quản lý công nợ mùa vụ luôn là bài toán khó của các đại lý vật tư nông nghiệp. AgriSage POS ra đời để giải quyết triệt để vấn đề này với công nghệ hiện đại.
 
@@ -134,7 +142,8 @@ Hệ thống tự động gửi thông báo nhắc nhở thân thiện đến kh
     category: "Dành cho đại lý",
     categoryColor: "info",
     categoryIcon: "store",
-    image: "https://lh3.googleusercontent.com/aida/AEtjO1UcasajcWUG5lt9IMzzkZCfizSzonIKrqFlpjVjdhn9JRbKHdnb3gO8h7UdmBrBwCuw5z47VUQ9F-7nCFZaKqgmFpWLV0TtvPwVEVKe6wJ6lPNKUL2XMMsWsbS7BtNm6zwNhPfh0ijguD7fArU0o6SIzm2aooI4JY4dLT0BX25HHA-S6NwiKtFK2a_SoOkdgO-zG37LfUUEtCsumjl3Q311AIKijaYTOr3oAhFGvPZQ01DbZ-Rd1kMJtFOj",
+    image:
+      "https://lh3.googleusercontent.com/aida/AEtjO1UcasajcWUG5lt9IMzzkZCfizSzonIKrqFlpjVjdhn9JRbKHdnb3gO8h7UdmBrBwCuw5z47VUQ9F-7nCFZaKqgmFpWLV0TtvPwVEVKe6wJ6lPNKUL2XMMsWsbS7BtNm6zwNhPfh0ijguD7fArU0o6SIzm2aooI4JY4dLT0BX25HHA-S6NwiKtFK2a_SoOkdgO-zG37LfUUEtCsumjl3Q311AIKijaYTOr3oAhFGvPZQ01DbZ-Rd1kMJtFOj",
     date: "08/10/2024",
     readTime: 4,
     author: "Đội ngũ AgriSage",
@@ -143,8 +152,10 @@ Hệ thống tự động gửi thông báo nhắc nhở thân thiện đến kh
   {
     id: "a4",
     slug: "phong-tri-tuyen-trung-ca-phe",
-    title: "Phòng trị tuyến trùng hại rễ cà phê - Giải pháp toàn diện từ sinh học đến hóa học",
-    excerpt: "Tuyến trùng Meloidogyne sp. là nguyên nhân hàng đầu gây vàng lá, còi cọc và chết dần trên cà phê. Hướng dẫn phòng trị kết hợp bền vững.",
+    title:
+      "Phòng trị tuyến trùng hại rễ cà phê - Giải pháp toàn diện từ sinh học đến hóa học",
+    excerpt:
+      "Tuyến trùng Meloidogyne sp. là nguyên nhân hàng đầu gây vàng lá, còi cọc và chết dần trên cà phê. Hướng dẫn phòng trị kết hợp bền vững.",
     content: `
 Tuyến trùng hại rễ (Nematoda) đang trở thành mối đe dọa nghiêm trọng cho vườn cà phê tại Tây Nguyên. Ước tính có tới 60% diện tích cà phê bị nhiễm tuyến trùng ở các mức độ khác nhau.
 
@@ -174,7 +185,8 @@ Tuyến trùng hại rễ (Nematoda) đang trở thành mối đe dọa nghiêm 
     category: "Kỹ thuật canh tác",
     categoryColor: "success",
     categoryIcon: "eco",
-    image: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&h=480&fit=crop&auto=format",
+    image:
+      "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=800&h=480&fit=crop&auto=format",
     date: "05/10/2024",
     readTime: 8,
     author: "KS. Trần Minh Khoa",
@@ -184,7 +196,8 @@ Tuyến trùng hại rễ (Nematoda) đang trở thành mối đe dọa nghiêm 
     id: "a5",
     slug: "canh-tac-lua-huu-co-vung-dbscl",
     title: "Canh tác lúa hữu cơ vùng ĐBSCL - Cơ hội xuất khẩu giá cao sang EU",
-    excerpt: "Tiêu chuẩn hữu cơ EU mở ra cơ hội xuất khẩu lúa gạo Việt Nam với giá gấp 3-5 lần lúa thường. Hướng dẫn quy trình chuyển đổi 3 năm.",
+    excerpt:
+      "Tiêu chuẩn hữu cơ EU mở ra cơ hội xuất khẩu lúa gạo Việt Nam với giá gấp 3-5 lần lúa thường. Hướng dẫn quy trình chuyển đổi 3 năm.",
     content: `
 Thị trường lúa gạo hữu cơ thế giới đang tăng trưởng 12% mỗi năm, trong đó EU là thị trường tiêu thụ lớn nhất với nhu cầu ngày càng cao.
 
@@ -216,7 +229,8 @@ Thị trường lúa gạo hữu cơ thế giới đang tăng trưởng 12% mỗ
     category: "Nông nghiệp hữu cơ",
     categoryColor: "success",
     categoryIcon: "spa",
-    image: "https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=800&h=480&fit=crop&auto=format",
+    image:
+      "https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=800&h=480&fit=crop&auto=format",
     date: "02/10/2024",
     readTime: 10,
     author: "TS. Phạm Thị Lan",
@@ -226,7 +240,8 @@ Thị trường lúa gạo hữu cơ thế giới đang tăng trưởng 12% mỗ
     id: "a6",
     slug: "tieu-ho-tieu-bia-lap",
     title: "Kỹ thuật phục hồi vườn tiêu bị hồ tiêu chết nhanh, chết chậm",
-    excerpt: "Bệnh chết nhanh do Phytophthora capsici và chết chậm do Fusarium solani là hai bệnh nguy hiểm nhất trên hồ tiêu. Quy trình cứu vườn khẩn cấp.",
+    excerpt:
+      "Bệnh chết nhanh do Phytophthora capsici và chết chậm do Fusarium solani là hai bệnh nguy hiểm nhất trên hồ tiêu. Quy trình cứu vườn khẩn cấp.",
     content: `
 Bệnh chết nhanh và chết chậm đang tàn phá hàng nghìn hecta tiêu tại Gia Lai, Đắk Lắk và Bình Phước. Nắm vững quy trình điều trị là điều kiện sống còn của vườn tiêu.
 
@@ -253,13 +268,14 @@ Bệnh chết nhanh và chết chậm đang tàn phá hàng nghìn hecta tiêu t
     category: "Cảnh báo dịch hại",
     categoryColor: "warning",
     categoryIcon: "warning",
-    image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=480&fit=crop&auto=format",
+    image:
+      "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&h=480&fit=crop&auto=format",
     date: "28/09/2024",
     readTime: 6,
     author: "KS. Hoàng Văn Thắng",
     tags: ["hồ tiêu", "Phytophthora", "Fusarium", "phục hồi vườn"],
   },
-];
+]
 
 export const articleCategories = [
   { label: "Tất cả", value: "" },
@@ -267,4 +283,4 @@ export const articleCategories = [
   { label: "Kỹ thuật canh tác", value: "Kỹ thuật canh tác" },
   { label: "Dành cho đại lý", value: "Dành cho đại lý" },
   { label: "Nông nghiệp hữu cơ", value: "Nông nghiệp hữu cơ" },
-];
+]

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import { products } from '../../data/mockProducts'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
@@ -74,18 +75,27 @@ export default function AiDoctorPage() {
     <>
       <Breadcrumb items={[{ label: 'Trang chủ', to: '/' }, { label: 'Bác sĩ cây trồng AI' }]} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
-            <span className="material-symbols-outlined text-[16px]">psychology</span>
-            <span>Đột phá Trí Tuệ Nhân Tạo</span>
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
+              <span className="material-symbols-outlined text-[16px]">psychology</span>
+              <span>Đột phá Trí Tuệ Nhân Tạo</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight mt-3">
+              Bác Sĩ Cây Trồng AI - Chẩn Đoán Bệnh Trong 3 Giây
+            </h1>
+            <p className="text-sm text-text-secondary mt-2 leading-relaxed">
+              Chụp ảnh vùng lá, cành hoặc rễ bị tổn thương, hệ thống AI của AgriSage sẽ phân tích mầm
+              bệnh và gợi ý phác đồ điều trị. Hoàn toàn miễn phí cho bà con nông dân.
+            </p>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight mt-3">
-            Bác Sĩ Cây Trồng AI - Chẩn Đoán Bệnh Trong 3 Giây
-          </h1>
-          <p className="text-sm text-text-secondary mt-2 leading-relaxed">
-            Chụp ảnh vùng lá, cành hoặc rễ bị tổn thương, hệ thống AI của AgriSage sẽ phân tích mầm
-            bệnh và gợi ý phác đồ điều trị. Hoàn toàn miễn phí cho bà con nông dân.
-          </p>
+          <Link
+            to="/account?tab=diagnosis"
+            className="inline-flex items-center justify-center gap-1.5 self-end px-4 py-2.5 bg-primary hover:bg-primary-hover text-white font-semibold text-sm rounded-lg shadow-sm transition-all shrink-0"
+          >
+            <span className="material-symbols-outlined text-[18px]">history</span>
+            <span>Xem lịch sử chẩn đoán</span>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8 items-start">

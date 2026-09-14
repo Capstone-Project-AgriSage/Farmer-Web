@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { confidenceTone, type DiagnosisScenario } from '../diagnosisScenarios'
 
 interface DiagnosisResultCardProps {
@@ -8,6 +9,8 @@ interface DiagnosisResultCardProps {
   onReset: () => void
 }
 
+const emptyReviewForm = { farmerName: '', farmerPhone: '', plotLocation: '' }
+
 export default function DiagnosisResultCard({
   result,
   previewUrl,
@@ -16,6 +19,18 @@ export default function DiagnosisResultCard({
   onReset,
 }: DiagnosisResultCardProps) {
   const tone = confidenceTone(result.confidence)
+  const [reviewForm, setReviewForm] = useState(emptyReviewForm)
+  const [sentForReview, setSentForReview] = useState(false)
+  const [isSendingReview, setIsSendingReview] = useState(false)
+
+  const handleSendForReview = (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSendingReview(true)
+    setTimeout(() => {
+      setIsSendingReview(false)
+      setSentForReview(true)
+    }, 900)
+  }
 
   return (
     <div className="bg-white rounded-2xl border border-border-subtle p-5 sm:p-6 shadow-sm space-y-5">
@@ -130,6 +145,58 @@ export default function DiagnosisResultCard({
               </div>
             ))}
           </div>
+        )}
+      </div>
+
+      <div className="border-t border-border-subtle pt-4">
+        {sentForReview ? (
+          <div className="p-4 rounded-lg bg-status-success-surface border border-status-success/20 flex items-start gap-2.5 text-sm text-status-success leading-relaxed">
+            <span className="material-symbols-outlined text-[20px] flex-shrink-0 mt-0.5">check_circle</span>
+            <span>
+              Đã gửi ca chẩn đoán này cho kỹ sư AgriSage xác nhận. Kỹ sư sẽ liên hệ lại theo số điện
+              thoại bà con đã cung cấp trong thời gian sớm nhất.
+            </span>
+          </div>
+        ) : (
+          <form onSubmit={handleSendForReview} className="space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-text-primary">
+              Chưa chắc chắn? Gửi cho kỹ sư AgriSage xác nhận
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <input
+                required
+                type="text"
+                placeholder="Họ và tên"
+                value={reviewForm.farmerName}
+                onChange={(e) => setReviewForm((prev) => ({ ...prev, farmerName: e.target.value }))}
+                className="w-full px-3.5 py-2.5 text-sm bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary text-text-primary"
+              />
+              <input
+                required
+                type="text"
+                placeholder="Số điện thoại"
+                value={reviewForm.farmerPhone}
+                onChange={(e) => setReviewForm((prev) => ({ ...prev, farmerPhone: e.target.value }))}
+                className="w-full px-3.5 py-2.5 text-sm bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary text-text-primary"
+              />
+            </div>
+            <input
+              required
+              type="text"
+              placeholder="Vị trí vườn/thửa đất (VD: Thửa 5, Xã Đinh Lạc, Di Linh)"
+              value={reviewForm.plotLocation}
+              onChange={(e) => setReviewForm((prev) => ({ ...prev, plotLocation: e.target.value }))}
+              className="w-full px-3.5 py-2.5 text-sm bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary text-text-primary"
+            />
+            <button
+              type="submit"
+              disabled={isSendingReview}
+              className="w-full h-11 bg-primary hover:bg-primary-hover text-white font-bold text-sm rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+            >
+              <span>{isSendingReview ? 'Đang gửi...' : 'Gửi cho kỹ sư xác nhận'}</span>
+              {!isSendingReview && <span className="material-symbols-outlined text-[18px]">send</span>}
+            </button>
+          </form>
         )}
       </div>
     </div>

@@ -6,6 +6,9 @@ export type ProductGroup =
   | 'Thuốc trừ sâu sinh học'
   | 'Tưới nhỏ giọt & Thiết bị'
 
+/** Discrete availability state — matches agent_agrisage's inventory status enum exactly, so the two apps agree on what "in stock" means. Kept separate from `stockLabel`, which is free-form customer-facing copy (warehouse, quantity) and isn't meant to be machine-comparable. */
+export type StockStatus = 'Còn hàng' | 'Sắp hết' | 'Hết hàng'
+
 export interface Product {
   slug: string
   name: string
@@ -20,6 +23,7 @@ export interface Product {
   wholesalePrice?: number
   wholesaleUnit?: string
   stockLabel: string
+  stockStatus: StockStatus
   tag?: string
   rating?: number
   reviewCount?: number

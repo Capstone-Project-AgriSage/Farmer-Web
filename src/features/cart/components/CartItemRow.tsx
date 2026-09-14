@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { formatVnd } from '../../../data/format'
 import { handleImageError } from '../../../utils/image'
+import { stockStatusTone } from '../../../utils/stockStatus'
 import type { CartItem } from '../../../types'
 
 interface CartItemRowProps {
@@ -11,6 +12,8 @@ interface CartItemRowProps {
 }
 
 export default function CartItemRow({ item, alternate, onQuantityChange, onRemove }: CartItemRowProps) {
+  const tone = stockStatusTone(item.product.stockStatus)
+
   return (
     <div
       className={`p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-12 gap-4 items-center ${alternate ? 'bg-surface-subtle/30' : ''}`}
@@ -29,8 +32,8 @@ export default function CartItemRow({ item, alternate, onQuantityChange, onRemov
             <span className="px-2 py-0.5 rounded bg-emerald-50 text-primary font-bold text-[10px]">
               {item.product.brand}
             </span>
-            <span className="text-[10px] text-status-success font-medium flex items-center gap-0.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-status-success"></span> {item.product.stockLabel}
+            <span className={`text-[10px] ${tone.text} font-medium flex items-center gap-0.5`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${tone.dot}`}></span> {item.product.stockLabel}
             </span>
           </div>
           <Link to={`/products/${item.product.slug}`}>

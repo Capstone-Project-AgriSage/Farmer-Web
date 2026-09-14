@@ -16,6 +16,7 @@ export const products: Product[] = [
     wholesalePrice: 4600000,
     wholesaleUnit: 'Thùng 100 gói',
     stockLabel: 'Sẵn kho Di Linh (428 gói)',
+    stockStatus: 'Còn hàng',
     tag: 'Hỗ trợ nợ vụ',
     rating: 4.9,
     reviewCount: 186,
@@ -34,6 +35,7 @@ export const products: Product[] = [
     price: 195000,
     originalPrice: 215000,
     stockLabel: 'Sẵn kho Di Linh',
+    stockStatus: 'Còn hàng',
     tag: 'Freeship tận vườn',
   },
   {
@@ -47,6 +49,7 @@ export const products: Product[] = [
     image: '/images/products/npk-fertilizer.jpg',
     price: 920000,
     stockLabel: 'Còn 150 bao',
+    stockStatus: 'Còn hàng',
     tag: 'Bảo lãnh nợ mùa vụ',
   },
   {
@@ -61,6 +64,7 @@ export const products: Product[] = [
     price: 125000,
     originalPrice: 145000,
     stockLabel: 'Sẵn kho Di Linh',
+    stockStatus: 'Còn hàng',
     tag: 'Giao trong 2 giờ',
   },
   {
@@ -75,6 +79,7 @@ export const products: Product[] = [
     price: 210000,
     originalPrice: 230000,
     stockLabel: 'Sẵn kho Di Linh',
+    stockStatus: 'Còn hàng',
     tag: 'Hỗ trợ nợ vụ',
   },
   {
@@ -90,6 +95,7 @@ export const products: Product[] = [
     price: 68000,
     originalPrice: 75000,
     stockLabel: 'Sẵn kho Di Linh',
+    stockStatus: 'Còn hàng',
     tag: 'Chính hãng VAT',
   },
   {
@@ -104,6 +110,7 @@ export const products: Product[] = [
     price: 340000,
     originalPrice: 380000,
     stockLabel: 'Sẵn kho Di Linh',
+    stockStatus: 'Còn hàng',
     tag: 'Hỗ trợ nợ vụ',
   },
   {
@@ -119,6 +126,7 @@ export const products: Product[] = [
     price: 215000,
     originalPrice: 240000,
     stockLabel: 'Sẵn kho Di Linh',
+    stockStatus: 'Còn hàng',
     tag: 'Giao trong 2 giờ',
   },
   {
@@ -132,7 +140,8 @@ export const products: Product[] = [
     image: '/images/products/npk-fertilizer.jpg',
     price: 545000,
     originalPrice: 590000,
-    stockLabel: 'Sẵn kho Di Linh',
+    stockLabel: 'Còn 20 bao (sắp hết)',
+    stockStatus: 'Sắp hết',
     tag: 'Bảo lãnh nợ vụ',
   },
   {
@@ -146,6 +155,7 @@ export const products: Product[] = [
     image: '/images/products/corn-seeds.jpg',
     price: 165000,
     stockLabel: 'Sẵn kho Di Linh',
+    stockStatus: 'Còn hàng',
     tag: 'Giống thuần chủng',
   },
   {
@@ -159,7 +169,8 @@ export const products: Product[] = [
     image: '/images/products/drip-irrigation.jpg',
     price: 3200000,
     originalPrice: 3600000,
-    stockLabel: 'Sẵn kho Di Linh',
+    stockLabel: 'Tạm hết, đang về kho Di Linh',
+    stockStatus: 'Hết hàng',
     tag: 'Hỗ trợ nợ vụ',
   },
   {
@@ -174,6 +185,7 @@ export const products: Product[] = [
     image: '/images/products/biopesticide-spray.jpg',
     price: 88000,
     stockLabel: 'Sẵn kho Di Linh',
+    stockStatus: 'Còn hàng',
     tag: 'An toàn sinh học',
   },
 ]

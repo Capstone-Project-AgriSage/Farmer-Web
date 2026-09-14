@@ -1,4 +1,5 @@
 import { formatVnd } from '../../../data/format'
+import { stockStatusTone } from '../../../utils/stockStatus'
 import type { Product } from '../../../types'
 
 export const specOptions = [
@@ -26,6 +27,9 @@ export default function PurchasePanel({
   onAddToCart,
   onBuyNow,
 }: PurchasePanelProps) {
+  const tone = stockStatusTone(product.stockStatus)
+  const outOfStock = product.stockStatus === 'Hết hàng'
+
   return (
     <div className="lg:col-span-7 flex flex-col justify-between">
       <div className="space-y-4">
@@ -68,8 +72,8 @@ export default function PurchasePanel({
               mùa này
             </div>
           )}
-          <div className="text-status-success font-semibold flex items-center gap-1">
-            <span className="material-symbols-outlined text-[16px]">inventory</span> Còn hàng sẵn tại kho
+          <div className={`${tone.text} font-semibold flex items-center gap-1`}>
+            <span className="material-symbols-outlined text-[16px]">inventory</span> {product.stockLabel}
           </div>
         </div>
 
@@ -175,17 +179,19 @@ export default function PurchasePanel({
             </div>
             <button
               onClick={onAddToCart}
-              className="flex-1 py-3 px-4 border-2 border-primary text-primary hover:bg-emerald-50 font-bold text-xs sm:text-sm rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm"
+              disabled={outOfStock}
+              className="flex-1 py-3 px-4 border-2 border-primary text-primary hover:bg-emerald-50 font-bold text-xs sm:text-sm rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
             >
               <span className="material-symbols-outlined text-[20px]">add_shopping_cart</span>
               <span>Thêm vào giỏ hàng</span>
             </button>
             <button
               onClick={onBuyNow}
-              className="flex-1 py-3 px-4 bg-primary hover:bg-primary-hover text-white font-bold text-xs sm:text-sm rounded-lg transition-colors shadow-md flex items-center justify-center gap-2"
+              disabled={outOfStock}
+              className="flex-1 py-3 px-4 bg-primary hover:bg-primary-hover text-white font-bold text-xs sm:text-sm rounded-lg transition-colors shadow-md flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-primary"
             >
               <span className="material-symbols-outlined text-[20px]">credit_card</span>
-              <span>Mua ngay / Ghi sổ nợ vụ</span>
+              <span>{outOfStock ? 'Tạm hết hàng' : 'Mua ngay / Ghi sổ nợ vụ'}</span>
             </button>
           </div>
           <div className="flex items-center justify-between p-3 rounded-lg bg-white border border-border-subtle text-xs">

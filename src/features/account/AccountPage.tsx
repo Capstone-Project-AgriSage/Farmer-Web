@@ -7,22 +7,38 @@ import { confidenceTone } from '../ai-doctor/diagnosisScenarios'
 
 const creditLimit = 50000000
 
+type DebtStatus = 'Bình thường' | 'Sắp đến hạn' | 'Đến hạn' | 'Quá hạn' | 'Đã thanh toán'
+
 interface DebtEntry {
   orderCode: string
   date: string
   dueDate: string
   amount: number
-  status: 'Còn nợ' | 'Đã thanh toán'
+  status: DebtStatus
 }
 
 const debtLedger: DebtEntry[] = [
-  { orderCode: '#DH-2024-8842', date: '08/10/2024', dueDate: '08/02/2025', amount: 2600000, status: 'Còn nợ' },
+  { orderCode: '#DH-2024-8842', date: '08/10/2024', dueDate: '08/02/2025', amount: 2600000, status: 'Sắp đến hạn' },
   { orderCode: '#DH-2024-8703', date: '30/08/2024', dueDate: '30/12/2024', amount: 890000, status: 'Đã thanh toán' },
   { orderCode: '#DH-2024-8560', date: '15/07/2024', dueDate: '15/11/2024', amount: 1200000, status: 'Đã thanh toán' },
 ]
 
+function debtStatusClass(status: DebtStatus) {
+  switch (status) {
+    case 'Quá hạn':
+      return 'bg-status-error-surface text-status-error'
+    case 'Đến hạn':
+    case 'Sắp đến hạn':
+      return 'bg-status-warning-surface text-status-warning'
+    case 'Đã thanh toán':
+      return 'bg-status-success-surface text-status-success'
+    default:
+      return 'bg-surface-secondary text-text-secondary'
+  }
+}
+
 const creditUsed = debtLedger
-  .filter((entry) => entry.status === 'Còn nợ')
+  .filter((entry) => entry.status !== 'Đã thanh toán')
   .reduce((sum, entry) => sum + entry.amount, 0)
 const creditPercent = Math.round((creditUsed / creditLimit) * 100)
 
@@ -252,13 +268,7 @@ export default function AccountPage() {
                           <div>
                             <div className="flex items-center gap-2">
                               <span className="font-mono font-bold text-text-primary text-xs">{entry.orderCode}</span>
-                              <span
-                                className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                                  entry.status === 'Còn nợ'
-                                    ? 'bg-status-warning-surface text-status-warning'
-                                    : 'bg-status-success-surface text-status-success'
-                                }`}
-                              >
+                              <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${debtStatusClass(entry.status)}`}>
                                 {entry.status}
                               </span>
                             </div>

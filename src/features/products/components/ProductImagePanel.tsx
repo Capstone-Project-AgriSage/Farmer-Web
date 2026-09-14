@@ -1,4 +1,5 @@
 import { handleImageError } from '../../../utils/image'
+import { stockStatusTone } from '../../../utils/stockStatus'
 import type { Product } from '../../../types'
 
 const guarantees: [string, string][] = [
@@ -9,6 +10,8 @@ const guarantees: [string, string][] = [
 ]
 
 export default function ProductImagePanel({ product }: { product: Product }) {
+  const tone = stockStatusTone(product.stockStatus)
+
   return (
     <div className="lg:col-span-5 flex flex-col gap-5">
       <div className="bg-white rounded-2xl border border-border-subtle p-6 shadow-sm relative overflow-hidden flex items-center justify-center min-h-[420px]">
@@ -21,8 +24,8 @@ export default function ProductImagePanel({ product }: { product: Product }) {
             Tem chống giả QR
           </span>
         </div>
-        <span className="absolute top-16 left-3 sm:top-3 sm:left-auto sm:right-3 px-2 py-1 bg-status-success-surface text-status-success text-xs font-semibold rounded-md flex items-center gap-1 border border-status-success/20">
-          <span className="w-2 h-2 rounded-full bg-status-success animate-pulse"></span>{' '}
+        <span className={`absolute top-16 left-3 sm:top-3 sm:left-auto sm:right-3 px-2 py-1 ${tone.badgeBg} ${tone.text} text-xs font-semibold rounded-md flex items-center gap-1 border border-current/20`}>
+          <span className={`w-2 h-2 rounded-full ${tone.dot} animate-pulse`}></span>{' '}
           {product.stockLabel}
         </span>
         <div className="w-full h-80 flex items-center justify-center p-2">

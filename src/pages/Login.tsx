@@ -215,17 +215,9 @@ export default function Login() {
                 </div>
               </div>
               <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs font-bold text-text-primary">
-                    Mật khẩu
-                  </label>
-                  <Link
-                    to="/quen-mat-khau"
-                    className="text-xs text-primary hover:underline"
-                  >
-                    Quên mật khẩu?
-                  </Link>
-                </div>
+                <label className="block text-xs font-bold text-text-primary mb-1.5">
+                  Mật khẩu
+                </label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[18px] text-text-muted">
                     lock
@@ -249,6 +241,14 @@ export default function Login() {
                       {showPass ? "visibility_off" : "visibility"}
                     </span>
                   </button>
+                </div>
+                <div className="mt-2 flex justify-end">
+                  <Link
+                    to="/quen-mat-khau"
+                    className="text-xs text-primary hover:underline"
+                  >
+                    Quên mật khẩu?
+                  </Link>
                 </div>
               </div>
 

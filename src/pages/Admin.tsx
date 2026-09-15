@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link, Navigate, useNavigate, useParams } from "react-router"
 import { useAuth } from "../context/AuthContext"
 import AiQueueScreen from "./admin/AiQueueScreen"
+import CustomersScreen from "./admin/CustomersScreen"
 import DealerProfileScreen from "./admin/DealerProfileScreen"
 import DebtScreen from "./admin/DebtScreen"
 import OrdersScreen from "./admin/OrdersScreen"
@@ -14,6 +15,7 @@ type AdminSection =
   | "ai"
   | "stock"
   | "orders"
+  | "customers"
   | "debt"
   | "vietqr"
   | "dealer"
@@ -29,6 +31,7 @@ const menu: {
   { id: "ai", slug: "ai", label: "Hàng đợi AI", icon: "psychology", badge: "4" },
   { id: "stock", slug: "stock", label: "Quản lý kho", icon: "inventory_2" },
   { id: "orders", slug: "orders", label: "Đơn hàng", icon: "shopping_bag" },
+  { id: "customers", slug: "customers", label: "Khách hàng", icon: "groups" },
   {
     id: "debt",
     slug: "debt",
@@ -52,6 +55,8 @@ export function SectionPanel({ section }: { section: AdminSection }) {
       return <StockScreen />
     case "orders":
       return <OrdersScreen />
+    case "customers":
+      return <CustomersScreen />
     case "debt":
       return <DebtScreen />
     case "vietqr":

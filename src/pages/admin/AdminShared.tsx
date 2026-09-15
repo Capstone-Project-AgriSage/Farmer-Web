@@ -7,6 +7,7 @@ type AdminSection =
   | "ai"
   | "stock"
   | "orders"
+  | "customers"
   | "debt"
   | "vietqr"
   | "dealer"
@@ -65,6 +66,7 @@ const menu: {
   { id: "ai", slug: "ai", label: "Hàng đợi AI", icon: "psychology", badge: "4" },
   { id: "stock", slug: "stock", label: "Quản lý kho", icon: "inventory_2" },
   { id: "orders", slug: "orders", label: "Đơn hàng", icon: "shopping_bag" },
+  { id: "customers", slug: "customers", label: "Khách hàng", icon: "groups" },
   {
     id: "debt",
     slug: "debt",
@@ -171,6 +173,12 @@ const metricsBySection: Record<
     { label: "Chờ xuất kho", value: "8", icon: "inventory", tone: "amber" },
     { label: "Đang giao", value: "14", icon: "local_shipping", tone: "blue" },
     { label: "Doanh số hôm nay", value: "52.8tr", icon: "payments" },
+  ],
+  customers: [
+    { label: "Tổng khách hàng", value: "284", icon: "groups" },
+    { label: "Khách mua lại", value: "68%", icon: "repeat", tone: "blue" },
+    { label: "Cần chăm sóc", value: "19", icon: "support_agent", tone: "amber" },
+    { label: "Dư nợ liên quan", value: "136.4tr", icon: "account_balance_wallet" },
   ],
   debt: [
     {
@@ -478,6 +486,77 @@ const configs: Record<AdminSection, SectionConfig> = {
       "Tiền mặt",
       "AgriCredit",
       "Sổ nợ mùa vụ",
+    ]),
+  },
+  customers: {
+    eyebrow: "Quản lý khách hàng",
+    title: "Hồ sơ khách hàng và lịch sử chăm sóc",
+    description:
+      "Theo dõi nông hộ, HTX, đại lý liên kết, nhu cầu mùa vụ và trạng thái chăm sóc.",
+    primaryLabel: "Thêm khách hàng",
+    secondaryLabel: "Lên lịch chăm sóc",
+    exportLabel: "Xuất danh sách",
+    searchPlaceholder: "Tìm tên khách hàng, số điện thoại, cây trồng, khu vực...",
+    categories: ["Nông hộ", "HTX", "Đại lý liên kết", "Trang trại"],
+    statuses: ["Đang hoạt động", "Cần chăm sóc", "Tiềm năng", "Ngưng mua"],
+    timeOptions: ["Mới liên hệ", "7 ngày qua", "Tháng này", "Lâu chưa chăm sóc"],
+    columns: ["Khách hàng", "Nhóm", "Phụ trách", "Liên hệ gần nhất", "Giá trị", "Trạng thái"],
+    records: [
+      record(
+        "KH-284",
+        "Nguyễn Văn Đức",
+        "Sầu riêng Ri6 · Di Linh · 09 1828 8842",
+        "Nông hộ",
+        "Đang hoạt động",
+        "green",
+        "Mới liên hệ",
+        "48.5tr",
+        "KS. Phạm Thị Lan",
+        "Quan tâm phác đồ thán thư đầu mùa mưa",
+      ),
+      record(
+        "KH-227",
+        "HTX Di Linh",
+        "Cà phê Catimor · 42 hộ thành viên · 0263 382 1100",
+        "HTX",
+        "Cần chăm sóc",
+        "amber",
+        "7 ngày qua",
+        "92.8tr",
+        "Trần Minh Đức",
+        "Hẹn báo giá phân bón vụ mới",
+      ),
+      record(
+        "KH-193",
+        "Vườn Chú Năm",
+        "Hồ tiêu · Bảo Lộc · 09 7765 2211",
+        "Trang trại",
+        "Tiềm năng",
+        "blue",
+        "Tháng này",
+        "18.6tr",
+        "AgriCredit",
+        "Đang xét hạn mức gối đầu mùa vụ",
+      ),
+      record(
+        "KH-118",
+        "Đại lý Thanh Hà",
+        "Bán lẻ vật tư · Đức Trọng · 09 3318 4400",
+        "Đại lý liên kết",
+        "Ngưng mua",
+        "red",
+        "Lâu chưa chăm sóc",
+        "4.8tr",
+        "Kế toán",
+        "Cần gọi lại xác nhận công nợ cuối kỳ",
+      ),
+    ],
+    formTitle: "khách hàng",
+    formFields: sharedFields("Tên khách hàng", "Thông tin liên hệ / nhu cầu", "Nhóm khách hàng", [
+      "Nông hộ",
+      "HTX",
+      "Đại lý liên kết",
+      "Trang trại",
     ]),
   },
   debt: {

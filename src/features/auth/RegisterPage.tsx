@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { useAuth } from '../../context/AuthContext'
 import { isValidPhoneOrEmail } from '../../utils/validation'
 import FieldError from '../../components/ui/FieldError'
 import AuthLayout from './components/AuthLayout'
@@ -17,14 +18,16 @@ interface FormErrors {
 export default function RegisterPage() {
   useDocumentTitle('Đăng ký tài khoản')
   const navigate = useNavigate()
+  const { register } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [fullName, setFullName] = useState('Nguyễn Văn Nông')
-  const [contact, setContact] = useState('0912 345 678')
-  const [password, setPassword] = useState('NongDan@2024')
-  const [confirmPassword, setConfirmPassword] = useState('NongDan@2024')
-  const [terms, setTerms] = useState(true)
+  const [fullName, setFullName] = useState('')
+  const [contact, setContact] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [terms, setTerms] = useState(false)
   const [errors, setErrors] = useState<FormErrors>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const validate = (): FormErrors => {
     const next: FormErrors = {}
@@ -43,12 +46,18 @@ export default function RegisterPage() {
     return next
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const nextErrors = validate()
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length === 0) {
-      navigate('/')
+      setIsSubmitting(true)
+      try {
+        await register(fullName, contact, password)
+        navigate('/')
+      } finally {
+        setIsSubmitting(false)
+      }
     }
   }
 
@@ -234,11 +243,12 @@ export default function RegisterPage() {
         </div>
         <div className="pt-2">
           <button
-            className="w-full h-11 bg-primary hover:bg-primary-hover active:bg-primary-dark text-white font-semibold text-sm rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 focus:ring-2 focus:ring-primary/40 focus:outline-none cursor-pointer"
+            className="w-full h-11 bg-primary hover:bg-primary-hover active:bg-primary-dark text-white font-semibold text-sm rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 focus:ring-2 focus:ring-primary/40 focus:outline-none cursor-pointer disabled:opacity-70"
             type="submit"
+            disabled={isSubmitting}
           >
-            <span>Đăng ký tài khoản</span>
-            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+            <span>{isSubmitting ? 'Đang tạo tài khoản...' : 'Đăng ký tài khoản'}</span>
+            {!isSubmitting && <span className="material-symbols-outlined text-[18px]">arrow_forward</span>}
           </button>
         </div>
       </form>
@@ -250,7 +260,10 @@ export default function RegisterPage() {
           Hoặc tiếp tục với
         </span>
       </div>
-      <GoogleAuthButton label="Đăng ký bằng Google" onClick={() => navigate('/')} />
+      <GoogleAuthButton
+        label="Đăng ký bằng Google"
+        onClick={() => register('google-oauth', 'google-oauth', 'google-oauth').then(() => navigate('/'))}
+      />
       <div className="text-center pt-4 text-xs text-text-secondary">
         <span>Đã có tài khoản?</span>
         <Link

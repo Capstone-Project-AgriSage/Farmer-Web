@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import { formatVnd } from '../../data/format'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { useAuth } from '../../context/AuthContext'
 import { confidenceTone } from '../ai-doctor/diagnosisScenarios'
 
 const creditLimit = 50000000
@@ -119,9 +120,16 @@ const latestDiagnosis = diagnosisHistory[0]
 
 export default function AccountPage() {
   useDocumentTitle('Tài khoản của tôi')
+  const navigate = useNavigate()
+  const { logout } = useAuth()
   const [searchParams] = useSearchParams()
   const requestedTab = searchParams.get('tab')
   const [activeTab, setActiveTab] = useState<TabId>(isTabId(requestedTab) ? requestedTab : 'overview')
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
 
   return (
     <>
@@ -147,6 +155,14 @@ export default function AccountPage() {
                   <span className="font-semibold text-text-primary">Tháng 03/2023</span>
                 </div>
               </div>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="w-full mt-4 pt-4 border-t border-border-subtle flex items-center justify-center gap-1.5 text-xs font-semibold text-status-error hover:underline"
+              >
+                <span className="material-symbols-outlined text-[16px]">logout</span>
+                <span>Đăng xuất</span>
+              </button>
             </div>
           </div>
 

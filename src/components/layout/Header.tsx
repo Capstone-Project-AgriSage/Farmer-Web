@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 
 interface HeaderProps {
   cartCount: number
@@ -17,7 +18,14 @@ const navLinks = [
 export default function Header({ cartCount }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
+  const { isAuthenticated, logout } = useAuth()
   const [lastPathname, setLastPathname] = useState(location.pathname)
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
 
   if (location.pathname !== lastPathname) {
     setLastPathname(location.pathname)
@@ -100,14 +108,26 @@ export default function Header({ cartCount }: HeaderProps) {
               {cartCount}
             </span>
           </Link>
-          <Link
-            to="/login"
-            title="Đăng nhập"
-            className="hidden sm:inline-flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 text-xs font-semibold text-primary-dark bg-white hover:bg-emerald-50 rounded-md transition-all shadow-sm"
-          >
-            <span className="material-symbols-outlined text-[16px] text-primary">login</span>
-            <span className="hidden sm:inline">Đăng nhập</span>
-          </Link>
+          {isAuthenticated ? (
+            <button
+              type="button"
+              onClick={handleLogout}
+              title="Đăng xuất"
+              className="hidden sm:inline-flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 text-xs font-semibold text-primary-dark bg-white hover:bg-emerald-50 rounded-md transition-all shadow-sm"
+            >
+              <span className="material-symbols-outlined text-[16px] text-primary">logout</span>
+              <span className="hidden sm:inline">Đăng xuất</span>
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              title="Đăng nhập"
+              className="hidden sm:inline-flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 text-xs font-semibold text-primary-dark bg-white hover:bg-emerald-50 rounded-md transition-all shadow-sm"
+            >
+              <span className="material-symbols-outlined text-[16px] text-primary">login</span>
+              <span className="hidden sm:inline">Đăng nhập</span>
+            </Link>
+          )}
           <button
             type="button"
             onClick={() => setIsMenuOpen((v) => !v)}
@@ -143,13 +163,24 @@ export default function Header({ cartCount }: HeaderProps) {
               <span>{link.label}</span>
             </NavLink>
           ))}
-          <Link
-            to="/login"
-            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold text-primary-dark bg-white hover:bg-emerald-50 transition-colors mt-2"
-          >
-            <span className="material-symbols-outlined text-[20px] text-primary">login</span>
-            <span>Đăng nhập</span>
-          </Link>
+          {isAuthenticated ? (
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold text-primary-dark bg-white hover:bg-emerald-50 transition-colors mt-2"
+            >
+              <span className="material-symbols-outlined text-[20px] text-primary">logout</span>
+              <span>Đăng xuất</span>
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold text-primary-dark bg-white hover:bg-emerald-50 transition-colors mt-2"
+            >
+              <span className="material-symbols-outlined text-[20px] text-primary">login</span>
+              <span>Đăng nhập</span>
+            </Link>
+          )}
         </nav>
       )}
     </header>

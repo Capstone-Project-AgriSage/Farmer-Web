@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
-const suggestedKeywords = ['NPK 20-20-15', 'Trừ thán thư sầu riêng', 'Ridomil Gold', 'Tuyến trùng cà phê']
+const suggestedKeywords = ['Beam 75WP', 'Đặc trị đạo ôn lá', 'Anvil 5SC trị khô vằn', 'Lúa giống ST25', 'Bạc lá vi khuẩn']
 
 export default function HeroSection() {
   const navigate = useNavigate()

@@ -79,9 +79,9 @@ export default function ContactPage() {
             <div className="bg-white rounded-xl border border-border-subtle p-5 shadow-sm flex items-start gap-3">
               <span className="material-symbols-outlined text-primary text-[22px]">store</span>
               <div>
-                <div className="text-sm font-bold text-text-primary">Chi nhánh Lâm Đồng</div>
+                <div className="text-sm font-bold text-text-primary">Đại lý Vật tư Nông nghiệp Hai Thắng</div>
                 <div className="text-xs text-text-secondary mt-0.5">
-                  142 Hùng Vương, TT. Di Linh, Tỉnh Lâm Đồng
+                  Thị trấn Thới Lai, Huyện Thới Lai, TP. Cần Thơ (ĐBSCL)
                 </div>
               </div>
             </div>
@@ -141,7 +141,7 @@ export default function ContactPage() {
                       required
                       className="w-full px-4 py-2.5 rounded-lg border border-border-subtle text-text-primary text-sm focus:outline-none focus:border-primary bg-white"
                       type="text"
-                      placeholder="Xã Đinh Lạc, Huyện Di Linh, Lâm Đồng"
+                      placeholder="Ấp Thới Thuận, TT. Thới Lai, Cần Thơ"
                       value={area}
                       onChange={(e) => setArea(e.target.value)}
                     />

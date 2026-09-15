@@ -2,19 +2,16 @@ import { products } from '../../../data/mockProducts'
 import type { ProductGroup } from '../../../types'
 
 export const groupOptions: ProductGroup[] = [
-  'Thuốc BVTV & Trừ nấm',
-  'Phân bón NPK & Vi lượng',
-  'Phân hữu cơ vi sinh',
-  'Hạt giống & Cây giống',
-  'Thuốc trừ sâu sinh học',
-  'Tưới nhỏ giọt & Thiết bị',
+  'Thuốc đặc trị nấm & diệt khuẩn',
+  'Phân bón NPK & Dinh dưỡng lúa',
+  'Lúa giống xác nhận',
 ]
 
 export const diseaseOptions = [
-  'Thán thư, xì mủ sầu riêng',
-  'Rỉ sắt, nấm hồng cà phê',
-  'Rệp sáp & Tuyến trùng rễ',
-  'Vàng lá, thối rễ mùa mưa',
+  'Đạo ôn lá',
+  'Bạc lá vi khuẩn',
+  'Đốm nâu',
+  'Khô vằn',
 ]
 
 export const brandOptions = Array.from(new Set(products.map((p) => p.brand))).sort()
@@ -171,7 +168,7 @@ export default function FilterSidebar({
                   className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
                   type="checkbox"
                 />
-                <span>Sẵn hàng tại kho Di Linh</span>
+                <span>Sẵn hàng tại kho Thới Lai</span>
               </label>
               <label className="flex items-center gap-2 hover:text-primary cursor-pointer">
                 <input

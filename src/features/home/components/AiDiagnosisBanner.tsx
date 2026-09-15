@@ -63,7 +63,7 @@ export default function AiDiagnosisBanner() {
               </Link>
               <div className="text-[11px] text-text-muted pt-1 flex items-center gap-1.5 justify-center">
                 <span className="w-2 h-2 rounded-full bg-status-success"></span>
-                <span>Vừa chẩn đoán: Sầu riêng đốm mắt cua (Lâm Đồng)</span>
+                <span>Vừa chẩn đoán: Đạo ôn lá lúa OM5451 (Thới Lai, Cần Thơ)</span>
               </div>
             </div>
           </div>

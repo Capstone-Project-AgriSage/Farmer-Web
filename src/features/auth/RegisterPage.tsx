@@ -133,13 +133,13 @@ export default function RegisterPage() {
                 className="w-full pl-9 pr-3 py-2.5 bg-white border border-border-subtle rounded-lg text-text-primary text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all cursor-pointer"
                 id="farmRegion"
                 name="region"
-                defaultValue="Lâm Đồng (Đà Lạt, Di Linh...)"
+                defaultValue="Cần Thơ (Thới Lai, Cờ Đỏ, Ô Môn...)"
               >
-                <option>Lâm Đồng (Đà Lạt, Di Linh...)</option>
-                <option>Đắk Lắk (Buôn Ma Thuột...)</option>
-                <option>Gia Lai - Kon Tum</option>
-                <option>Đồng bằng Sông Cửu Long</option>
-                <option>Đông Nam Bộ &amp; khu vực khác</option>
+                <option>Cần Thơ (Thới Lai, Cờ Đỏ, Ô Môn...)</option>
+                <option>An Giang (Châu Phú, Thoại Sơn...)</option>
+                <option>Đồng Tháp (Lấp Vò, Tháp Mười...)</option>
+                <option>Kiên Giang (Tân Hiệp, Giồng Riềng...)</option>
+                <option>Khu vực Đồng bằng Sông Cửu Long khác</option>
               </select>
             </div>
           </div>

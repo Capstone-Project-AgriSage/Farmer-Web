@@ -50,7 +50,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
-    errorElement: <RouteErrorBoundary /> ,
+    errorElement: <RouteErrorBoundary />,
     children: [
       ...publicRoutes,
       { element: <ProtectedRoute />, children: protectedRoutes },

@@ -1,0 +1,80 @@
+import type { DiagnosisCase } from '../types'
+import { products } from './mockProducts'
+
+export const mockDiagnosisCases: DiagnosisCase[] = [
+  {
+    id: 'AI-2401',
+    farmerId: 'FARMER-8802',
+    farmerName: 'Nguyễn Văn Hùng',
+    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBzFCY5gmImB0PcOm4pSHf60qElMi8y8tL7eKY1l9PmV0EffU1VooGtRwlyP_oJpzldFfmcsMs_rBXlgQh2igTIOcyMreMw3HMuquR-tsKNgbpv1BE6Y0RByoI9TbdQt2MIvQYhwotOwlZUPYw71pJQdFzujeTE8ojFZqojFURPVGEDFM6O0dN2iTpUzDhH9cqmGIHAFelhNrB3AKxJeSGl_Ze_sbiiPHBVUBB6antIt3oYkx_1fP4R',
+    cropStage: 'ST25 • 32 ngày sau sạ (Đẻ nhánh rộ)',
+    predictedDiseaseId: 'leaf_blast',
+    predictedDiseaseName: 'Bệnh đạo ôn lá',
+    aiConfidence: 94,
+    status: 'PENDING_AGENT_REVIEW',
+    recommendedProducts: [
+      products.find((p) => p.slug === 'beam-75wp')!,
+      products.find((p) => p.slug === 'fuji-one-40ec')!,
+    ].filter(Boolean),
+    createdAt: '09:25 Hôm nay',
+  },
+  {
+    id: 'AI-2403',
+    farmerId: 'FARMER-8802',
+    farmerName: 'Nguyễn Văn Hùng',
+    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAt35udfK8GSS7eqrUC7jdMZqoZ-zz3tmFNf2JCDH8QP9lQR53P0d3rfWKTBri4Ti-PpXy1bYoXkWapXQlkAH_w07fphcEheL4DhJA3_iWg2ModFYZ25tO5lst5i0Ndl5yQEk86CQ6PTSMx4fM9rmafB4B9GhJt91FVGjvfuCcwaj8a8enFPFKZRbpxSM3CO1S5MSTNS06lWdjq40aEbL9sjFLfKjIohrgIjOQEfvMbBbj8zPP6vL3f',
+    cropStage: 'ST25 • 42 ngày sau sạ (Làm đòng)',
+    predictedDiseaseId: 'bacterial_leaf_blight',
+    predictedDiseaseName: 'Bệnh bạc lá vi khuẩn',
+    aiConfidence: 91,
+    status: 'VERIFIED',
+    verifiedDiseaseId: 'bacterial_leaf_blight',
+    verifiedDiseaseName: 'Bệnh bạc lá vi khuẩn (Cháy bìa lá)',
+    reviewerName: 'Đại lý Nguyễn Văn Minh (Hai Thắng)',
+    reviewerNote: 'Vết bệnh cháy bìa lá do vi khuẩn Xanthomonas bắt đầu lan ở mép lá. Đề nghị tháo bớt đạm, rút khô nước 2 ngày và phun Map Lotus 125WP vào sáng sớm lúc ráo sương.',
+    recommendedProducts: [
+      products.find((p) => p.slug === 'map-lotus-125wp')!,
+    ].filter(Boolean),
+    createdAt: '07:40 Hôm qua',
+    reviewedAt: '08:05 Hôm qua',
+  },
+  {
+    id: 'AI-2404',
+    farmerId: 'FARMER-8802',
+    farmerName: 'Nguyễn Văn Hùng',
+    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAyNfl6vVgu9opzuszzspymr7EgRxjdW9wuuBnWyfIy1sKyq0bi6H-GwN8VYX-ijbNsFjPBZQxiOMtx2KQ-EMmM7P-6-O667G1igkhv83jznncFvZwE1VPSeTru6S1cjBxi6kq0yPJBxS9IGzDmewyfxMk9MOAsGUp3N_6P0SlWqIXYWA4D-gqyqldEyrRd1RRUAb5qOjoruxCVg-mzAD0hqcvjLv0x2z4zHHGWIVG958zhEAnvINCb',
+    cropStage: 'ST25 • 28 ngày sau sạ',
+    predictedDiseaseId: 'brown_spot',
+    predictedDiseaseName: 'Nghi ngờ đốm nâu',
+    aiConfidence: 61,
+    status: 'REJECTED_INCONCLUSIVE',
+    rejectionReason: 'Ảnh chụp bị chói nắng và mờ nét viền lá, độ tin cậy AI < 70%. Hệ thống không thể cấp phác đồ thương mại an toàn. Đã chuyển kỹ sư thăm đồng.',
+    recommendedProducts: [],
+    createdAt: '15:20 12/10/2024',
+    reviewedAt: '15:35 12/10/2024',
+  },
+  {
+    id: 'AI-2405',
+    farmerId: 'FARMER-8802',
+    farmerName: 'Nguyễn Văn Hùng',
+    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB3_b7heyukOtfNqeNQe4nuGyZ1B9r3b_f3r5_KO_4sRYyvQ0V4x4LcyRWQ9XND_MumcDVWG-27ZtBL1kWH4DpVRq7YIX4jsISOoaFBBUxmNciRxPJsHAQ3f-BlJ1DLw-g9ddDM2ispZPJQ3ze4DKo5SkGB7pGUF7WhblNF4QLBuLjNTgDWOkXjcOqNr_LZ1Sr69Rr2nIHov0WzE7AIYzNkbjat9a1nLZs1RpHczYEdGv2A6rnYcUJD',
+    cropStage: 'ST25 • 25 ngày sau sạ',
+    predictedDiseaseId: 'brown_spot',
+    predictedDiseaseName: 'Bệnh đốm nâu',
+    aiConfidence: 88,
+    status: 'VERIFIED',
+    verifiedDiseaseId: 'brown_spot',
+    verifiedDiseaseName: 'Bệnh đốm nâu (Tiêm lửa)',
+    reviewerName: 'Đại lý Nguyễn Văn Minh (Hai Thắng)',
+    reviewerNote: 'Đốm tròn viền vàng rải rác trên lá dưới do ruộng thiếu Kali. Bón thêm phân bón Kali và phun Tilt Super 300EC để chặn lây lan.',
+    recommendedProducts: [
+      products.find((p) => p.slug === 'tilt-super-300ec')!,
+    ].filter(Boolean),
+    createdAt: '08:15 05/10/2024',
+    reviewedAt: '08:40 05/10/2024',
+  },
+]
+
+export function getDiagnosisCaseById(id: string): DiagnosisCase | undefined {
+  return mockDiagnosisCases.find((c) => c.id === id)
+}

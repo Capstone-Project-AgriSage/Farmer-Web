@@ -8,12 +8,12 @@ interface HeaderProps {
 
 const navLinks = [
   { to: '/', label: 'Trang chủ', routed: true },
+  { to: '/products', label: 'Vật tư lúa', routed: true },
+  { to: '/ai-doctor', label: 'Chẩn đoán bệnh AI', routed: true },
+  { to: '/account?tab=credit', label: 'Sổ nợ mùa vụ', routed: true },
   { to: '/about', label: 'Giới thiệu', routed: true },
-  { to: '/products', label: 'Sản phẩm', routed: true },
-  { to: '/ai-doctor', label: 'Bác sĩ AI', routed: true },
-  { to: '/knowledge', label: 'Kiến thức', routed: true },
-  { to: '/contact', label: 'Liên hệ', routed: true },
 ]
+
 
 export default function Header({ cartCount }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)

@@ -90,7 +90,7 @@ export default function ProductsPage() {
       }
       if (minPrice !== null && p.price < minPrice) return false
       if (maxPrice !== null && p.price > maxPrice) return false
-      if (filters.onlyWarehouse && !p.stockLabel.includes('Di Linh')) return false
+      if (filters.onlyWarehouse && !p.stockLabel.includes('Thới Lai')) return false
       if (filters.onlyCredit && !(p.tag?.includes('nợ') || p.wholesalePrice)) return false
       if (filters.onlyExpress && !p.tag?.includes('2 giờ')) return false
       return true

@@ -197,11 +197,11 @@ export default function PurchasePanel({
           <div className="flex items-center justify-between p-3 rounded-lg bg-white border border-border-subtle text-xs">
             <div className="flex items-center gap-2 text-text-secondary">
               <span className="material-symbols-outlined text-primary text-[18px]">phone_in_talk</span>
-              <span>Hotline kỹ sư tư vấn liều lượng sầu riêng, cà phê:</span>
+              <span>Hotline kỹ sư tư vấn liều lượng ruộng lúa ĐBSCL:</span>
             </div>
             <a className="font-bold text-primary hover:underline flex items-center gap-1" href="tel:19006828">
               <span>1900 6828</span>
-              <span className="text-[10px] text-text-muted font-normal">(Miễn phí)</span>
+              <span className="text-[10px] text-text-muted font-normal">(Đại lý Hai Thắng)</span>
             </a>
           </div>
         </div>

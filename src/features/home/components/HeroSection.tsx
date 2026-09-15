@@ -15,9 +15,15 @@ export default function HeroSection() {
   }
 
   return (
-    <section className="relative w-full bg-gradient-to-b from-primary-dark via-[#1a5b22] to-primary overflow-hidden text-white py-12 lg:py-20">
-      <div className="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-white/10 blur-3xl pointer-events-none"></div>
-      <div className="absolute left-1/3 -bottom-20 w-80 h-80 rounded-full bg-emerald-400/10 blur-3xl pointer-events-none"></div>
+    <section className="relative w-full overflow-hidden text-white py-12 lg:py-20">
+      <img
+        alt=""
+        aria-hidden="true"
+        src="/images/misc/hero-rice-field.jpg"
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-primary-dark via-primary-dark/85 to-primary-dark/45"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/55 via-transparent to-primary-dark/25"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           <div className="lg:col-span-7 space-y-6 text-left">

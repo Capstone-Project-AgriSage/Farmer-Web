@@ -7,12 +7,12 @@ interface HeaderProps {
 }
 
 const navLinks = [
-  { to: '/', label: 'Trang chủ', icon: 'home', routed: true },
-  { to: '/about', label: 'Giới thiệu', icon: 'info', routed: true },
-  { to: '/products', label: 'Sản phẩm', icon: 'inventory_2', routed: true },
-  { to: '/ai-doctor', label: 'Bác sĩ AI', icon: 'psychology', routed: true },
-  { to: '/knowledge', label: 'Kiến thức', icon: 'menu_book', routed: true },
-  { to: '/contact', label: 'Liên hệ', icon: 'mail', routed: true },
+  { to: '/', label: 'Trang chủ', routed: true },
+  { to: '/about', label: 'Giới thiệu', routed: true },
+  { to: '/products', label: 'Sản phẩm', routed: true },
+  { to: '/ai-doctor', label: 'Bác sĩ AI', routed: true },
+  { to: '/knowledge', label: 'Kiến thức', routed: true },
+  { to: '/contact', label: 'Liên hệ', routed: true },
 ]
 
 export default function Header({ cartCount }: HeaderProps) {
@@ -45,7 +45,7 @@ export default function Header({ cartCount }: HeaderProps) {
           </div>
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-white text-base sm:text-lg tracking-tight leading-none group-hover:text-emerald-200 transition-colors truncate">
+              <span className="font-brand font-extrabold text-white text-base sm:text-lg tracking-tight leading-none group-hover:text-emerald-200 transition-colors truncate">
                 AgriSage
               </span>
             </div>
@@ -62,28 +62,22 @@ export default function Header({ cartCount }: HeaderProps) {
                 to={link.to}
                 end={link.to === '/'}
                 className={({ isActive }) =>
-                  `flex items-center gap-1.5 whitespace-nowrap transition-colors ${
+                  `whitespace-nowrap transition-colors ${
                     isActive
                       ? 'text-white font-semibold px-3 py-1.5 rounded-full bg-white/15 border border-white/20 shadow-sm'
                       : 'hover:text-white'
                   }`
                 }
               >
-                <span className="material-symbols-outlined text-[20px] text-emerald-300">
-                  {link.icon}
-                </span>
-                <span>{link.label}</span>
+                {link.label}
               </NavLink>
             ) : (
               <a
                 key={link.label}
                 href={link.to}
-                className="flex items-center gap-1.5 whitespace-nowrap hover:text-white transition-colors"
+                className="whitespace-nowrap hover:text-white transition-colors"
               >
-                <span className="material-symbols-outlined text-[20px] text-emerald-300">
-                  {link.icon}
-                </span>
-                <span>{link.label}</span>
+                {link.label}
               </a>
             ),
           )}
@@ -150,17 +144,14 @@ export default function Header({ cartCount }: HeaderProps) {
               to={link.to}
               end={link.to === '/'}
               className={({ isActive }) =>
-                `flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                `block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                   isActive
                     ? 'bg-white/15 text-white font-semibold'
                     : 'text-emerald-100/90 hover:bg-white/10 hover:text-white'
                 }`
               }
             >
-              <span className="material-symbols-outlined text-[20px] text-emerald-300">
-                {link.icon}
-              </span>
-              <span>{link.label}</span>
+              {link.label}
             </NavLink>
           ))}
           {isAuthenticated ? (

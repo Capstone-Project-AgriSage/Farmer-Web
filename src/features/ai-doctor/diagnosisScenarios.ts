@@ -46,79 +46,29 @@ export interface DiagnosisScenario {
   diseaseTag: string
 }
 
-export const cropOptions = [
-  { value: 'durian', label: 'Sầu riêng' },
-  { value: 'coffee', label: 'Cà phê & Hồ tiêu' },
-  { value: 'other', label: 'Rau màu & Cây có múi / Khác' },
-] as const
+/** AgriSage's AI diagnosis currently supports rice only, matching agent_agrisage's
+ * AI-recommendation queue (see mockAiRecommendations.ts case AI-2401, same disease). */
+export const cropLabel = 'Lúa (Oryza sativa)'
 
-export type CropValue = (typeof cropOptions)[number]['value']
-
-export const diagnosisScenarios: Record<CropValue, DiagnosisScenario> = {
-  durian: {
-    diseaseName: 'Thán thư, xì mủ sầu riêng',
-    pathogen: 'Nấm Colletotrichum sp. / Phytophthora palmivora',
-    confidence: 92,
-    severity: 'Trung bình',
-    symptomsDetected: [
-      'Đốm nâu viền vàng lan rộng trên phiến lá',
-      'Vết nứt thân rỉ mủ màu nâu đỏ',
-      'Mép lá cháy khô, dễ rụng khi có gió mạnh',
-    ],
-    treatmentSteps: [
-      'Cắt tỉa cành, lá bệnh và tiêu hủy xa vườn để tránh lây lan',
-      'Pha Ridomil Gold 68WG 100g cho 40-50L nước, phun ướt đều tán lá',
-      'Cạo sạch vết xì mủ trên thân, quét trực tiếp dung dịch đặc',
-      'Theo dõi và phun lại sau 7-10 ngày nếu bệnh chưa dứt',
-    ],
-    alternatives: [
-      { name: 'Cháy lá do nắng nóng sinh lý', confidence: 6 },
-      { name: 'Thiếu vi lượng Canxi - Bo', confidence: 2 },
-    ],
-    diseaseTag: 'Thán thư, xì mủ sầu riêng',
-  },
-  coffee: {
-    diseaseName: 'Rỉ sắt, nấm hồng cà phê',
-    pathogen: 'Nấm Hemileia vastatrix',
-    confidence: 78,
-    severity: 'Trung bình',
-    symptomsDetected: [
-      'Đốm bột màu cam vàng mặt dưới lá',
-      'Lá vàng úa và rụng sớm, tán cây thưa',
-      'Xuất hiện lớp phấn hồng nhạt trên cành non',
-    ],
-    treatmentSteps: [
-      'Phun Anvil 5SC hoặc Nativo 750WG theo liều khuyến cáo trên bao bì',
-      'Luân phiên hoạt chất mỗi 15-20 ngày trong mùa mưa cao điểm để tránh kháng thuốc',
-      'Bón cân đối Kali giúp cây tăng sức đề kháng',
-      'Tỉa cành tạo tán thông thoáng, giảm ẩm độ trong tán lá',
-    ],
-    alternatives: [
-      { name: 'Thiếu dinh dưỡng đa lượng', confidence: 12 },
-      { name: 'Bọ xít muỗi gây hại', confidence: 10 },
-    ],
-    diseaseTag: 'Rỉ sắt, nấm hồng cà phê',
-  },
-  other: {
-    diseaseName: 'Vàng lá, thối rễ mùa mưa',
-    pathogen: 'Phức hợp nấm Fusarium sp. và Phytophthora sp.',
-    confidence: 55,
-    severity: 'Nặng',
-    symptomsDetected: [
-      'Lá vàng từ gân chính lan ra mép lá',
-      'Rễ tơ thâm đen, dễ tuột vỏ khi kéo nhẹ',
-      'Cây còi cọc dù đã bón phân đầy đủ',
-    ],
-    treatmentSteps: [
-      'Đào rãnh thoát nước quanh gốc, tránh đọng nước mùa mưa',
-      'Tưới gốc Aliette 800WG pha theo liều khuyến cáo, kết hợp chế phẩm nấm đối kháng Trichoderma',
-      'Hạn chế bón đạm trong giai đoạn cây đang suy yếu',
-      'Độ tin cậy chẩn đoán dưới 60% — nên gọi kỹ sư nông học kiểm tra trực tiếp trước khi xử lý diện rộng',
-    ],
-    alternatives: [
-      { name: 'Ngộ độc hữu cơ do đất yếm khí', confidence: 24 },
-      { name: 'Tuyến trùng gây hại rễ', confidence: 15 },
-    ],
-    diseaseTag: 'Vàng lá, thối rễ mùa mưa',
-  },
+export const diagnosisScenario: DiagnosisScenario = {
+  diseaseName: 'Đạo ôn lá',
+  pathogen: 'Nấm Pyricularia oryzae',
+  confidence: 94,
+  severity: 'Trung bình',
+  symptomsDetected: [
+    'Vết bệnh hình thoi (mắt én), tâm màu xám tro, viền nâu đậm trên phiến lá',
+    'Vết bệnh lan rộng và liên kết nhau khi trời ẩm, mưa nhiều',
+    'Chóp lá cháy khô, ruộng lúa ngả màu xám xa trông như bị cháy',
+  ],
+  treatmentSteps: [
+    'Ngừng bón đạm khi phát hiện bệnh, tránh bón thúc đòng khi ruộng đang nhiễm nặng',
+    'Phun Fuji-One 40WP (Isoprothiolane 40%) theo liều khuyến cáo trên bao bì, phun ướt đều tán lá',
+    'Giữ mực nước ổn định trong ruộng, tránh để ruộng khô hạn xen kẽ ngập nước',
+    'Theo dõi và phun lại sau 7 ngày nếu vết bệnh chưa ngừng lây lan',
+  ],
+  alternatives: [
+    { name: 'Cháy bìa lá do vi khuẩn (bạc lá)', confidence: 5 },
+    { name: 'Ngộ độc phèn/hữu cơ đầu vụ', confidence: 1 },
+  ],
+  diseaseTag: 'Đạo ôn lá',
 }

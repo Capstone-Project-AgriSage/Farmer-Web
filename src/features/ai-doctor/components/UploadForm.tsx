@@ -1,5 +1,5 @@
 import type { RefObject } from 'react'
-import { cropOptions, type CropValue } from '../diagnosisScenarios'
+import { cropLabel } from '../diagnosisScenarios'
 import Spinner from '../../../components/ui/Spinner'
 
 interface UploadFormProps {
@@ -9,8 +9,6 @@ interface UploadFormProps {
   onDragStateChange: (dragging: boolean) => void
   onFileSelected: (file: File | undefined) => void
   onResetImage: () => void
-  crop: CropValue
-  onCropChange: (crop: CropValue) => void
   symptomText: string
   onSymptomTextChange: (text: string) => void
   isAnalyzing: boolean
@@ -24,8 +22,6 @@ export default function UploadForm({
   onDragStateChange,
   onFileSelected,
   onResetImage,
-  crop,
-  onCropChange,
   symptomText,
   onSymptomTextChange,
   isAnalyzing,
@@ -94,17 +90,13 @@ export default function UploadForm({
         <label className="block text-xs font-bold uppercase tracking-wider text-text-primary mb-2">
           2. Loại cây trồng
         </label>
-        <select
-          value={crop}
-          onChange={(e) => onCropChange(e.target.value as CropValue)}
-          className="w-full px-3.5 py-2.5 text-sm bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary text-text-primary"
-        >
-          {cropOptions.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
+        <div className="flex items-center gap-2 px-3.5 py-2.5 text-sm bg-surface-subtle border border-border-subtle rounded-lg text-text-primary">
+          <span className="material-symbols-outlined text-primary text-[18px]">grass</span>
+          <span className="font-semibold">{cropLabel}</span>
+          <span className="ml-auto text-[11px] text-text-muted uppercase tracking-wider">
+            Cây trồng duy nhất hỗ trợ hiện tại
+          </span>
+        </div>
       </div>
 
       <div>

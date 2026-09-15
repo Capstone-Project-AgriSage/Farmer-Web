@@ -188,6 +188,21 @@ export const products: Product[] = [
     stockStatus: 'Còn hàng',
     tag: 'An toàn sinh học',
   },
+  {
+    slug: 'fuji-one-40wp',
+    name: 'Fuji-One 40WP - Đặc trị đạo ôn lá, đạo ôn cổ bông',
+    brand: 'Kumiai (Nhật Bản)',
+    category: 'Thuốc đặc trị nấm bệnh',
+    group: 'Thuốc BVTV & Trừ nấm',
+    diseaseTags: ['Đạo ôn lá'],
+    activeIngredient: 'Isoprothiolane 40%',
+    packaging: 'Gói 100g',
+    image: '/images/products/fungicide-spray.jpg',
+    price: 45000,
+    stockLabel: 'Sẵn kho Cần Thơ (142 gói)',
+    stockStatus: 'Còn hàng',
+    tag: 'AI khuyên dùng',
+  },
 ]
 
 export function getProductBySlug(slug: string): Product | undefined {

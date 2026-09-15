@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import { products } from '../../data/mockProducts'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
-import { diagnosisScenarios, type CropValue, type DiagnosisScenario } from './diagnosisScenarios'
+import { diagnosisScenario, type DiagnosisScenario } from './diagnosisScenarios'
 import UploadForm from './components/UploadForm'
 import DiagnosisResultCard from './components/DiagnosisResultCard'
 import PhotoTipsCard from './components/PhotoTipsCard'
@@ -14,7 +14,6 @@ export default function AiDoctorPage() {
   useDocumentTitle('Bác sĩ cây trồng AI')
 
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  const [crop, setCrop] = useState<CropValue>('durian')
   const [symptomText, setSymptomText] = useState('')
   const [isDragging, setIsDragging] = useState(false)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -48,7 +47,7 @@ export default function AiDoctorPage() {
     setShowAlternatives(false)
     if (analyzeTimeoutRef.current) clearTimeout(analyzeTimeoutRef.current)
     analyzeTimeoutRef.current = setTimeout(() => {
-      setResult(diagnosisScenarios[crop])
+      setResult(diagnosisScenario)
       setIsAnalyzing(false)
       analyzeTimeoutRef.current = null
     }, 1800)
@@ -107,8 +106,6 @@ export default function AiDoctorPage() {
               onDragStateChange={setIsDragging}
               onFileSelected={applyFile}
               onResetImage={handleReset}
-              crop={crop}
-              onCropChange={setCrop}
               symptomText={symptomText}
               onSymptomTextChange={setSymptomText}
               isAnalyzing={isAnalyzing}

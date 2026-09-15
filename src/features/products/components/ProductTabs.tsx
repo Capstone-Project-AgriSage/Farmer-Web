@@ -11,30 +11,34 @@ export type ProductTabId = (typeof tabs)[number]['id']
 
 const dosageGuides = [
   {
-    crop: 'Cây Sầu Riêng',
-    tag: 'Đặc trị Phytophthora',
-    disease: 'Nứt thân xì mủ, thối cổ rễ, cháy lá mùa mưa.',
+    crop: 'Lúa Đẻ Nhánh (20 - 35 NSS)',
+    tag: 'Đặc trị Đạo ôn & Sâu cuốn lá',
+    disease: 'Đạo ôn lá (cháy lá), sâu cuốn lá nhỏ, sâu đục thân giai đoạn đẻ nhánh rộ.',
     guide: [
-      'Phun lá: Pha 100g cho 40 - 50 lít nước sạch, phun ướt đều tán.',
-      'Quét vết nứt: Cạo sạch vết thối, pha sệt 100g với 0.5L nước quét trực tiếp.',
+      'Phun lá: Pha 25 - 30g thuốc trừ bệnh cho bình 25 lít nước, phun ướt đều tán lúa.',
+      'Thời điểm: Phun khi vết bệnh chớm xuất hiện chấm kim hoặc mật độ bướm rộ 2-3 ngày.',
     ],
   },
   {
-    crop: 'Cà Phê & Hồ Tiêu',
-    tag: 'Chống rụng quả non',
-    disease: 'Rỉ sắt nấm hồng trên cà phê, bệnh chết nhanh tiêu mùa mưa lũ.',
+    crop: 'Lúa Làm Đòng - Trổ Lẹt Xẹt (45 - 60 NSS)',
+    tag: 'Bảo vệ Đòng & Cổ bông',
+    disease: 'Đạo ôn cổ bông, cháy bìa lá vi khuẩn, khô vằn ăn lên bẹ lá đòng.',
     guide: [
-      'Tưới gốc: Pha 100g cho 50 lít nước, tưới 3 - 5 lít quanh tán gốc mỗi trụ.',
-      'Phun phòng: Định kỳ 15 - 20 ngày trong mùa mưa cao điểm Lâm Đồng.',
+      'Phun đón đòng: Phun kết hợp phòng trừ đạo ôn cổ bông và đốm sọc vi khuẩn.',
+      'Phun lại lần 2: Khi lúa trổ đều (sau trổ lẹt xẹt 5 - 7 ngày) để bảo vệ hạt sáng mẩy.',
     ],
   },
   {
-    crop: 'Rau Màu & Cây Có Múi',
-    tag: 'Lưu dẫn 2 chiều',
-    disease: 'Mốc sương cà chua, sương mai dưa hấu, vàng lá thối rễ cam quýt.',
-    guide: ['Liều dùng: Pha 40g - 50g cho bình 25 lít nước.', 'Lưu ý: Phun khi tỷ lệ bệnh chớm xuất hiện 5% trên ruộng.'],
+    crop: 'Lúa Cong Trái Me - Chín Sáp (70 - 85 NSS)',
+    tag: 'Chống Lem Lép Hạt & Đốm Nâu',
+    disease: 'Đốm nâu, lem lép hạt do nấm và vi khuẩn, vàng lá chín sớm.',
+    guide: [
+      'Liều dùng: Pha 40ml - 50ml chế phẩm đặc trị cho bình 25 lít nước sạch.',
+      'Cách ly: Đảm bảo thời gian cách ly (PHI) tối thiểu 14 ngày trước ngày gặt thu hoạch.',
+    ],
   },
 ]
+
 
 interface ProductTabsProps {
   product: Product
@@ -108,7 +112,7 @@ export default function ProductTabs({ product, activeTab, onActiveTabChange }: P
                     </tr>
                     <tr className="bg-surface-subtle">
                       <td className="py-2.5 px-4 font-semibold text-text-primary">Đóng gói &amp; Phân phối</td>
-                      <td className="py-2.5 px-4">Hệ thống kho vận AgriSage Logistics Di Linh &amp; Cần Thơ</td>
+                      <td className="py-2.5 px-4">Kho Đại lý Hai Thắng (Thị trấn Thới Lai, TP. Cần Thơ)</td>
                     </tr>
                     <tr>
                       <td className="py-2.5 px-4 font-semibold text-text-primary">Hạn sử dụng</td>

@@ -41,8 +41,8 @@ export default function Footer() {
                   store
                 </span>
                 <span>
-                  <strong className="text-white">Chi nhánh Lâm Đồng:</strong> 142 Hùng Vương, TT.
-                  Di Linh, Tỉnh Lâm Đồng.
+                  <strong className="text-white">Đại lý Vật tư Nông nghiệp Hai Thắng:</strong> Thị trấn Thới Lai,
+                  Huyện Thới Lai, TP. Cần Thơ (Đồng bằng Sông Cửu Long).
                 </span>
               </div>
             </div>
@@ -54,43 +54,43 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2.5 text-xs text-emerald-100/80">
               <li>
-                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="#">
+                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="/products">
                   <span className="material-symbols-outlined text-[14px] text-emerald-300/60">
                     chevron_right
                   </span>
-                  <span>Vật tư phân bón NPK &amp; Hữu cơ</span>
+                  <span>Phân bón NPK &amp; Hữu cơ cho lúa</span>
                 </a>
               </li>
               <li>
-                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="#">
+                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="/products">
                   <span className="material-symbols-outlined text-[14px] text-emerald-300/60">
                     chevron_right
                   </span>
-                  <span>Thuốc bảo vệ thực vật sinh học</span>
+                  <span>Thuốc BVTV trừ bệnh đạo ôn, bạc lá</span>
                 </a>
               </li>
               <li>
-                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="#">
+                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="/products">
+                  <span className="material-symbols-outlined text-[14px] text-emerald-300/60">
+                    chevron_right
+                  </span>
+                  <span>Lúa giống xác nhận ST25, OM5451</span>
+                </a>
+              </li>
+              <li>
+                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="/ai-doctor">
                   <span className="material-symbols-outlined text-[14px] text-emerald-300 font-medium">
                     psychology
                   </span>
-                  <span className="font-medium text-white">Chẩn đoán AI bệnh lá cây</span>
+                  <span className="font-medium text-white">Chẩn đoán bệnh lá lúa AI</span>
                 </a>
               </li>
               <li>
-                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="#">
+                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="/account?tab=credit">
                   <span className="material-symbols-outlined text-[14px] text-emerald-300/60">
                     chevron_right
                   </span>
-                  <span>Quản lý hạn mức công nợ mùa vụ</span>
-                </a>
-              </li>
-              <li>
-                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="#">
-                  <span className="material-symbols-outlined text-[14px] text-emerald-300/60">
-                    chevron_right
-                  </span>
-                  <span>Lô hàng &amp; cảnh báo hạn dùng tự động</span>
+                  <span>Sổ nợ mùa vụ &amp; Xác nhận 2 chiều</span>
                 </a>
               </li>
             </ul>
@@ -146,7 +146,7 @@ export default function Footer() {
             <div className="pt-2">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 border border-white/15 text-xs text-emerald-100">
                 <span className="w-2 h-2 rounded-full bg-status-success animate-pulse"></span>
-                <span>Hệ thống chi nhánh Lâm Đồng &amp; ĐBSCL đang trực tuyến</span>
+                <span>Đại lý Hai Thắng (Thới Lai, Cần Thơ) đang trực tuyến</span>
               </div>
             </div>
           </div>

@@ -4,40 +4,22 @@ import type { ProductGroup } from '../../../types'
 
 const categories: { name: string; group: ProductGroup; count: string; image: string }[] = [
   {
-    name: 'Phân bón NPK & Vi lượng',
-    group: 'Phân bón NPK & Vi lượng',
-    count: '240+ sản phẩm',
-    image: '/images/categories/npk.jpg',
-  },
-  {
-    name: 'Thuốc BVTV & Diệt nấm',
-    group: 'Thuốc BVTV & Trừ nấm',
-    count: '180+ sản phẩm',
+    name: 'Thuốc Đặc Trị Nấm & Khuẩn',
+    group: 'Thuốc đặc trị nấm & diệt khuẩn',
+    count: '6 sản phẩm chuẩn',
     image: '/images/categories/bvtv.jpg',
   },
   {
-    name: 'Phân hữu cơ vi sinh',
-    group: 'Phân hữu cơ vi sinh',
-    count: '95+ sản phẩm',
-    image: '/images/categories/huu-co.jpg',
+    name: 'Phân Bón NPK & Dinh Dưỡng Lúa',
+    group: 'Phân bón NPK & Dinh dưỡng lúa',
+    count: '2 dòng chủ lực',
+    image: '/images/categories/npk.jpg',
   },
   {
-    name: 'Hạt giống & Cây giống',
-    group: 'Hạt giống & Cây giống',
-    count: '120+ loại',
+    name: 'Lúa Giống Xác Nhận',
+    group: 'Lúa giống xác nhận',
+    count: 'Chuẩn thuần F1',
     image: '/images/categories/hat-giong.jpg',
-  },
-  {
-    name: 'Tưới nhỏ giọt & Thiết bị',
-    group: 'Tưới nhỏ giọt & Thiết bị',
-    count: '70+ phụ kiện',
-    image: '/images/categories/tuoi-nho-giot.jpg',
-  },
-  {
-    name: 'Thuốc trừ sâu sinh học',
-    group: 'Thuốc trừ sâu sinh học',
-    count: '110+ sản phẩm',
-    image: '/images/categories/sinh-hoc.jpg',
   },
 ]
 

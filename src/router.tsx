@@ -12,11 +12,6 @@ const ProductDetailPage = lazy(() => import('./features/products/ProductDetailPa
 const CartPage = lazy(() => import('./features/cart/CartPage'))
 const CheckoutPage = lazy(() => import('./features/checkout/CheckoutPage'))
 const OrderSuccessPage = lazy(() => import('./features/order/OrderSuccessPage'))
-const AboutPage = lazy(() => import('./features/about/AboutPage'))
-const KnowledgePage = lazy(() => import('./features/knowledge/KnowledgePage'))
-const ArticleDetailPage = lazy(() => import('./features/knowledge/ArticleDetailPage'))
-const ContactPage = lazy(() => import('./features/contact/ContactPage'))
-const MyRequestsPage = lazy(() => import('./features/contact/MyRequestsPage'))
 const AccountPage = lazy(() => import('./features/account/AccountPage'))
 const AiDoctorPage = lazy(() => import('./features/ai-doctor/AiDoctorPage'))
 const NotFoundPage = lazy(() => import('./features/misc/NotFoundPage'))
@@ -31,11 +26,6 @@ const routes = [
   { path: 'cart', element: <CartPage /> },
   { path: 'checkout', element: <CheckoutPage /> },
   { path: 'order-success', element: <OrderSuccessPage /> },
-  { path: 'about', element: <AboutPage /> },
-  { path: 'knowledge', element: <KnowledgePage /> },
-  { path: 'knowledge/:slug', element: <ArticleDetailPage /> },
-  { path: 'contact', element: <ContactPage /> },
-  { path: 'contact/requests', element: <MyRequestsPage /> },
   { path: 'account', element: <AccountPage /> },
   { path: 'ai-doctor', element: <AiDoctorPage /> },
   { path: '*', element: <NotFoundPage /> },

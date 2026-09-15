@@ -16,109 +16,135 @@ export function confidenceTone(confidence: number): ConfidenceTone {
       bar: 'bg-status-success',
       text: 'text-status-success',
       badgeBg: 'bg-status-success-surface',
-      label: 'Độ tin cậy cao',
+      label: 'Độ tin cậy cao (≥85%)',
     }
   }
-  if (confidence >= 60) {
+  if (confidence >= 70) {
     return {
       bar: 'bg-status-warning',
       text: 'text-status-warning',
       badgeBg: 'bg-status-warning-surface',
-      label: 'Độ tin cậy trung bình',
+      label: 'Độ tin cậy trung bình (70-84%)',
     }
   }
   return {
     bar: 'bg-status-error',
     text: 'text-status-error',
     badgeBg: 'bg-status-error-surface',
-    label: 'Độ tin cậy thấp',
+    label: 'Chưa đủ chắc chắn (<70%)',
   }
 }
 
 export interface DiagnosisScenario {
+  diseaseId: 'leaf_blast' | 'bacterial_leaf_blight' | 'brown_spot' | 'sheath_blight' | 'healthy'
   diseaseName: string
   pathogen: string
   confidence: number
-  severity: 'Nhẹ' | 'Trung bình' | 'Nặng'
+  severity: 'Nhẹ' | 'Trung bình' | 'Nặng' | 'Bình thường'
   symptomsDetected: string[]
   treatmentSteps: string[]
   alternatives: DiagnosisCandidate[]
   diseaseTag: string
 }
 
-export const cropOptions = [
-  { value: 'durian', label: 'Sầu riêng' },
-  { value: 'coffee', label: 'Cà phê & Hồ tiêu' },
-  { value: 'other', label: 'Rau màu & Cây có múi / Khác' },
+export const riceStageOptions = [
+  { value: 'tillering', label: 'Giai đoạn Đẻ nhánh (20-35 ngày sau sạ)' },
+  { value: 'panicle', label: 'Giai đoạn Làm đòng (40-55 ngày sau sạ)' },
+  { value: 'ripening', label: 'Giai đoạn Trổ chín (60-90 ngày sau sạ)' },
+  { value: 'seedling', label: 'Giai đoạn Mạ non (10-20 ngày sau sạ)' },
 ] as const
 
-export type CropValue = (typeof cropOptions)[number]['value']
+export type RiceStageValue = (typeof riceStageOptions)[number]['value']
 
-export const diagnosisScenarios: Record<CropValue, DiagnosisScenario> = {
-  durian: {
-    diseaseName: 'Thán thư, xì mủ sầu riêng',
-    pathogen: 'Nấm Colletotrichum sp. / Phytophthora palmivora',
-    confidence: 92,
+export const diagnosisScenarios: Record<RiceStageValue, DiagnosisScenario> = {
+  tillering: {
+    diseaseId: 'leaf_blast',
+    diseaseName: 'Bệnh đạo ôn lá lúa',
+    pathogen: 'Nấm Pyricularia oryzae (Magnaporthe oryzae)',
+    confidence: 94,
     severity: 'Trung bình',
     symptomsDetected: [
-      'Đốm nâu viền vàng lan rộng trên phiến lá',
-      'Vết nứt thân rỉ mủ màu nâu đỏ',
-      'Mép lá cháy khô, dễ rụng khi có gió mạnh',
+      'Chấm bệnh hình mắt én (hình thoi) màu xám tro viền nâu xuất hiện rải rác trên phiến lá',
+      'Đầu lá có dấu hiệu co rút và sém khô khi thời tiết se lạnh nhiều sương mù',
+      'Mật độ đẻ nhánh rậm rạp làm tăng độ ẩm ứ đọng',
     ],
     treatmentSteps: [
-      'Cắt tỉa cành, lá bệnh và tiêu hủy xa vườn để tránh lây lan',
-      'Pha Ridomil Gold 68WG 100g cho 40-50L nước, phun ướt đều tán lá',
-      'Cạo sạch vết xì mủ trên thân, quét trực tiếp dung dịch đặc',
-      'Theo dõi và phun lại sau 7-10 ngày nếu bệnh chưa dứt',
+      'Giữ mực nước ruộng 3-5cm, tuyệt đối ngưng bón đạm (Urê) và phân bón lá có đạm',
+      'Rút bớt sương mù đọng bằng cách khua giọt sương vào sáng sớm',
+      'Đợi thẩm định viên / Đại lý duyệt thuốc đặc trị (Tricyclazole / Isoprothiolane) trước khi phun',
+      'Phun khi trời ráo sương và kiểm tra lại sau 5 ngày',
     ],
     alternatives: [
-      { name: 'Cháy lá do nắng nóng sinh lý', confidence: 6 },
-      { name: 'Thiếu vi lượng Canxi - Bo', confidence: 2 },
+      { name: 'Đốm nâu nhẹ sinh lý', confidence: 4 },
+      { name: 'Vết chích rầy lưng trắng', confidence: 2 },
     ],
-    diseaseTag: 'Thán thư, xì mủ sầu riêng',
+    diseaseTag: 'leaf_blast',
   },
-  coffee: {
-    diseaseName: 'Rỉ sắt, nấm hồng cà phê',
-    pathogen: 'Nấm Hemileia vastatrix',
-    confidence: 78,
-    severity: 'Trung bình',
-    symptomsDetected: [
-      'Đốm bột màu cam vàng mặt dưới lá',
-      'Lá vàng úa và rụng sớm, tán cây thưa',
-      'Xuất hiện lớp phấn hồng nhạt trên cành non',
-    ],
-    treatmentSteps: [
-      'Phun Anvil 5SC hoặc Nativo 750WG theo liều khuyến cáo trên bao bì',
-      'Luân phiên hoạt chất mỗi 15-20 ngày trong mùa mưa cao điểm để tránh kháng thuốc',
-      'Bón cân đối Kali giúp cây tăng sức đề kháng',
-      'Tỉa cành tạo tán thông thoáng, giảm ẩm độ trong tán lá',
-    ],
-    alternatives: [
-      { name: 'Thiếu dinh dưỡng đa lượng', confidence: 12 },
-      { name: 'Bọ xít muỗi gây hại', confidence: 10 },
-    ],
-    diseaseTag: 'Rỉ sắt, nấm hồng cà phê',
-  },
-  other: {
-    diseaseName: 'Vàng lá, thối rễ mùa mưa',
-    pathogen: 'Phức hợp nấm Fusarium sp. và Phytophthora sp.',
-    confidence: 55,
+  panicle: {
+    diseaseId: 'bacterial_leaf_blight',
+    diseaseName: 'Bệnh bạc lá vi khuẩn (cháy bìa lá)',
+    pathogen: 'Vi khuẩn Xanthomonas oryzae pv. oryzae',
+    confidence: 91,
     severity: 'Nặng',
     symptomsDetected: [
-      'Lá vàng từ gân chính lan ra mép lá',
-      'Rễ tơ thâm đen, dễ tuột vỏ khi kéo nhẹ',
-      'Cây còi cọc dù đã bón phân đầy đủ',
+      'Vệt cháy màu vàng rơm chạy dọc mép lá từ chóp lá lúa lan dần vào phiến lá',
+      'Mép lá lượn sóng và khô giòn vào buổi trưa nắng gắt',
+      'Sáng sớm xuất hiện giọt dịch nhờn vi khuẩn màu vàng đục trên mép vết bệnh',
     ],
     treatmentSteps: [
-      'Đào rãnh thoát nước quanh gốc, tránh đọng nước mùa mưa',
-      'Tưới gốc Aliette 800WG pha theo liều khuyến cáo, kết hợp chế phẩm nấm đối kháng Trichoderma',
-      'Hạn chế bón đạm trong giai đoạn cây đang suy yếu',
-      'Độ tin cậy chẩn đoán dưới 60% — nên gọi kỹ sư nông học kiểm tra trực tiếp trước khi xử lý diện rộng',
+      'Tháo bớt nước trong ruộng nếu có giông gió làm rách dập lá',
+      'Tuyệt đối không bón đón đòng thừa đạm, tăng cường bón Kali để tăng tính kháng',
+      'Đại lý phụ trách khu vực sẽ kiểm tra và cấp phác đồ kháng sinh thực vật (Bismerthiazol / Oxolinic acid)',
+      'Phun thuốc sát khuẩn phổ rộng vào chiều mát',
     ],
     alternatives: [
-      { name: 'Ngộ độc hữu cơ do đất yếm khí', confidence: 24 },
-      { name: 'Tuyến trùng gây hại rễ', confidence: 15 },
+      { name: 'Khô chóp lá do gió mặn / thời tiết', confidence: 6 },
+      { name: 'Bạc lá do nhện gié cắn phá', confidence: 3 },
     ],
-    diseaseTag: 'Vàng lá, thối rễ mùa mưa',
+    diseaseTag: 'bacterial_leaf_blight',
+  },
+  ripening: {
+    diseaseId: 'sheath_blight',
+    diseaseName: 'Bệnh khô vằn (đốm vằn bẹ lá)',
+    pathogen: 'Nấm Rhizoctonia solani',
+    confidence: 86,
+    severity: 'Trung bình',
+    symptomsDetected: [
+      'Vết đốm loang lổ dạng da hổ viền nâu sẫm, tâm xám trắng ở bẹ lá sát mặt nước',
+      'Sợi nấm trắng và hạch nấm nâu tròn bám chặt vào bẹ thân lúa',
+      'Bệnh có chiều hướng bò leo lên lá đòng gây lem lép hạt',
+    ],
+    treatmentSteps: [
+      'Thực hiện tưới ướt - khô xen kẽ, làm cỏ bờ tạo độ thông thoáng gốc lúa',
+      'Đại lý Hai Thắng sẽ xác nhận hoạt chất phù hợp (Hexaconazole / Validamycin A)',
+      'Phun rà sát phần bẹ gốc lúa vào buổi chiều ráo nắng',
+      'Theo dõi sát sao giai đoạn trổ đều để tránh nấm xâm nhập vỏ trấu',
+    ],
+    alternatives: [
+      { name: 'Vết thối bẹ do ngập úng hữu cơ', confidence: 9 },
+      { name: 'Vết bầm sinh lý do va quẹt', confidence: 5 },
+    ],
+    diseaseTag: 'sheath_blight',
+  },
+  seedling: {
+    diseaseId: 'healthy',
+    diseaseName: 'Lúa sinh trưởng khỏe mạnh',
+    pathogen: 'Không phát hiện mầm bệnh dịch hại nguy hiểm',
+    confidence: 98,
+    severity: 'Bình thường',
+    symptomsDetected: [
+      'Phiến lá thẳng đứng, sắc xanh tươi đồng đều không có đốm nấm',
+      'Gốc mạ mập mạp, bẹ lá sạch sẽ',
+      'Rễ trắng tơ bám đều mặt đất ruộng',
+    ],
+    treatmentSteps: [
+      'Duy trì mực nước 1-2cm giúp giữ ấm và chống cỏ dại',
+      'Thăm đồng thường xuyên 2 lần/tuần theo bảng so màu lá lúa LCC',
+      'Không lạm dụng phun thuốc phòng ngừa khi cây đang hoàn toàn khỏe mạnh',
+    ],
+    alternatives: [
+      { name: 'Bệnh đốm nâu nhẹ', confidence: 2 },
+    ],
+    diseaseTag: 'healthy',
   },
 }

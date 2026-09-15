@@ -35,13 +35,12 @@ export default function OrderTimeline() {
           <div className="flex flex-col">
             <div className="flex items-center justify-between">
               <span className="font-bold text-sm text-[#0277BD]">
-                Kho Di Linh đang bốc xếp vật tư &amp; niêm phong lô
+                Kho Hai Thắng (Thới Lai) đang bốc xếp vật tư &amp; niêm phong lô
               </span>
               <span className="text-xs font-mono text-[#0277BD] font-semibold">Đang tiến hành</span>
             </div>
             <p className="text-xs text-[#465348] mt-1">
-              Nhân viên kho đang kiểm tra tem QR chống giả của Syngenta, bao bì 50kg Đầu Trâu
-              và hạn dùng thuốc BVTV.
+              Nhân viên kho đang kiểm tra tem QR chống giả, bao bì lúa giống và hạn dùng thuốc BVTV lúa.
             </p>
           </div>
         </div>
@@ -52,13 +51,12 @@ export default function OrderTimeline() {
           <div className="flex flex-col">
             <div className="flex items-center justify-between">
               <span className="font-semibold text-sm text-[#172118]">
-                Điều xe tải bán tải nông nghiệp chở tận vườn
+                Điều xe tải giao vật tư nông nghiệp tận bờ ruộng
               </span>
               <span className="text-xs text-[#7A8A7C]">Dự kiến: 07:30 sáng mai</span>
             </div>
             <p className="text-xs text-[#7A8A7C] mt-0.5">
-              Tài xế Nguyễn Văn Lực (SĐT: 0984 112 345) phụ trách lộ trình tuyến Di Linh -
-              Đinh Lạc.
+              Tài xế Nguyễn Văn Lực (SĐT: 0984 112 345) phụ trách lộ trình tuyến Kênh Xáng - Thới Lai.
             </p>
           </div>
         </div>

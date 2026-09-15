@@ -1,0 +1,67 @@
+import type { DebtEntry, DebtPayment } from '../types'
+
+export const mockDebtEntries: DebtEntry[] = [
+  {
+    id: 'DEBT-2024-01',
+    orderCode: '#DH-2024-1080',
+    orderId: 'DH-2024-1080',
+    totalDebt: 9620000,
+    confirmedByFarmer: false,
+    farmerConfirmationStatus: 'AWAITING_CONFIRMATION',
+    dueDate: '15/02/2025 (Cuối vụ Đông Xuân 2025)',
+    paidAmount: 0,
+    remainingDebt: 9620000,
+    status: 'ACTIVE',
+    createdAt: '07:15 Hôm nay',
+  },
+  {
+    id: 'DEBT-2024-02',
+    orderCode: '#DH-2024-8842',
+    orderId: 'DH-2024-8842',
+    totalDebt: 3925000,
+    confirmedByFarmer: true,
+    farmerConfirmationStatus: 'CONFIRMED',
+    dueDate: '20/01/2025',
+    paidAmount: 0,
+    remainingDebt: 3925000,
+    status: 'ACTIVE',
+    createdAt: '08/10/2024',
+  },
+  {
+    id: 'DEBT-2024-03',
+    orderCode: '#DH-2024-8703',
+    orderId: 'DH-2024-8703',
+    totalDebt: 4500000,
+    confirmedByFarmer: true,
+    farmerConfirmationStatus: 'CONFIRMED',
+    dueDate: '30/12/2024',
+    paidAmount: 4500000,
+    remainingDebt: 0,
+    status: 'PAID',
+    createdAt: '30/08/2024',
+  },
+]
+
+export const mockDebtPayments: DebtPayment[] = [
+  {
+    id: 'PAY-DEBT-01',
+    debtEntryId: 'DEBT-2024-02',
+    orderCode: '#DH-2024-8842',
+    amount: 1500000,
+    paymentMethod: 'VIETQR',
+    status: 'PENDING_AGENT_CONFIRMATION',
+    createdAt: '10:30 Hôm nay',
+    note: 'Thanh toán trước một phần phân bón vụ Đông Xuân qua Vietcombank',
+  },
+  {
+    id: 'PAY-DEBT-00',
+    debtEntryId: 'DEBT-2024-03',
+    orderCode: '#DH-2024-8703',
+    amount: 4500000,
+    paymentMethod: 'CASH',
+    status: 'CONFIRMED',
+    createdAt: '15:00 28/11/2024',
+    confirmedAt: '15:15 28/11/2024',
+    note: 'Tất toán tiền mặt tại kho Hai Thắng',
+  },
+]

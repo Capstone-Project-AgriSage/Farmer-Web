@@ -9,10 +9,9 @@ export default function AgronomistCard() {
           <span className="text-xs font-semibold text-green-200 uppercase tracking-wider">
             Kỹ sư nông học phụ trách đơn
           </span>
-          <h3 className="text-base font-bold mt-0.5">Kỹ sư Lâm Văn Thành (Lâm Đồng)</h3>
+          <h3 className="text-base font-bold mt-0.5">Kỹ sư Trương Minh Trí (Trạm Hai Thắng)</h3>
           <p className="text-xs text-green-100 mt-1 leading-relaxed">
-            Đã kiểm tra toa thuốc của Bác Hùng: Phối hợp Ridomil Gold &amp; Humic theo tỷ lệ
-            chuẩn cho vườn sầu riêng sau mưa. Cần hỗ trợ pha chế, vui lòng gọi miễn cước:
+            Đã thẩm định toa vật tư của Bác Hùng: Phối hợp Beam 75WP &amp; Map Lotus 125WP kiểm soát đạo ôn lá và cháy bìa lá vi khuẩn cho ruộng lúa ST25. Cần hỗ trợ kỹ thuật pha thuốc:
           </p>
           <div className="mt-4 flex items-center gap-3">
             <a

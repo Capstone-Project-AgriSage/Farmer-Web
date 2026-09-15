@@ -6,8 +6,9 @@ export default function PaymentReceiptCard() {
           <span className="material-symbols-outlined text-[#0d631b] text-xl">receipt_long</span>
           <h2 className="font-bold text-base text-[#172118]">Chứng từ &amp; Trạng thái thanh toán</h2>
         </div>
-        <span className="px-2.5 py-0.5 rounded-full bg-[#E8F5E9] text-[#1B5E20] text-xs font-bold uppercase">
-          Đã quyết toán 100%
+        <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-xs font-bold uppercase flex items-center gap-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"></span>
+          Chờ đại lý Hai Thắng đối soát VietQR
         </span>
       </div>
       <div className="p-4 rounded-xl bg-[#F5FBF4] border border-[#E1E8E2] flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -16,16 +17,16 @@ export default function PaymentReceiptCard() {
             <span className="material-symbols-outlined text-2xl">qr_code_scanner</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-xs text-[#7A8A7C]">Cổng thanh toán điện tử:</span>
-            <span className="font-bold text-[#172118] text-sm">Chuyển khoản VietQR / Napas 247</span>
-            <span className="text-xs text-[#465348]">Ngân hàng: Vietcombank - CN Lâm Đồng</span>
+            <span className="text-xs text-[#7A8A7C]">Tài khoản thụ hưởng đại lý:</span>
+            <span className="font-bold text-[#172118] text-sm">NGUYEN VAN THANG · 19006828999</span>
+            <span className="text-xs text-[#465348]">Vietcombank - Chi nhánh Cần Thơ (PGD Thới Lai)</span>
           </div>
         </div>
         <div className="text-right sm:border-l sm:border-[#E1E8E2] sm:pl-6 w-full sm:w-auto">
-          <span className="text-xs text-[#7A8A7C] block">Số tiền đã chuyển:</span>
+          <span className="text-xs text-[#7A8A7C] block">Số tiền thanh toán:</span>
           <span className="font-mono text-xl font-extrabold text-[#0d631b]">2.600.000 đ</span>
-          <span className="text-[11px] text-[#2E7D32] flex items-center justify-end gap-1 mt-0.5">
-            <span className="material-symbols-outlined text-xs">check_circle</span> Hệ thống tự duyệt tức thì
+          <span className="text-[11px] text-amber-700 flex items-center justify-end gap-1 mt-0.5 font-medium">
+            <span className="material-symbols-outlined text-xs">schedule</span> Đại lý sẽ xác nhận sau khi nhận tiền
           </span>
         </div>
       </div>

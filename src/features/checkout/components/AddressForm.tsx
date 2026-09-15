@@ -18,12 +18,13 @@ export type AddressFormErrors = Partial<Record<keyof AddressFormValues, string>>
 export const addressFormDefaults: AddressFormValues = {
   recipientName: 'Nguyễn Văn Hùng',
   phone: '0918 234 567',
-  province: 'Lâm Đồng',
-  district: 'Huyện Di Linh',
-  ward: 'Xã Đinh Lạc',
-  addressDetail: 'Số 45 Thôn Tân Lạc (gần dốc ngã ba vườn sầu riêng Chú Năm)',
-  note: 'Đường bê tông xe tải 5 tấn vào được tận sân kho, vui lòng liên hệ Chú Năm trước khi xuất bến 30 phút.',
+  province: 'Cần Thơ',
+  district: 'Huyện Thới Lai',
+  ward: 'Thị trấn Thới Lai',
+  addressDetail: 'Ấp Thới Thuận (gần ngã ba Kênh Xáng, cách đại lý Hai Thắng 1.5km)',
+  note: 'Đường bê tông bờ kênh, xe tải 2.5 tấn hoặc ghe vào tận ruộng lúa. Gọi Chú Hùng trước khi giao hàng 15 phút.',
 }
+
 
 export function validateAddressForm(values: AddressFormValues): AddressFormErrors {
   const errors: AddressFormErrors = {}
@@ -102,9 +103,9 @@ export default function AddressForm({
           <div>
             <div className="text-xs font-semibold text-text-primary flex items-center gap-1">
               <span className="material-symbols-outlined text-[16px]">store</span>
-              Nhận tại kho Di Linh
+              Nhận tại đại lý Hai Thắng
             </div>
-            <p className="text-[11px] text-text-muted">142 Hùng Vương, TT. Di Linh</p>
+            <p className="text-[11px] text-text-muted">Thị trấn Thới Lai, TP. Cần Thơ</p>
           </div>
         </label>
       </div>
@@ -149,10 +150,10 @@ export default function AddressForm({
               value={values.province}
               onChange={(e) => onChange('province', e.target.value)}
             >
-              <option>Lâm Đồng</option>
-              <option>Đắk Lắk</option>
-              <option>Đồng Nai</option>
-              <option>Gia Lai</option>
+              <option>Cần Thơ</option>
+              <option>An Giang</option>
+              <option>Đồng Tháp</option>
+              <option>Hậu Giang</option>
             </select>
           </div>
           <div>
@@ -164,9 +165,10 @@ export default function AddressForm({
               value={values.district}
               onChange={(e) => onChange('district', e.target.value)}
             >
-              <option>Huyện Di Linh</option>
-              <option>Huyện Đức Trọng</option>
-              <option>TP. Bảo Lộc</option>
+              <option>Huyện Thới Lai</option>
+              <option>Huyện Cờ Đỏ</option>
+              <option>Quận Ô Môn</option>
+              <option>Huyện Vĩnh Thạnh</option>
             </select>
           </div>
           <div>
@@ -178,15 +180,16 @@ export default function AddressForm({
               value={values.ward}
               onChange={(e) => onChange('ward', e.target.value)}
             >
-              <option>Xã Đinh Lạc</option>
-              <option>Xã Gia Hiệp</option>
-              <option>Thị trấn Di Linh</option>
+              <option>Thị trấn Thới Lai</option>
+              <option>Xã Thới Thạnh</option>
+              <option>Xã Tân Thạnh</option>
+              <option>Xã Định Môn</option>
             </select>
           </div>
         </div>
         <div>
           <label className="block text-xs font-bold text-text-secondary mb-1.5">
-            Địa chỉ cụ thể / Vị trí vườn sầu riêng <span className="text-status-error">*</span>
+            Địa chỉ cụ thể / Vị trí ruộng lúa <span className="text-status-error">*</span>
           </label>
           <input
             className={`w-full px-3.5 py-2 text-xs font-medium bg-surface-subtle border rounded-lg focus:outline-none text-text-primary ${

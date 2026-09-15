@@ -7,9 +7,8 @@ interface DiagnosisResultCardProps {
   showAlternatives: boolean
   onToggleAlternatives: () => void
   onReset: () => void
+  onSubmittedToAgent?: () => void
 }
-
-const emptyReviewForm = { farmerName: '', farmerPhone: '', plotLocation: '' }
 
 export default function DiagnosisResultCard({
   result,
@@ -17,19 +16,19 @@ export default function DiagnosisResultCard({
   showAlternatives,
   onToggleAlternatives,
   onReset,
+  onSubmittedToAgent,
 }: DiagnosisResultCardProps) {
   const tone = confidenceTone(result.confidence)
-  const [reviewForm, setReviewForm] = useState(emptyReviewForm)
   const [sentForReview, setSentForReview] = useState(false)
   const [isSendingReview, setIsSendingReview] = useState(false)
 
-  const handleSendForReview = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSendForReview = () => {
     setIsSendingReview(true)
     setTimeout(() => {
       setIsSendingReview(false)
       setSentForReview(true)
-    }, 900)
+      onSubmittedToAgent?.()
+    }, 800)
   }
 
   return (
@@ -37,7 +36,7 @@ export default function DiagnosisResultCard({
       <div className="flex items-center justify-between pb-4 border-b border-border-subtle">
         <h2 className="text-base font-bold text-text-primary flex items-center gap-2">
           <span className="material-symbols-outlined text-primary text-[20px]">summarize</span>
-          <span>Kết quả chẩn đoán</span>
+          <span>Kết quả nhận diện ban đầu từ AI Vision</span>
         </h2>
         <button
           onClick={onReset}
@@ -79,26 +78,21 @@ export default function DiagnosisResultCard({
         </div>
       </div>
 
-      <div
-        className={`p-3.5 rounded-lg border text-xs leading-relaxed flex items-start gap-2 ${
-          result.confidence >= 60
-            ? 'bg-status-info-surface border-status-info/20 text-status-info'
-            : 'bg-status-error-surface border-status-error/20 text-status-error'
-        }`}
-      >
-        <span className="material-symbols-outlined text-[16px] flex-shrink-0 mt-0.5">
-          {result.confidence >= 60 ? 'info' : 'warning'}
-        </span>
-        <span>
-          {result.confidence >= 60
-            ? 'Kết quả AI chỉ mang tính chất tham khảo hỗ trợ ra quyết định. Trường hợp bệnh nặng hoặc lan rộng, bà con nên liên hệ kỹ sư nông học qua hotline 1900 6828 để được xác nhận trước khi xử lý diện rộng.'
-            : 'Độ tin cậy dưới 60% — ảnh chưa đủ rõ để AI kết luận chắc chắn. Vui lòng chụp lại cận cảnh vùng bệnh hoặc gọi ngay hotline 1900 6828 để kỹ sư nông học hỗ trợ trực tiếp trước khi phun thuốc.'}
-        </span>
+      {/* AI SAFETY COMPLIANCE BANNER */}
+      <div className="p-4 rounded-xl border border-amber-300 bg-amber-50/80 text-amber-900 text-xs leading-relaxed space-y-2">
+        <div className="flex items-center gap-2 font-bold text-amber-950">
+          <span className="material-symbols-outlined text-amber-600 text-[18px]">verified_user</span>
+          <span>Chính sách An toàn Nông nghiệp AgriSage (Human-in-the-Loop)</span>
+        </div>
+        <p>
+          Để đảm bảo an toàn tuyệt đối cho ruộng lúa và tránh nguy cơ kháng thuốc hoặc dùng sai hoạt chất,{' '}
+          <strong>danh mục thuốc BVTV &amp; phân bón thương mại chỉ được hiển thị sau khi Đại lý Hai Thắng thẩm định trực tiếp hình ảnh.</strong>
+        </p>
       </div>
 
       <div>
         <h4 className="text-xs font-bold uppercase tracking-wider text-text-primary mb-2">
-          Triệu chứng AI nhận diện
+          Triệu chứng bệnh lá lúa được AI nhận diện
         </h4>
         <ul className="space-y-1.5 text-xs text-text-secondary">
           {result.symptomsDetected.map((s) => (
@@ -114,7 +108,7 @@ export default function DiagnosisResultCard({
 
       <div>
         <h4 className="text-xs font-bold uppercase tracking-wider text-text-primary mb-2">
-          Phác đồ điều trị đề xuất
+          Biện pháp canh tác &amp; xử lý an toàn ngay tại ruộng
         </h4>
         <ol className="space-y-1.5 text-xs text-text-secondary list-decimal list-inside">
           {result.treatmentSteps.map((s) => (
@@ -148,55 +142,37 @@ export default function DiagnosisResultCard({
         )}
       </div>
 
+      {/* HUMAN IN THE LOOP TRIGGER BUTTON */}
       <div className="border-t border-border-subtle pt-4">
         {sentForReview ? (
-          <div className="p-4 rounded-lg bg-status-success-surface border border-status-success/20 flex items-start gap-2.5 text-sm text-status-success leading-relaxed">
-            <span className="material-symbols-outlined text-[20px] flex-shrink-0 mt-0.5">check_circle</span>
-            <span>
-              Đã gửi ca chẩn đoán này cho kỹ sư AgriSage xác nhận. Kỹ sư sẽ liên hệ lại theo số điện
-              thoại bà con đã cung cấp trong thời gian sớm nhất.
-            </span>
+          <div className="p-4 rounded-xl bg-status-success-surface border border-status-success/30 flex items-start gap-2.5 text-sm text-status-success leading-relaxed">
+            <span className="material-symbols-outlined text-[22px] flex-shrink-0 mt-0.5">task_alt</span>
+            <div>
+              <div className="font-bold">Đã chuyển ca chẩn đoán tới Đại lý Hai Thắng (#AI-2401)</div>
+              <div className="text-xs mt-1 text-text-secondary">
+                Trạng thái: <strong className="text-amber-700">Chờ đại lý duyệt phác đồ thương mại</strong>.
+                Sau khi thẩm định viên xác nhận, thuốc đặc trị sẽ được hiển thị ngay tại đây và gửi thông báo về tài khoản của bà con.
+              </div>
+            </div>
           </div>
         ) : (
-          <form onSubmit={handleSendForReview} className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-text-primary">
-              Chưa chắc chắn? Gửi cho kỹ sư AgriSage xác nhận
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <input
-                required
-                type="text"
-                placeholder="Họ và tên"
-                value={reviewForm.farmerName}
-                onChange={(e) => setReviewForm((prev) => ({ ...prev, farmerName: e.target.value }))}
-                className="w-full px-3.5 py-2.5 text-sm bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary text-text-primary"
-              />
-              <input
-                required
-                type="text"
-                placeholder="Số điện thoại"
-                value={reviewForm.farmerPhone}
-                onChange={(e) => setReviewForm((prev) => ({ ...prev, farmerPhone: e.target.value }))}
-                className="w-full px-3.5 py-2.5 text-sm bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary text-text-primary"
-              />
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-text-primary">
+                Yêu cầu phác đồ thương mại
+              </span>
+              <span className="text-[11px] text-text-muted">Đại lý: Hai Thắng (Thới Lai)</span>
             </div>
-            <input
-              required
-              type="text"
-              placeholder="Vị trí vườn/thửa đất (VD: Thửa 5, Xã Đinh Lạc, Di Linh)"
-              value={reviewForm.plotLocation}
-              onChange={(e) => setReviewForm((prev) => ({ ...prev, plotLocation: e.target.value }))}
-              className="w-full px-3.5 py-2.5 text-sm bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary text-text-primary"
-            />
             <button
-              type="submit"
+              type="button"
+              onClick={handleSendForReview}
               disabled={isSendingReview}
               className="w-full h-11 bg-primary hover:bg-primary-hover text-white font-bold text-sm rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-70"
             >
-              <span>{isSendingReview ? 'Đang gửi...' : 'Gửi cho kỹ sư xác nhận'}</span>
-              {!isSendingReview && <span className="material-symbols-outlined text-[18px]">send</span>}
+              <span className="material-symbols-outlined text-[18px]">send</span>
+              <span>{isSendingReview ? 'Đang chuyển hình ảnh...' : 'Gửi đại lý Hai Thắng duyệt nhanh thuốc điều trị'}</span>
             </button>
-          </form>
+          </div>
         )}
       </div>
     </div>

@@ -7,11 +7,10 @@ interface HeaderProps {
 
 const navLinks = [
   { to: '/', label: 'Trang chủ', icon: 'home', routed: true },
-  { to: '/about', label: 'Giới thiệu', icon: 'info', routed: true },
-  { to: '/products', label: 'Sản phẩm', icon: 'inventory_2', routed: true },
-  { to: '/ai-doctor', label: 'Bác sĩ AI', icon: 'psychology', routed: true },
-  { to: '/knowledge', label: 'Kiến thức', icon: 'menu_book', routed: true },
-  { to: '/contact', label: 'Liên hệ', icon: 'mail', routed: true },
+  { to: '/products', label: 'Vật tư lúa', icon: 'inventory_2', routed: true },
+  { to: '/ai-doctor', label: 'Chẩn đoán bệnh AI', icon: 'psychology', routed: true },
+  { to: '/account?tab=credit', label: 'Sổ nợ mùa vụ', icon: 'credit_score', routed: true },
+  { to: '/account', label: 'Tài khoản', icon: 'account_circle', routed: true },
 ]
 
 export default function Header({ cartCount }: HeaderProps) {

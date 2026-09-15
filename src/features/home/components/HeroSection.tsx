@@ -22,8 +22,11 @@ export default function HeroSection() {
         src="/images/misc/hero-rice-field.jpg"
         className="absolute inset-0 w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-primary-dark via-primary-dark/85 to-primary-dark/45"></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/55 via-transparent to-primary-dark/25"></div>
+      {/* Overlay tints sampled from the photo's own corners (top ~#b1c8dd sky, bottom
+          ~#2c4b0e field) instead of the brand green, so the scrim reads as the photo
+          darkening naturally rather than a flat color sitting on top of it. */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#2c4b0e]/90 via-[#2c4b0e]/60 to-[#2c4b0e]/10"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-[#b1c8dd]/20 via-transparent to-[#2c4b0e]/40"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           <div className="lg:col-span-7 space-y-6 text-left">

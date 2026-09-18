@@ -44,23 +44,31 @@ export default function CategoryGrid() {
             <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
           </Link>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {categories.map((cat) => (
             <Link
               key={cat.name}
               to={`/products?group=${encodeURIComponent(cat.group)}`}
-              className="group bg-white p-5 rounded-xl border border-border-subtle hover:border-primary transition-all duration-300 shadow-sm hover:shadow-md text-center flex flex-col items-center justify-between"
+              className="group bg-white p-6 rounded-2xl border border-border-subtle hover:border-primary transition-all duration-300 shadow-sm hover:shadow-md flex items-center gap-5"
             >
-              <img
-                src={cat.image}
-                alt={cat.name}
-                onError={handleImageError}
-                className="w-16 h-16 object-contain mb-3 group-hover:scale-110 transition-transform duration-300"
-              />
-              <h3 className="text-xs sm:text-sm font-bold text-text-primary group-hover:text-primary transition-colors leading-snug">
-                {cat.name}
-              </h3>
-              <span className="text-[11px] text-text-muted mt-1">{cat.count}</span>
+              <div className="w-20 h-20 rounded-xl bg-slate-50 border border-border-subtle/80 flex items-center justify-center p-2 shrink-0 group-hover:scale-105 transition-transform duration-300">
+                <img
+                  src={cat.image}
+                  alt={cat.name}
+                  onError={handleImageError}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-base font-bold text-text-primary group-hover:text-primary transition-colors leading-snug">
+                  {cat.name}
+                </h3>
+                <p className="text-xs text-text-muted mt-1">{cat.count}</p>
+                <div className="text-xs font-semibold text-primary mt-2 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                  <span>Khám phá</span>
+                  <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                </div>
+              </div>
             </Link>
           ))}
         </div>

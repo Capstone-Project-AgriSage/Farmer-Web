@@ -2,15 +2,12 @@ import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import ProductCard from '../../components/ui/ProductCard'
-import Pagination from '../../components/ui/Pagination'
 import AiDiagnosisCallout from '../../components/ui/AiDiagnosisCallout'
 import { products } from '../../data/mockProducts'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
-import FilterSidebar, { createEmptyFilterValues, type FilterValues } from './components/FilterSidebar'
+import { createEmptyFilterValues, type FilterValues } from './components/FilterSidebar'
 
 type SortOption = 'best-selling' | 'newest' | 'price-asc' | 'price-desc'
-
-const PAGE_SIZE_OPTIONS = [12, 24, 48]
 
 interface Filters extends FilterValues {
   search: string
@@ -35,30 +32,15 @@ export default function ProductsPage() {
   const [searchParams] = useSearchParams()
   const [filters, setFilters] = useState<Filters>(() => filtersFromSearchParams(searchParams))
   const [sort, setSort] = useState<SortOption>('best-selling')
-  const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTIONS[0])
+  const [pageSize] = useState(48)
   const [page, setPage] = useState(1)
 
   const searchParamsKey = searchParams.toString()
 
-  // Re-sync from the URL whenever it changes (e.g. clicking a category card,
-  // then a plain "Sản phẩm" nav link) — otherwise these stay stale because a
-  // navigation within the same route does not remount this component.
   useEffect(() => {
     setFilters(filtersFromSearchParams(searchParams))
     setPage(1)
   }, [searchParamsKey])
-
-  const groupCounts = useMemo(() => {
-    const counts = new Map<string, number>()
-    for (const p of products) counts.set(p.group, (counts.get(p.group) ?? 0) + 1)
-    return counts
-  }, [])
-
-  const brandCounts = useMemo(() => {
-    const counts = new Map<string, number>()
-    for (const p of products) counts.set(p.brand, (counts.get(p.brand) ?? 0) + 1)
-    return counts
-  }, [])
 
   const patchFilters = (patch: Partial<Filters>) => {
     setFilters((prev) => ({ ...prev, ...patch }))
@@ -116,8 +98,19 @@ export default function ProductsPage() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize))
   const currentPage = Math.min(page, totalPages)
   const pageItems = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-  const rangeStart = filtered.length === 0 ? 0 : (currentPage - 1) * pageSize + 1
-  const rangeEnd = Math.min(currentPage * pageSize, filtered.length)
+
+  const categoryChips = [
+    { label: 'Tất cả vật tư', value: '' },
+    { label: 'Thuốc BVTV', value: 'Thuốc đặc trị nấm & diệt khuẩn' },
+    { label: 'Phân bón NPK', value: 'Phân bón NPK & Dinh dưỡng lúa' },
+    { label: 'Lúa giống', value: 'Lúa giống xác nhận' },
+  ]
+
+  const currentGroup = Array.from(filters.groups)[0] ?? ''
+
+  const handleSelectGroup = (groupVal: string) => {
+    patchFilters({ groups: groupVal ? new Set([groupVal]) : new Set() })
+  }
 
   return (
     <>
@@ -128,41 +121,52 @@ export default function ProductsPage() {
           { label: 'Tất cả vật tư nông nghiệp' },
         ]}
       />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        {/* Page Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">
-              Vật Tư &amp; Nông Dược Chính Hãng Cho Mùa Vụ
+              Vật Tư Nông Dược Chính Hãng
             </h1>
-            <p className="text-sm text-text-secondary mt-1">
-              Hệ thống phân phối phân bón NPK, hữu cơ vi sinh, hạt giống và thuốc BVTV đạt chuẩn,
-              hỗ trợ bảo lãnh công nợ và giao tận vườn.
+            <p className="text-xs sm:text-sm text-text-secondary mt-1">
+              Phân bón NPK, lúa giống và thuốc BVTV đạt chuẩn VietGAP từ Đại lý Hai Thắng.
             </p>
           </div>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-status-success-surface text-status-success rounded-lg border border-primary/20 text-xs font-semibold">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-primary rounded-xl border border-emerald-200 text-xs font-semibold self-start md:self-auto">
             <span className="material-symbols-outlined text-[18px]">verified</span>
-            <span>100% Chính Hãng &amp; Tem VAT</span>
+            <span>100% Chính Hãng • Tem VAT</span>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-border-subtle p-3.5 shadow-sm mb-6 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="relative flex-1">
-            <span className="material-symbols-outlined absolute left-3 top-2.5 text-text-muted text-[20px]">
-              search
-            </span>
-            <input
-              className="w-full pl-10 pr-4 py-2 text-sm text-text-primary placeholder:text-text-muted bg-surface-subtle border border-border-subtle rounded-lg focus:outline-none focus:border-primary"
-              placeholder="Tìm theo tên thuốc, hoạt chất (Azoxystrobin, Mancozeb...), thương hiệu (Bayer, Syngenta, Lộc Trời)..."
-              type="text"
-              value={filters.search}
-              onChange={(e) => patchFilters({ search: e.target.value })}
-            />
-          </div>
-          <div className="flex flex-wrap items-center justify-between lg:justify-end gap-3">
+        {/* Filter Toolbar: Category Chips + Search + Sort */}
+        <div className="bg-white rounded-2xl border border-border-subtle p-4 shadow-xs space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            {/* Horizontal Category Chips */}
+            <div className="flex flex-wrap items-center gap-1.5">
+              {categoryChips.map((chip) => {
+                const isActive = currentGroup === chip.value
+                return (
+                  <button
+                    key={chip.label}
+                    type="button"
+                    onClick={() => handleSelectGroup(chip.value)}
+                    className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                      isActive
+                        ? 'bg-primary text-white shadow-xs'
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    }`}
+                  >
+                    {chip.label}
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Sort & Count */}
             <div className="flex items-center gap-2">
-              <span className="text-xs text-text-secondary font-medium whitespace-nowrap">Sắp xếp:</span>
+              <span className="text-xs text-text-muted">Sắp xếp:</span>
               <select
-                className="text-xs font-medium text-text-primary bg-surface-subtle border border-border-subtle rounded-lg px-3 py-2 focus:outline-none focus:border-primary"
+                className="text-xs font-medium text-text-primary bg-slate-50 border border-border-subtle rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-primary"
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortOption)}
               >
@@ -172,65 +176,52 @@ export default function ProductsPage() {
                 <option value="price-desc">Giá cao đến thấp</option>
               </select>
             </div>
-            <div className="text-xs text-text-muted font-medium border-l border-border-subtle pl-3">
-              Hiển thị <span className="font-bold text-text-primary">{rangeStart} - {rangeEnd}</span> trên{' '}
-              <span className="font-bold text-text-primary">{filtered.length}</span> sản phẩm
-            </div>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <FilterSidebar
-            filters={filters}
-            onFilterChange={patchFilters}
-            groupCounts={groupCounts}
-            brandCounts={brandCounts}
-            onReset={resetFilters}
-          />
-
-          <div className="lg:col-span-9">
-            {pageItems.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {pageItems.map((product) => (
-                  <ProductCard key={product.slug} product={product} />
-                ))}
-              </div>
-            ) : (
-              <div className="bg-white rounded-xl border border-border-subtle p-12 text-center">
-                <span className="material-symbols-outlined text-text-muted text-5xl">search_off</span>
-                <h3 className="text-base font-bold text-text-primary mt-3">
-                  Không tìm thấy sản phẩm phù hợp
-                </h3>
-                <p className="text-sm text-text-secondary mt-1">
-                  Thử điều chỉnh bộ lọc hoặc từ khóa tìm kiếm khác.
-                </p>
-                <button
-                  onClick={resetFilters}
-                  className="mt-4 px-5 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-lg transition-colors"
-                >
-                  Xóa toàn bộ bộ lọc
-                </button>
-              </div>
-            )}
-
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setPage}
-              pageSize={pageSize}
-              onPageSizeChange={(size) => {
-                setPageSize(size)
-                setPage(1)
-              }}
-              pageSizeOptions={PAGE_SIZE_OPTIONS}
-            />
-
-            <AiDiagnosisCallout
-              title="Chưa rõ cây trồng bị bệnh gì để chọn thuốc?"
-              subtitle="Chụp ảnh lá gửi Bác sĩ AI chẩn đoán bệnh tức thì trong 3 giây và nhận ngay đơn thuốc chuẩn xác."
+          {/* Search bar */}
+          <div className="relative">
+            <span className="material-symbols-outlined absolute left-3 top-2.5 text-text-muted text-[18px]">
+              search
+            </span>
+            <input
+              className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm text-text-primary placeholder:text-text-muted bg-slate-50 border border-border-subtle rounded-xl focus:outline-none focus:border-primary"
+              placeholder="Tìm theo tên thuốc (Beam 75WP, Anvil 5SC), hoạt chất hoặc loại phân bón..."
+              type="text"
+              value={filters.search}
+              onChange={(e) => patchFilters({ search: e.target.value })}
             />
           </div>
         </div>
+
+        {/* Product Grid */}
+        {pageItems.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {pageItems.map((product) => (
+              <ProductCard key={product.slug} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white rounded-2xl border border-border-subtle p-12 text-center">
+            <span className="material-symbols-outlined text-text-muted text-5xl">search_off</span>
+            <h3 className="text-base font-bold text-text-primary mt-3">
+              Không tìm thấy sản phẩm phù hợp
+            </h3>
+            <p className="text-xs text-text-secondary mt-1">
+              Thử từ khóa tìm kiếm hoặc bấm chọn danh mục khác.
+            </p>
+            <button
+              onClick={resetFilters}
+              className="mt-4 px-5 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition-colors"
+            >
+              Xem tất cả sản phẩm
+            </button>
+          </div>
+        )}
+
+        <AiDiagnosisCallout
+          title="Chưa rõ ruộng lúa bị bệnh gì để chọn thuốc?"
+          subtitle="Chụp ảnh lá gửi Bác sĩ AI chẩn đoán tức thì trong 3 giây và nhận ngay đơn thuốc chuẩn xác."
+        />
       </div>
     </>
   )

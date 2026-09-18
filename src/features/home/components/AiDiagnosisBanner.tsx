@@ -1,70 +1,64 @@
 import { Link } from 'react-router-dom'
 
 const steps = [
-  ['Chụp ảnh cây trồng', 'Chụp rõ nét vị trí lá đốm, cháy bìa hay rễ thối'],
-  ['AI phân tích mẫu', 'Nhận diện chủng nấm, sâu bệnh hại và mức độ'],
-  ['Nhận phác đồ ngay', 'Kê đơn thuốc chính xác & chỉ định cách phun'],
+  { step: '1', title: 'Chụp ảnh lá lúa', desc: 'Chụp rõ vùng đốm bệnh, cháy bìa' },
+  { step: '2', title: 'AI nhận diện sau 3s', desc: 'Nhận diện đạo ôn, bạc lá, khô vằn' },
+  { step: '3', title: 'Phác đồ đại lý duyệt', desc: 'Kê đơn thuốc chính hãng Hai Thắng' },
 ]
 
 export default function AiDiagnosisBanner() {
   return (
     <section className="w-full py-12 bg-white border-b border-border-subtle" id="ai-diagnosis">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-2xl bg-gradient-to-r from-surface-subtle via-emerald-50/50 to-surface-secondary border border-primary/20 p-6 sm:p-10 relative overflow-hidden shadow-sm">
+        <div className="rounded-2xl bg-gradient-to-br from-emerald-50/70 via-white to-surface-subtle border border-emerald-200/60 p-6 sm:p-10 relative overflow-hidden shadow-xs">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-8 space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
-                <span className="material-symbols-outlined text-[16px]">psychology</span>
-                <span>Đột phá Trí Tuệ Nhân Tạo</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
+                <span className="material-symbols-outlined text-[15px]">psychology</span>
+                <span>Bác Sĩ Cây Trồng AI</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">
-                Bác sĩ cây trồng AI - Chẩn đoán bệnh trong 3 giây
+                Chẩn đoán bệnh lúa qua ảnh chụp trong 3 giây
               </h2>
-              <p className="text-text-secondary text-sm leading-relaxed max-w-2xl">
-                Không còn lo lắng cây trồng suy thoái. Chỉ cần chụp ảnh vùng lá, cành hoặc rễ bị
-                tổn thương, hệ thống AI của AgriSage sẽ lập tức phân tích mầm bệnh và gợi ý đơn
-                thuốc điều trị chuẩn xác.
+              <p className="text-text-secondary text-sm leading-relaxed max-w-xl">
+                Quét nhận diện 5 bệnh phổ biến trên lúa ĐBSCL. Hệ thống tự động phân tích và đề xuất phác đồ điều trị được thẩm định bởi kỹ sư nông học Đại lý Hai Thắng.
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3">
-                {steps.map(([title, desc], i) => (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                {steps.map((item) => (
                   <div
-                    key={title}
-                    className="flex items-start gap-3 p-3 bg-white rounded-xl border border-border-subtle shadow-sm"
+                    key={item.title}
+                    className="flex items-start gap-3 p-3.5 bg-white rounded-xl border border-border-subtle shadow-2xs"
                   >
-                    <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm flex-shrink-0">
-                      {i + 1}
+                    <div className="w-7 h-7 rounded-lg bg-emerald-100 text-primary flex items-center justify-center font-bold text-xs flex-shrink-0">
+                      {item.step}
                     </div>
                     <div>
-                      <div className="text-xs font-bold text-text-primary">{title}</div>
-                      <div className="text-[11px] text-text-muted mt-0.5">{desc}</div>
+                      <div className="text-xs font-bold text-text-primary">{item.title}</div>
+                      <div className="text-[11px] text-text-muted mt-0.5">{item.desc}</div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="lg:col-span-4 flex flex-col items-center justify-center bg-white p-6 rounded-xl border border-border-subtle shadow-md text-center space-y-4">
-              <div className="w-16 h-16 rounded-full bg-primary-light flex items-center justify-center text-primary ring-8 ring-primary-light/50">
-                <span className="material-symbols-outlined text-[32px]">document_scanner</span>
+            <div className="lg:col-span-4 flex flex-col items-center justify-center bg-white p-6 rounded-2xl border border-border-subtle shadow-sm text-center space-y-3.5">
+              <div className="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-primary">
+                <span className="material-symbols-outlined text-[30px]">photo_camera</span>
               </div>
               <div>
                 <h3 className="font-bold text-text-primary text-base">
-                  Bắt đầu khám bệnh cho vườn
+                  Khám bệnh đồng ruộng
                 </h3>
-                <p className="text-xs text-text-muted mt-1">
-                  Hoàn toàn miễn phí cho bà con nông dân
+                <p className="text-xs text-text-muted mt-0.5">
+                  Miễn phí 100% cho bà con nông dân
                 </p>
               </div>
               <Link
                 to="/ai-doctor"
-                className="w-full py-3 px-4 bg-primary hover:bg-primary-hover text-white rounded-lg font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2"
+                className="w-full py-2.5 px-4 bg-primary hover:bg-primary-hover text-white rounded-xl font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2"
               >
-                <span className="material-symbols-outlined text-[20px]">add_a_photo</span>
+                <span className="material-symbols-outlined text-[18px]">add_a_photo</span>
                 <span>Tải ảnh quét bệnh ngay</span>
               </Link>
-              <div className="text-[11px] text-text-muted pt-1 flex items-center gap-1.5 justify-center">
-                <span className="w-2 h-2 rounded-full bg-status-success"></span>
-                <span>Vừa chẩn đoán: Sầu riêng đốm mắt cua (Lâm Đồng)</span>
-              </div>
             </div>
           </div>
         </div>

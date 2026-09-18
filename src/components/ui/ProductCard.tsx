@@ -3,9 +3,12 @@ import type { Product } from '../../types'
 import { formatVnd } from '../../data/format'
 import { useCart } from '../../context/CartContext'
 import { handleImageError } from '../../utils/image'
+import { stockStatusTone } from '../../utils/stockStatus'
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addToCart } = useCart()
+  const tone = stockStatusTone(product.stockStatus)
+  const outOfStock = product.stockStatus === 'Hết hàng'
 
   return (
     <div className="bg-white rounded-xl border border-border-subtle hover:border-primary hover:shadow-card transition-all duration-300 overflow-hidden flex flex-col justify-between group">
@@ -22,8 +25,8 @@ export default function ProductCard({ product }: { product: Product }) {
           onError={handleImageError}
           className="w-full h-full object-contain p-2 mix-blend-multiply group-hover:scale-105 transition-transform duration-300"
         />
-        <span className="absolute bottom-2 right-2 px-2 py-0.5 bg-status-success-surface text-status-success text-[10px] font-semibold rounded flex items-center gap-1 z-10">
-          <span className="w-1.5 h-1.5 rounded-full bg-status-success"></span> {product.stockLabel}
+        <span className={`absolute bottom-2 right-2 px-2 py-0.5 ${tone.badgeBg} ${tone.text} text-[10px] font-semibold rounded flex items-center gap-1 z-10`}>
+          <span className={`w-1.5 h-1.5 rounded-full ${tone.dot}`}></span> {product.stockLabel}
         </span>
       </Link>
       <div className="p-4 flex-1 flex flex-col justify-between">
@@ -67,8 +70,9 @@ export default function ProductCard({ product }: { product: Product }) {
             </div>
             <button
               onClick={() => addToCart(product)}
-              className="p-2 rounded-lg bg-primary hover:bg-primary-hover text-white shadow-sm transition-colors flex items-center justify-center"
-              title="Thêm vào giỏ"
+              disabled={outOfStock}
+              className="p-2 rounded-lg bg-primary hover:bg-primary-hover text-white shadow-sm transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-primary"
+              title={outOfStock ? 'Tạm hết hàng' : 'Thêm vào giỏ'}
               aria-label={`Thêm ${product.name} vào giỏ hàng`}
             >
               <span className="material-symbols-outlined text-[18px]">add_shopping_cart</span>

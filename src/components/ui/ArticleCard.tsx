@@ -1,8 +1,12 @@
+import { Link } from 'react-router-dom'
 import type { Article } from '../../data/mockArticles'
 
 export default function ArticleCard({ article }: { article: Article }) {
   return (
-    <div className="bg-surface-subtle rounded-xl border border-border-subtle overflow-hidden hover:shadow-card transition-all group flex flex-col justify-between">
+    <Link
+      to={`/knowledge/${article.slug}`}
+      className="bg-surface-subtle rounded-xl border border-border-subtle overflow-hidden hover:shadow-card transition-all group flex flex-col justify-between"
+    >
       <div className="p-5">
         <div
           className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold mb-3 ${article.badge.className}`}
@@ -21,6 +25,6 @@ export default function ArticleCard({ article }: { article: Article }) {
           Chi tiết <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
         </span>
       </div>
-    </div>
+    </Link>
   )
 }

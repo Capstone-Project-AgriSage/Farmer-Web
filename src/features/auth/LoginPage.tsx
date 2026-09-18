@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { useAuth } from '../../context/AuthContext'
+import { isValidPhoneOrEmail } from '../../utils/validation'
 import AuthLayout from './components/AuthLayout'
 import GoogleAuthButton from './components/GoogleAuthButton'
 import Spinner from '../../components/ui/Spinner'
@@ -8,19 +10,32 @@ import Spinner from '../../components/ui/Spinner'
 export default function LoginPage() {
   useDocumentTitle('Đăng nhập')
   const navigate = useNavigate()
+  const { login } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
-  const [email, setEmail] = useState('manager.lamdong@agrisage.vn')
-  const [password, setPassword] = useState('AgriCare2024@')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!email.trim() || !password) {
+      setError('Vui lòng nhập đầy đủ email/số điện thoại và mật khẩu.')
+      return
+    }
+    if (!isValidPhoneOrEmail(email)) {
+      setError('Email hoặc số điện thoại không hợp lệ.')
+      return
+    }
+    setError('')
     setIsSubmitting(true)
-    setTimeout(() => {
-      setIsSubmitting(false)
+    try {
+      await login(email, password)
       navigate('/')
-    }, 1200)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -89,6 +104,12 @@ export default function LoginPage() {
             </button>
           </div>
         </div>
+        {error ? (
+          <div className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-status-error-surface text-status-error text-xs font-medium">
+            <span className="material-symbols-outlined text-[16px]">error</span>
+            {error}
+          </div>
+        ) : null}
         <div className="flex items-center justify-between pt-1">
           <label className="group flex items-center gap-2 cursor-pointer select-none">
             <input
@@ -145,7 +166,11 @@ export default function LoginPage() {
           Hoặc tiếp tục với
         </span>
       </div>
-      <GoogleAuthButton label="Đăng nhập bằng Google" onClick={() => navigate('/')} className="mb-6" />
+      <GoogleAuthButton
+        label="Đăng nhập bằng Google"
+        onClick={() => login('google-oauth', 'google-oauth').then(() => navigate('/'))}
+        className="mb-6"
+      />
       <div className="text-center pt-1 text-sm text-text-secondary">
         <span>Bà con hoặc đại lý mới chưa có tài khoản?</span>
         <Link

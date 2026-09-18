@@ -10,20 +10,20 @@ export default function SuccessHeroBanner() {
           <span className="material-symbols-outlined text-5xl font-bold">check_circle</span>
         </div>
         <span className="px-3 py-1 rounded-full bg-[#E8F5E9] text-[#1B5E20] text-xs font-bold uppercase tracking-wider mb-2">
-          Xác nhận thành công • Đã ghi nhận vào kho Di Linh
+          Xác nhận thành công • Đã ghi nhận vào kho Hai Thắng (Thới Lai)
         </span>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-[#172118] tracking-tight">
           Cảm ơn Bác nông dân Nguyễn Văn Hùng!
         </h1>
         <p className="text-sm sm:text-base text-[#465348] mt-2 leading-relaxed">
-          Đơn hàng <strong className="text-[#0d631b] font-mono text-base">#AGR-8842</strong> của
+          Đơn hàng <strong className="text-[#0d631b] font-mono text-base">#DH-2024-8842</strong> của
           Bác đã được tiếp nhận thành công trên hệ sinh thái AgriSage. Bộ phận kho vận đang xuất
-          bao bì và chuẩn bị điều xe tải giao vật tư đến tận vườn.
+          bao bì và chuẩn bị điều phương tiện giao vật tư đến tận bờ ruộng lúa.
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full mt-6 pt-6 border-t border-[#E1E8E2]">
           <div className="bg-[#F5FBF4] p-3 rounded-xl border border-[#E1E8E2]/60 text-left">
             <span className="text-[11px] font-medium text-[#7A8A7C] uppercase block">Mã đơn hàng</span>
-            <span className="font-mono text-sm font-bold text-[#0d631b]">#AGR-8842</span>
+            <span className="font-mono text-sm font-bold text-[#0d631b]">#DH-2024-8842</span>
           </div>
           <div className="bg-[#F5FBF4] p-3 rounded-xl border border-[#E1E8E2]/60 text-left">
             <span className="text-[11px] font-medium text-[#7A8A7C] uppercase block">Tổng thanh toán</span>

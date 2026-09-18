@@ -35,7 +35,7 @@ export default function PaymentMethodSelector({
                   <span className="px-2 py-0.5 rounded bg-emerald-50 text-primary font-bold text-[10px]">Khuyên dùng</span>
                 </div>
                 <p className="text-[11px] text-text-muted mt-0.5">
-                  Quét mã mọi ứng dụng ngân hàng, hệ thống tự động duyệt tức thì sau 5 giây
+                  Quét mã trên app ngân hàng, chủ đại lý Hai Thắng đối soát và xác nhận khớp tiền thủ công
                 </p>
               </div>
             </div>
@@ -48,22 +48,22 @@ export default function PaymentMethodSelector({
                   <img
                     alt="VietQR Thanh toán AgriSage"
                     className="w-full h-full object-contain"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuALx-dVVzRnd72-ROkUelIQqlcBUHtPe-3DzHWyRw77ufNGnWzWAIrsM6PFWAuFnV1rtfELNZYQfQhvrAR4Q69tVVB3VQD2MfcvhZx4Dj-hQIkyHYdpZgTlIJSMEkK-tAMYAg2Fg2LSwpZtPJBgK8pIBIQS8WYNst_HvcQoiH0HjT-_BGK8EstV07FRKN4w5QZGz5ul9w-3IwWgvSh9fWvE86YovMWC_wSiR6PEAcBqgbRdw73R4x1XRg"
+                    src="/images/misc/vietqr-demo.png"
                   />
                 </div>
                 <span className="text-[10px] font-bold text-primary mt-1.5 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-status-success animate-pulse"></span>
-                  VietQR Napas247
+                  Vietcombank Napas247
                 </span>
               </div>
               <div className="flex-1 space-y-2 text-xs w-full">
                 <div className="flex items-center justify-between py-1 border-b border-border-subtle">
                   <span className="text-text-muted">Ngân hàng:</span>
-                  <span className="font-bold text-text-primary">Vietcombank (VCB)</span>
+                  <span className="font-bold text-text-primary">Vietcombank - Chi nhánh Cần Thơ</span>
                 </div>
                 <div className="flex items-center justify-between py-1 border-b border-border-subtle">
                   <span className="text-text-muted">Chủ tài khoản:</span>
-                  <span className="font-bold text-text-primary uppercase">CTCP NÔNG NGHIỆP SỐ AGRISAGE</span>
+                  <span className="font-bold text-text-primary uppercase">NGUYEN VAN THANG (ĐẠI LÝ HAI THẮNG)</span>
                 </div>
                 <div className="flex items-center justify-between py-1 border-b border-border-subtle">
                   <span className="text-text-muted">Số tài khoản:</span>
@@ -99,9 +99,9 @@ export default function PaymentMethodSelector({
                     </button>
                   </div>
                 </div>
-                <div className="p-2 rounded bg-status-success-surface text-status-success text-[11px] font-medium flex items-center gap-1 mt-1">
-                  <span className="material-symbols-outlined text-[14px]">verified</span>
-                  Đơn hàng sẽ tự động xác nhận và chuẩn bị xuất kho ngay khi nhận tiền.
+                <div className="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-[11px] font-medium flex items-start gap-1.5 mt-1">
+                  <span className="material-symbols-outlined text-[16px] text-amber-700 flex-shrink-0 mt-0.5">info</span>
+                  <span>Đại lý Hai Thắng sẽ kiểm tra và đối soát chuyển khoản thủ công trên tài khoản Vietcombank trước khi xuất kho.</span>
                 </div>
               </div>
             </div>
@@ -117,10 +117,9 @@ export default function PaymentMethodSelector({
             <div className="flex items-start gap-3">
               <input readOnly checked={paymentMethod === 'cod'} className="text-primary focus:ring-0 mt-0.5 w-4 h-4" name="payment_method" type="radio" />
               <div>
-                <span className="text-xs font-bold text-text-primary">Thanh toán tiền mặt khi nhận hàng (COD)</span>
+                <span className="text-xs font-bold text-text-primary">Tiền mặt khi nhận hàng (Đại lý giao tận ruộng / nhà)</span>
                 <p className="text-xs text-text-secondary mt-1">
-                  Bác nông dân được mở thùng kiểm tra bao bì nguyên niêm phong, hạn dùng và
-                  tem chống giả Syngenta/Bayer trước khi trả tiền cho tài xế xe tải.
+                  Bác nông dân kiểm tra quy cách bao bì vật tư chính hãng, đúng hạn sử dụng trước khi giao tiền cho nhân viên đại lý Hai Thắng.
                 </p>
               </div>
             </div>
@@ -138,14 +137,13 @@ export default function PaymentMethodSelector({
               <input readOnly checked={paymentMethod === 'credit'} className="text-primary focus:ring-0 mt-0.5 w-4 h-4" name="payment_method" type="radio" />
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-text-primary">Sổ nợ mùa vụ AgriCredit</span>
+                  <span className="text-xs font-bold text-text-primary">Gối nợ mùa vụ (Sổ nợ Hai Thắng)</span>
                   <span className="px-2 py-0.5 rounded bg-status-success-surface text-status-success font-bold text-[10px]">
                     0% Lãi suất
                   </span>
                 </div>
                 <p className="text-xs text-text-secondary mt-1">
-                  Hạn mức ghi nợ trả sau mùa thu hoạch nông sản. Áp dụng cho hội viên đại lý
-                  và nông hộ liên kết.
+                  Được đại lý cấp hạn mức mua trước vật tư trả sau vụ gặt lúa Đông Xuân 2025. Hai bên ký nhận và theo dõi minh bạch trên hệ thống.
                 </p>
                 <div className="mt-2 text-[11px] text-text-secondary flex items-center gap-2">
                   <span>

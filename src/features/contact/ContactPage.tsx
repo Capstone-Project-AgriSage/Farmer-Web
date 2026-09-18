@@ -1,11 +1,16 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+
+const REQUEST_TYPES = ['Kỹ thuật canh tác', 'Đặt vật tư', 'Sổ nợ mùa vụ', 'Khác']
 
 export default function ContactPage() {
   useDocumentTitle('Liên hệ')
   const [name, setName] = useState('')
   const [contact, setContact] = useState('')
+  const [area, setArea] = useState('')
+  const [requestType, setRequestType] = useState(REQUEST_TYPES[0])
   const [message, setMessage] = useState('')
   const [sent, setSent] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -18,6 +23,8 @@ export default function ContactPage() {
       setSent(true)
       setName('')
       setContact('')
+      setArea('')
+      setRequestType(REQUEST_TYPES[0])
       setMessage('')
     }, 1000)
   }
@@ -26,17 +33,26 @@ export default function ContactPage() {
     <>
       <Breadcrumb items={[{ label: 'Trang chủ', to: '/' }, { label: 'Liên hệ' }]} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="max-w-2xl">
-          <div className="text-xs font-bold uppercase tracking-wider text-primary mb-1">
-            HỖ TRỢ NÔNG DÂN &amp; ĐẠI LÝ
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+          <div className="max-w-2xl">
+            <div className="text-xs font-bold uppercase tracking-wider text-primary mb-1">
+              HỖ TRỢ NÔNG DÂN &amp; ĐẠI LÝ
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">
+              Liên Hệ Với AgriSage
+            </h1>
+            <p className="text-sm text-text-secondary mt-2">
+              Kỹ sư nông học của chúng tôi luôn sẵn sàng hỗ trợ bà con về kỹ thuật canh tác, đặt vật
+              tư và sổ nợ mùa vụ.
+            </p>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">
-            Liên Hệ Với AgriSage
-          </h1>
-          <p className="text-sm text-text-secondary mt-2">
-            Kỹ sư nông học của chúng tôi luôn sẵn sàng hỗ trợ bà con về kỹ thuật canh tác, đặt vật
-            tư và sổ nợ mùa vụ.
-          </p>
+          <Link
+            to="/contact/requests"
+            className="inline-flex items-center justify-center gap-1.5 self-end px-4 py-2.5 bg-primary hover:bg-primary-hover text-white font-semibold text-sm rounded-lg shadow-sm transition-all shrink-0"
+          >
+            <span className="material-symbols-outlined text-[18px]">history</span>
+            <span>Xem yêu cầu đã gửi</span>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
@@ -63,9 +79,9 @@ export default function ContactPage() {
             <div className="bg-white rounded-xl border border-border-subtle p-5 shadow-sm flex items-start gap-3">
               <span className="material-symbols-outlined text-primary text-[22px]">store</span>
               <div>
-                <div className="text-sm font-bold text-text-primary">Chi nhánh Lâm Đồng</div>
+                <div className="text-sm font-bold text-text-primary">Đại lý Vật tư Nông nghiệp Hai Thắng</div>
                 <div className="text-xs text-text-secondary mt-0.5">
-                  142 Hùng Vương, TT. Di Linh, Tỉnh Lâm Đồng
+                  Thị trấn Thới Lai, Huyện Thới Lai, TP. Cần Thơ (ĐBSCL)
                 </div>
               </div>
             </div>
@@ -116,6 +132,33 @@ export default function ContactPage() {
                       value={contact}
                       onChange={(e) => setContact(e.target.value)}
                     />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-1.5">
+                      Khu vực / Địa chỉ
+                    </label>
+                    <input
+                      required
+                      className="w-full px-4 py-2.5 rounded-lg border border-border-subtle text-text-primary text-sm focus:outline-none focus:border-primary bg-white"
+                      type="text"
+                      placeholder="Ấp Thới Thuận, TT. Thới Lai, Cần Thơ"
+                      value={area}
+                      onChange={(e) => setArea(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-1.5">
+                      Loại yêu cầu
+                    </label>
+                    <select
+                      className="w-full px-4 py-2.5 rounded-lg border border-border-subtle text-text-primary text-sm focus:outline-none focus:border-primary bg-white"
+                      value={requestType}
+                      onChange={(e) => setRequestType(e.target.value)}
+                    >
+                      {REQUEST_TYPES.map((type) => (
+                        <option key={type} value={type}>{type}</option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-1.5">

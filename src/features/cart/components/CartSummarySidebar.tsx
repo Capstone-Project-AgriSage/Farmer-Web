@@ -1,9 +1,11 @@
 import { formatVnd } from '../../../data/format'
+import OrderTotalSummary from '../../../components/ui/OrderTotalSummary'
 
 interface CartSummarySidebarProps {
   itemCount: number
   subtotal: number
   discount: number
+  appliedVoucher: string | null
   shippingFee: number
   total: number
   onCheckout: () => void
@@ -13,6 +15,7 @@ export default function CartSummarySidebar({
   itemCount,
   subtotal,
   discount,
+  appliedVoucher,
   shippingFee,
   total,
   onCheckout,
@@ -22,7 +25,7 @@ export default function CartSummarySidebar({
       <div className="bg-white rounded-2xl border border-border-subtle p-6 shadow-sm space-y-5">
         <h2 className="text-base font-bold text-text-primary pb-3 border-b border-border-subtle flex items-center justify-between">
           <span>Tóm tắt đơn hàng</span>
-          <span className="text-xs font-normal text-text-muted">Mã đơn tạm: #AGR-8842</span>
+          <span className="text-xs font-normal text-text-muted">Mã đơn tạm: #DH-2024-8842</span>
         </h2>
         <div className="space-y-3 text-xs">
           <div className="flex items-center justify-between text-text-secondary">
@@ -32,9 +35,11 @@ export default function CartSummarySidebar({
           <div className="flex items-center justify-between text-text-secondary">
             <span className="flex items-center gap-1">
               <span>Giảm giá Voucher mùa vụ:</span>
-              <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-50 text-status-success font-bold">
-                VUMUA2024
-              </span>
+              {appliedVoucher && (
+                <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-50 text-status-success font-bold">
+                  {appliedVoucher}
+                </span>
+              )}
             </span>
             <span className="font-bold text-status-success">-{formatVnd(discount)}</span>
           </div>
@@ -49,16 +54,7 @@ export default function CartSummarySidebar({
             <span className="text-text-muted font-medium">Đã bao gồm</span>
           </div>
         </div>
-        <div className="pt-4 border-t border-border-subtle">
-          <div className="flex items-baseline justify-between mb-1">
-            <span className="text-sm font-bold text-text-primary">Tổng tiền thanh toán:</span>
-            <span className="text-2xl font-extrabold text-primary tracking-tight">{formatVnd(total)}</span>
-          </div>
-          <div className="text-right text-[11px] text-status-success font-medium flex items-center justify-end gap-1">
-            <span className="material-symbols-outlined text-[13px]">trending_down</span>
-            Tiết kiệm {formatVnd(discount)} cho mùa vụ này
-          </div>
-        </div>
+        <OrderTotalSummary total={total} discount={discount} />
         <button
           onClick={onCheckout}
           className="w-full py-3.5 px-4 bg-primary hover:bg-primary-hover text-white font-bold text-sm rounded-xl transition-all shadow-md hover:shadow-floating flex items-center justify-center gap-2 group"

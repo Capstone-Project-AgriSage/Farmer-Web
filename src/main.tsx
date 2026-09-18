@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import '@fontsource-variable/inter'
+import '@fontsource/be-vietnam-pro/800.css'
 import '@fontsource-variable/material-symbols-outlined/fill.css'
 import './index.css'
 import App from './App.tsx'

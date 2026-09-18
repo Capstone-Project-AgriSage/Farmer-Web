@@ -26,7 +26,7 @@ export default function KnowledgePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {articles.map((article) => (
-            <ArticleCard key={article.title} article={article} />
+            <ArticleCard key={article.slug} article={article} />
           ))}
         </div>
 

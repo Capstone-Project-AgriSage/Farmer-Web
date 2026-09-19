@@ -5,7 +5,7 @@ export default function HotlineCard() {
         <span className="material-symbols-outlined text-[22px]">support_agent</span>
       </div>
       <div className="flex-1">
-        <div className="text-sm font-bold text-text-primary">Cần kỹ sư xác nhận trực tiếp?</div>
+        <div className="text-sm font-bold text-text-primary">Cần đại lý tư vấn trực tiếp?</div>
         <div className="text-xs text-text-muted">Hỗ trợ miễn phí 7:00 - 20:00</div>
       </div>
       <a href="tel:19006828" className="font-extrabold text-primary text-sm hover:underline flex-shrink-0">

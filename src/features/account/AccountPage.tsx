@@ -181,7 +181,7 @@ export default function AccountPage() {
                 </span>
               </div>
               <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold">
-                0% Lãi suất thu hoạch trả
+                Thanh toán sau vụ gặt
               </span>
             </div>
 

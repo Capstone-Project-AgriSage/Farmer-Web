@@ -17,8 +17,8 @@ export default function SuccessHeroBanner() {
         </h1>
         <p className="text-sm sm:text-base text-[#465348] mt-2 leading-relaxed">
           Đơn hàng <strong className="text-[#0d631b] font-mono text-base">#DH-2024-8842</strong> của
-          Bác đã được tiếp nhận thành công trên hệ sinh thái AgriSage. Bộ phận kho vận đang xuất
-          bao bì và chuẩn bị điều phương tiện giao vật tư đến tận bờ ruộng lúa.
+          Bác đã được tiếp nhận thành công tại Đại lý Hai Thắng. Bộ phận kho đang đóng gói
+          và chuẩn bị điều phương tiện giao vật tư đến tận nhà / bờ ruộng cho Bác.
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full mt-6 pt-6 border-t border-[#E1E8E2]">
           <div className="bg-[#F5FBF4] p-3 rounded-xl border border-[#E1E8E2]/60 text-left">

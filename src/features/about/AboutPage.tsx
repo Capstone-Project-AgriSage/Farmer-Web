@@ -25,7 +25,7 @@ const values = [
   {
     icon: 'credit_score',
     title: 'Đồng hành tài chính mùa vụ',
-    desc: 'Sổ nợ mùa vụ AgriCredit 0% lãi suất, thanh toán linh hoạt sau thu hoạch, giảm áp lực vốn đầu năm.',
+    desc: 'Sổ nợ mùa vụ AgriCredit hỗ trợ mua chịu, thanh toán linh hoạt sau thu hoạch, giảm áp lực vốn đầu năm.',
   },
   {
     icon: 'local_shipping',

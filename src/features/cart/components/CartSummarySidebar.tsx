@@ -70,7 +70,7 @@ export default function CartSummarySidebar({
             <span>Hỗ trợ Sổ nợ mùa vụ AgriCredit</span>
           </div>
           <p className="text-[11px] text-text-secondary leading-relaxed pl-6.5">
-            Hạn mức thanh toán sau vụ thu hoạch 0% lãi suất dành cho đại lý và nông hộ liên kết.
+            Gửi yêu cầu mua chịu vụ mùa để đại lý xét duyệt theo sổ nợ liên kết.
           </p>
           <div className="flex items-center gap-2 pt-1 border-t border-border-subtle text-[11px] text-text-muted">
             <span className="material-symbols-outlined text-[15px] text-status-success">verified</span>

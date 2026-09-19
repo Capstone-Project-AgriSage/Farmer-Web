@@ -21,7 +21,7 @@ export default function AiDiagnosisBanner() {
                 Chẩn đoán bệnh lúa qua ảnh chụp trong 3 giây
               </h2>
               <p className="text-text-secondary text-sm leading-relaxed max-w-xl">
-                Quét nhận diện 5 bệnh phổ biến trên lúa ĐBSCL. Hệ thống tự động phân tích và đề xuất phác đồ điều trị được thẩm định bởi kỹ sư nông học Đại lý Hai Thắng.
+                Quét nhận diện 5 bệnh phổ biến trên lúa ĐBSCL. Hệ thống phân tích và gửi kết quả để đại lý kiểm tra trước khi gửi khuyến nghị thuốc cho bà con.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
                 {steps.map((item) => (

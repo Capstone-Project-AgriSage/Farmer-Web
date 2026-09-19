@@ -35,7 +35,7 @@ export default function PaymentMethodSelector({
                   <span className="px-2 py-0.5 rounded bg-emerald-50 text-primary font-bold text-[10px]">Khuyên dùng</span>
                 </div>
                 <p className="text-[11px] text-text-muted mt-0.5">
-                  Quét mã trên app ngân hàng, chủ đại lý Hai Thắng đối soát và xác nhận khớp tiền thủ công
+                  Quét mã trên app ngân hàng. Đại lý Hai Thắng sẽ đối soát và xác nhận khi nhận được tiền.
                 </p>
               </div>
             </div>
@@ -101,7 +101,7 @@ export default function PaymentMethodSelector({
                 </div>
                 <div className="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-[11px] font-medium flex items-start gap-1.5 mt-1">
                   <span className="material-symbols-outlined text-[16px] text-amber-700 flex-shrink-0 mt-0.5">info</span>
-                  <span>Đại lý Hai Thắng sẽ kiểm tra và đối soát chuyển khoản thủ công trên tài khoản Vietcombank trước khi xuất kho.</span>
+                  <span>Đại lý Hai Thắng sẽ kiểm tra và xác nhận chuyển khoản trước khi xuất kho giao hàng.</span>
                 </div>
               </div>
             </div>
@@ -117,9 +117,9 @@ export default function PaymentMethodSelector({
             <div className="flex items-start gap-3">
               <input readOnly checked={paymentMethod === 'cod'} className="text-primary focus:ring-0 mt-0.5 w-4 h-4" name="payment_method" type="radio" />
               <div>
-                <span className="text-xs font-bold text-text-primary">Tiền mặt khi nhận hàng (Đại lý giao tận ruộng / nhà)</span>
+                <span className="text-xs font-bold text-text-primary">Tiền mặt khi nhận hàng (COD)</span>
                 <p className="text-xs text-text-secondary mt-1">
-                  Bác nông dân kiểm tra quy cách bao bì vật tư chính hãng, đúng hạn sử dụng trước khi giao tiền cho nhân viên đại lý Hai Thắng.
+                  Kiểm tra đúng vật tư và hạn sử dụng trước khi thanh toán cho người giao hàng.
                 </p>
               </div>
             </div>
@@ -137,13 +137,13 @@ export default function PaymentMethodSelector({
               <input readOnly checked={paymentMethod === 'credit'} className="text-primary focus:ring-0 mt-0.5 w-4 h-4" name="payment_method" type="radio" />
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-text-primary">Gối nợ mùa vụ (Sổ nợ Hai Thắng)</span>
-                  <span className="px-2 py-0.5 rounded bg-status-success-surface text-status-success font-bold text-[10px]">
-                    0% Lãi suất
+                  <span className="text-xs font-bold text-text-primary">Gối nợ mùa vụ (Sổ nợ đại lý)</span>
+                  <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 font-bold text-[10px]">
+                    Mua chịu vụ mùa
                   </span>
                 </div>
                 <p className="text-xs text-text-secondary mt-1">
-                  Được đại lý cấp hạn mức mua trước vật tư trả sau vụ gặt lúa Đông Xuân 2025. Hai bên ký nhận và theo dõi minh bạch trên hệ thống.
+                  Gửi yêu cầu mua chịu vụ mùa để đại lý xét duyệt.
                 </p>
                 <div className="mt-2 text-[11px] text-text-secondary flex items-center gap-2">
                   <span>

@@ -88,7 +88,7 @@ export default function AiDoctorPage() {
       treatmentSteps: [
         'Giữ mực nước ruộng 3-5cm, tránh ngập úng hoặc cạn nứt',
         'Không bón đạm khi ruộng đang nhiễm bệnh',
-        'Phun hoạt chất được thẩm định viên khuyến cáo',
+        'Phun thuốc theo hướng dẫn từ đại lý',
       ],
       alternatives: [],
       diseaseTag: caseItem.predictedDiseaseId,
@@ -111,13 +111,13 @@ export default function AiDoctorPage() {
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-primary text-xs font-semibold">
               <span className="material-symbols-outlined text-[15px]">psychology</span>
-              <span>AI Vision v2.1 • Chuyên Biệt 5 Bệnh Lúa</span>
+              <span>Bác Sĩ Cây Trồng AI</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight mt-1.5">
               Bác Sĩ Cây Trồng AI
             </h1>
             <p className="text-xs sm:text-sm text-text-secondary mt-1">
-              Chẩn đoán tức thì đạo ôn, bạc lá vi khuẩn, đốm nâu, khô vằn. Phác đồ được kỹ sư Hai Thắng thẩm định.
+              Chẩn đoán tức thì đạo ôn, bạc lá vi khuẩn, đốm nâu, khô vằn. Đại lý sẽ kiểm tra kết quả trước khi gửi khuyến nghị cho bà con.
             </p>
           </div>
           <Link
@@ -127,30 +127,6 @@ export default function AiDoctorPage() {
             <span className="material-symbols-outlined text-[16px]">history</span>
             <span>Lịch sử ({mockDiagnosisCases.length} ca)</span>
           </Link>
-        </div>
-
-        {/* QUICK SAMPLE SELECTOR */}
-        <div className="bg-white p-3.5 rounded-2xl border border-border-subtle flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 shadow-2xs">
-          <div className="flex items-center gap-1.5 text-xs text-text-muted">
-            <span className="material-symbols-outlined text-primary text-[18px]">collections_bookmark</span>
-            <span>Thử nhanh mẫu lá bệnh thực tế:</span>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {mockDiagnosisCases.map((c) => (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => handleSelectVerifiedCase(c)}
-                className={`px-3 py-1 rounded-xl text-xs font-semibold border transition-all ${
-                  selectedCaseId === c.id
-                    ? 'bg-primary text-white border-primary shadow-2xs'
-                    : 'bg-slate-50 text-slate-700 border-border-subtle hover:border-primary hover:text-primary'
-                }`}
-              >
-                {c.predictedDiseaseName}
-              </button>
-            ))}
-          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
@@ -169,6 +145,30 @@ export default function AiDoctorPage() {
               isAnalyzing={isAnalyzing}
               onAnalyze={handleAnalyze}
             />
+
+            {/* QUICK SAMPLE SELECTOR */}
+            <div className="bg-white p-4 rounded-2xl border border-border-subtle flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
+              <div className="flex items-center gap-2 text-xs text-text-muted">
+                <span className="material-symbols-outlined text-primary text-[18px]">collections_bookmark</span>
+                <span className="font-medium text-text-secondary">Chưa có ảnh? Thử nhanh mẫu bệnh thực tế:</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {mockDiagnosisCases.map((c) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => handleSelectVerifiedCase(c)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
+                      selectedCaseId === c.id
+                        ? 'bg-primary text-white border-primary shadow-2xs'
+                        : 'bg-slate-50 text-slate-700 border-border-subtle hover:border-primary hover:text-primary'
+                    }`}
+                  >
+                    {c.predictedDiseaseName}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             {result && (
               <DiagnosisResultCard

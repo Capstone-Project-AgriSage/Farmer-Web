@@ -7,7 +7,7 @@ const commitments = [
   {
     icon: 'credit_score',
     title: 'Bảo Lãnh Nợ Mùa Vụ',
-    desc: 'Hỗ trợ hạn mức 0% lãi suất, thu hoạch lúa mới hoàn trả công nợ.',
+    desc: 'Hỗ trợ mua chịu vụ mùa, thu hoạch lúa mới hoàn trả công nợ.',
   },
   {
     icon: 'local_shipping',
@@ -16,7 +16,7 @@ const commitments = [
   },
   {
     icon: 'support_agent',
-    title: 'Kỹ Sư Nông Học 24/7',
+    title: 'Tư Vấn Nông Học 24/7',
     desc: 'Tư vấn phác đồ phun thuốc và đồng hành trọn vẹn từng vụ mùa.',
   },
 ]

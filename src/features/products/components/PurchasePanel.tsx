@@ -110,9 +110,9 @@ export default function PurchasePanel({
             </div>
           )}
           <div className="flex items-center gap-2 pt-1 text-xs">
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold text-[11px]">
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-semibold text-[11px] border border-emerald-200">
               <span className="material-symbols-outlined text-[14px]">credit_score</span>
-              Áp dụng Sổ Nợ Vụ Lúa 0%
+              Hỗ trợ mua chịu vụ mùa
             </span>
           </div>
         </div>
@@ -147,16 +147,16 @@ export default function PurchasePanel({
 
         <div className="space-y-3 pt-2">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <div className="flex items-center border border-border-subtle rounded-xl bg-white overflow-hidden w-full sm:w-32 justify-between">
+            <div className="flex items-center border border-border-subtle rounded-xl bg-white overflow-hidden w-full sm:w-36 justify-between h-11 shadow-2xs">
               <button
                 onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
                 aria-label={`Giảm số lượng ${product.name}`}
-                className="px-3.5 py-2 text-text-secondary hover:bg-slate-100 font-bold text-sm transition-colors"
+                className="w-11 h-full text-text-secondary hover:bg-slate-100 active:bg-slate-200 font-bold text-base transition-colors flex items-center justify-center"
               >
                 -
               </button>
               <input
-                className="w-10 text-center text-xs font-bold text-text-primary border-none focus:outline-none p-0"
+                className="w-12 text-center text-sm font-bold text-text-primary border-none focus:outline-none p-0"
                 aria-label={`Số lượng ${product.name}`}
                 min={1}
                 type="number"
@@ -166,7 +166,7 @@ export default function PurchasePanel({
               <button
                 onClick={() => onQuantityChange(quantity + 1)}
                 aria-label={`Tăng số lượng ${product.name}`}
-                className="px-3.5 py-2 text-text-secondary hover:bg-slate-100 font-bold text-sm transition-colors"
+                className="w-11 h-full text-text-secondary hover:bg-slate-100 active:bg-slate-200 font-bold text-base transition-colors flex items-center justify-center"
               >
                 +
               </button>
@@ -174,7 +174,7 @@ export default function PurchasePanel({
             <button
               onClick={onAddToCart}
               disabled={outOfStock}
-              className="flex-1 py-2.5 px-4 border border-primary text-primary hover:bg-emerald-50 font-bold text-xs sm:text-sm rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-2xs disabled:opacity-50"
+              className="flex-1 h-11 px-4 border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-sm rounded-xl transition-colors flex items-center justify-center gap-1.5 shadow-none disabled:opacity-50"
             >
               <span className="material-symbols-outlined text-[18px]">add_shopping_cart</span>
               <span>Thêm vào giỏ</span>
@@ -182,10 +182,10 @@ export default function PurchasePanel({
             <button
               onClick={onBuyNow}
               disabled={outOfStock}
-              className="flex-1 py-2.5 px-4 bg-primary hover:bg-primary-hover text-white font-bold text-xs sm:text-sm rounded-xl transition-colors shadow-xs flex items-center justify-center gap-1.5 disabled:opacity-50"
+              className="flex-[1.2] h-11 px-4 bg-primary hover:bg-primary-hover text-white font-bold text-sm rounded-xl transition-colors shadow-sm flex items-center justify-center gap-1.5 disabled:opacity-50"
             >
               <span className="material-symbols-outlined text-[18px]">credit_card</span>
-              <span>{outOfStock ? 'Tạm hết' : 'Mua ngay / Gối nợ'}</span>
+              <span>{outOfStock ? 'Tạm hết' : 'Mua ngay'}</span>
             </button>
           </div>
         </div>

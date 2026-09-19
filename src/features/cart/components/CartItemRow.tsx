@@ -51,19 +51,19 @@ export default function CartItemRow({ item, alternate, onQuantityChange, onRemov
         <span className="text-xs sm:text-sm font-bold text-text-primary">{formatVnd(item.product.price)}</span>
       </div>
       <div className="sm:col-span-2 flex items-center sm:justify-center gap-2">
-        <div className="flex items-center border border-border-subtle rounded-lg bg-white overflow-hidden shadow-sm">
+        <div className="flex items-center border border-border-subtle rounded-xl bg-white overflow-hidden shadow-2xs">
           <button
             onClick={() => onQuantityChange(item.quantity - 1)}
             aria-label={`Giảm số lượng ${item.product.name}`}
-            className="px-2.5 py-1 text-text-secondary hover:bg-surface-subtle font-bold text-xs transition-colors"
+            className="w-9 h-9 flex items-center justify-center text-text-secondary hover:bg-surface-subtle font-bold text-sm transition-colors active:bg-slate-100"
           >
             -
           </button>
-          <span className="w-8 text-center text-xs font-bold text-text-primary">{item.quantity}</span>
+          <span className="w-10 text-center text-sm font-bold text-text-primary">{item.quantity}</span>
           <button
             onClick={() => onQuantityChange(item.quantity + 1)}
             aria-label={`Tăng số lượng ${item.product.name}`}
-            className="px-2.5 py-1 text-text-secondary hover:bg-surface-subtle font-bold text-xs transition-colors"
+            className="w-9 h-9 flex items-center justify-center text-text-secondary hover:bg-surface-subtle font-bold text-sm transition-colors active:bg-slate-100"
           >
             +
           </button>
@@ -76,11 +76,11 @@ export default function CartItemRow({ item, alternate, onQuantityChange, onRemov
         </div>
         <button
           onClick={onRemove}
-          className="text-text-muted hover:text-status-error p-1 rounded transition-colors ml-1"
+          className="text-text-muted hover:text-status-error p-2 rounded-lg hover:bg-red-50 transition-colors ml-1"
           title="Xóa sản phẩm"
           aria-label={`Xóa ${item.product.name} khỏi giỏ hàng`}
         >
-          <span className="material-symbols-outlined text-[18px]">delete</span>
+          <span className="material-symbols-outlined text-[20px]">delete</span>
         </button>
       </div>
     </div>

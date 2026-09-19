@@ -36,7 +36,7 @@ export default function DiagnosisResultCard({
       <div className="flex items-center justify-between pb-4 border-b border-border-subtle">
         <h2 className="text-base font-bold text-text-primary flex items-center gap-2">
           <span className="material-symbols-outlined text-primary text-[20px]">summarize</span>
-          <span>Kết quả nhận diện ban đầu từ AI Vision</span>
+          <span>Kết quả chẩn đoán sơ bộ từ AI</span>
         </h2>
         <button
           onClick={onReset}
@@ -82,11 +82,11 @@ export default function DiagnosisResultCard({
       <div className="p-4 rounded-xl border border-amber-300 bg-amber-50/80 text-amber-900 text-xs leading-relaxed space-y-2">
         <div className="flex items-center gap-2 font-bold text-amber-950">
           <span className="material-symbols-outlined text-amber-600 text-[18px]">verified_user</span>
-          <span>Chính sách An toàn Nông nghiệp AgriSage (Human-in-the-Loop)</span>
+          <span>Lưu ý an toàn mùa vụ từ Đại lý Hai Thắng</span>
         </div>
         <p>
-          Để đảm bảo an toàn tuyệt đối cho ruộng lúa và tránh nguy cơ kháng thuốc hoặc dùng sai hoạt chất,{' '}
-          <strong>danh mục thuốc BVTV &amp; phân bón thương mại chỉ được hiển thị sau khi Đại lý Hai Thắng thẩm định trực tiếp hình ảnh.</strong>
+          Để đảm bảo an toàn tuyệt đối cho ruộng lúa và tránh xịt nhầm thuốc,{' '}
+          <strong>kết quả sẽ được đại lý có quyền thẩm định kiểm tra trước khi gửi khuyến nghị thuốc cho bà con.</strong>
         </p>
       </div>
 
@@ -150,8 +150,8 @@ export default function DiagnosisResultCard({
             <div>
               <div className="font-bold">Đã chuyển ca chẩn đoán tới Đại lý Hai Thắng (#AI-2401)</div>
               <div className="text-xs mt-1 text-text-secondary">
-                Trạng thái: <strong className="text-amber-700">Chờ đại lý duyệt phác đồ thương mại</strong>.
-                Sau khi thẩm định viên xác nhận, thuốc đặc trị sẽ được hiển thị ngay tại đây và gửi thông báo về tài khoản của bà con.
+                Trạng thái: <strong className="text-amber-700">Chờ đại lý kiểm tra kết quả</strong>.
+                Sau khi đại lý kiểm tra xác nhận, danh mục thuốc phù hợp sẽ được hiển thị ngay tại đây và gửi thông báo về tài khoản của bà con.
               </div>
             </div>
           </div>
@@ -159,7 +159,7 @@ export default function DiagnosisResultCard({
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-text-primary">
-                Yêu cầu phác đồ thương mại
+                Yêu cầu phác đồ điều trị
               </span>
               <span className="text-[11px] text-text-muted">Đại lý: Hai Thắng (Thới Lai)</span>
             </div>
@@ -170,7 +170,7 @@ export default function DiagnosisResultCard({
               className="w-full h-11 bg-primary hover:bg-primary-hover text-white font-bold text-sm rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 disabled:opacity-70"
             >
               <span className="material-symbols-outlined text-[18px]">send</span>
-              <span>{isSendingReview ? 'Đang chuyển hình ảnh...' : 'Gửi đại lý Hai Thắng duyệt nhanh thuốc điều trị'}</span>
+              <span>{isSendingReview ? 'Đang chuyển hình ảnh...' : 'Gửi để đại lý kiểm tra và lên đơn thuốc'}</span>
             </button>
           </div>
         )}

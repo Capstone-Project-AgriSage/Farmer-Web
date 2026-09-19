@@ -21,10 +21,10 @@ export default function RecommendedProductsCard({
       <div className="bg-white rounded-xl border border-border-subtle p-5 shadow-sm space-y-3">
         <div className="flex items-center gap-2 text-amber-800">
           <span className="material-symbols-outlined text-[20px]">hourglass_top</span>
-          <h4 className="text-sm font-bold">Phác đồ thương mại: Chờ thẩm định</h4>
+          <h4 className="text-sm font-bold">Phác đồ thuốc: Chờ đại lý kiểm tra</h4>
         </div>
         <p className="text-xs text-text-secondary leading-relaxed">
-          Đại lý Hai Thắng đang đối chiếu hình ảnh lá lúa với hoạt chất phòng trừ tối ưu. Thuốc BVTV phù hợp sẽ được mở ngay khi thẩm định hoàn tất.
+          Đại lý đang kiểm tra hình ảnh lá lúa và lựa chọn thuốc phù hợp cho bà con.
         </p>
         <div className="p-3 bg-surface-subtle rounded-lg text-[11px] text-text-muted flex items-center justify-between">
           <span>Tiêu chuẩn mô hình: Rice-V2.1</span>
@@ -40,7 +40,7 @@ export default function RecommendedProductsCard({
         <div className="flex items-center justify-between">
           <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[11px] font-bold">
             <span className="material-symbols-outlined text-[14px]">verified</span>
-            <span>Đã thẩm định chuyên môn</span>
+            <span>Đại lý đã kiểm tra</span>
           </div>
           <span className="text-[11px] text-text-muted">Kho Thới Lai</span>
         </div>
@@ -49,7 +49,7 @@ export default function RecommendedProductsCard({
         </h4>
         {reviewerName && (
           <p className="text-xs text-primary font-medium mt-0.5">
-            Thẩm định bởi: {reviewerName}
+            Đại lý kiểm tra: {reviewerName}
           </p>
         )}
       </div>

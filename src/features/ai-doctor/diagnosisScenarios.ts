@@ -71,7 +71,7 @@ export const diagnosisScenarios: Record<RiceStageValue, DiagnosisScenario> = {
     treatmentSteps: [
       'Giữ mực nước ruộng 3-5cm, tuyệt đối ngưng bón đạm (Urê) và phân bón lá có đạm',
       'Rút bớt sương mù đọng bằng cách khua giọt sương vào sáng sớm',
-      'Đợi thẩm định viên / Đại lý duyệt thuốc đặc trị (Tricyclazole / Isoprothiolane) trước khi phun',
+      'Đợi đại lý kiểm tra và duyệt thuốc đặc trị trước khi phun',
       'Phun khi trời ráo sương và kiểm tra lại sau 5 ngày',
     ],
     alternatives: [

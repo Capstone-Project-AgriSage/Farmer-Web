@@ -22,17 +22,18 @@ export default function ForgotPasswordPage() {
   return (
     <AuthLayout>
       <div className="mb-6 text-left">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
+        <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2">AgriSage</p>
+        <h1 className="text-2xl sm:text-3xl font-helvetica-neue tracking-tight text-brand-dark">
           Quên mật khẩu?
         </h1>
-        <p className="text-sm text-text-secondary mt-2 leading-relaxed">
+        <p className="text-sm text-brand-dark/60 mt-2 leading-relaxed">
           Nhập email hoặc số điện thoại đã đăng ký để nhận mã xác thực (OTP) đặt lại mật
           khẩu.
         </p>
       </div>
       {otpSent ? (
-        <div className="p-4 rounded-lg bg-status-success-surface border border-status-success/20 flex items-start gap-2.5 text-sm text-status-success leading-relaxed">
-          <span className="material-symbols-outlined text-[20px] flex-shrink-0 mt-0.5">check_circle</span>
+        <div className="p-4 bg-brand-light border border-brand-dark/10 flex items-start gap-2.5 text-sm text-brand-dark leading-relaxed">
+          <span className="material-symbols-outlined text-brand-green text-[20px] flex-shrink-0 mt-0.5">check_circle</span>
           <span>
             Đã gửi mã xác thực OTP đến <strong>{identity || 'liên hệ của bạn'}</strong>. Vui
             lòng kiểm tra tin nhắn SMS hoặc Email để đặt lại mật khẩu.
@@ -42,17 +43,17 @@ export default function ForgotPasswordPage() {
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label
-              className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-1.5"
+              className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1.5"
               htmlFor="recoveryInput"
             >
-              EMAIL HOẶC SỐ ĐIỆN THOẠI ĐÃ ĐĂNG KÝ
+              Email hoặc số điện thoại đã đăng ký
             </label>
-            <div className="relative rounded-md shadow-sm">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text-muted">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-brand-dark/40">
                 <span className="material-symbols-outlined text-[20px]">contact_mail</span>
               </div>
               <input
-                className="w-full pl-10 pr-4 py-2.5 bg-white border border-border-subtle rounded-md text-text-primary text-sm placeholder:text-text-muted focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all"
+                className="w-full pl-10 pr-4 py-2.5 bg-brand-cream border border-brand-dark/15 text-brand-dark text-sm placeholder:text-brand-dark/40 focus:border-brand-green focus:outline-none transition-colors"
                 id="recoveryInput"
                 name="identity"
                 placeholder="Ví dụ: 0912 345 678 hoặc nongdan@agrisage.vn"
@@ -63,8 +64,8 @@ export default function ForgotPasswordPage() {
               />
             </div>
           </div>
-          <div className="p-3.5 rounded-lg bg-surface-secondary border border-border-subtle flex items-start gap-2.5 text-xs text-text-secondary leading-relaxed">
-            <span className="material-symbols-outlined text-primary text-[18px] flex-shrink-0 mt-0.5">
+          <div className="p-3.5 bg-brand-light border border-brand-dark/10 flex items-start gap-2.5 text-xs text-brand-dark/60 leading-relaxed">
+            <span className="material-symbols-outlined text-brand-green text-[18px] flex-shrink-0 mt-0.5">
               info
             </span>
             <span>
@@ -74,17 +75,17 @@ export default function ForgotPasswordPage() {
           </div>
           <div className="pt-2">
             <button
-              className="w-full h-11 bg-primary hover:bg-primary-hover active:bg-primary-dark text-white font-medium text-sm rounded-md shadow-sm transition-all flex items-center justify-center gap-2 focus:ring-2 focus:ring-primary/40 focus:outline-none disabled:opacity-70"
+              className="w-full h-11 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide uppercase text-sm transition-colors flex items-center justify-center gap-2 focus:outline-none disabled:opacity-70"
               type="submit"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
-                <span className="flex items-center justify-center gap-2 font-medium">
+                <span className="flex items-center justify-center gap-2">
                   <Spinner className="-ml-1 mr-2 h-4 w-4 text-white" />
                   <span>Đang gửi mã...</span>
                 </span>
               ) : (
-                <span className="flex items-center justify-center gap-2 font-semibold">
+                <span className="flex items-center justify-center gap-2">
                   <span>Gửi mã xác thực OTP</span>
                   <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                 </span>
@@ -95,7 +96,7 @@ export default function ForgotPasswordPage() {
       )}
       <div className="pt-4 pb-2 text-center">
         <Link
-          className="inline-flex items-center justify-center gap-2 text-sm font-semibold text-text-secondary hover:text-primary transition-colors py-2 px-4 rounded-md hover:bg-surface-secondary"
+          className="inline-flex items-center justify-center gap-2 text-sm text-brand-dark/60 hover:text-brand-dark transition-colors py-2 px-4"
           to="/login"
         >
           <span className="material-symbols-outlined text-[18px]">arrow_back</span>
@@ -104,14 +105,14 @@ export default function ForgotPasswordPage() {
       </div>
       <div className="relative my-4 text-center">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-border-subtle"></div>
+          <div className="w-full border-t border-brand-dark/10"></div>
         </div>
       </div>
-      <div className="text-center text-xs text-text-muted flex items-center justify-center gap-1.5 pt-1">
-        <span className="material-symbols-outlined text-[16px] text-primary">support_agent</span>
+      <div className="text-center text-xs text-brand-dark/50 flex items-center justify-center gap-1.5 pt-1">
+        <span className="material-symbols-outlined text-[16px] text-brand-green">support_agent</span>
         <span>
           Cần hỗ trợ khẩn cấp? Gọi kỹ sư trực tuyến:{' '}
-          <strong className="text-primary font-bold hover:underline">
+          <strong className="text-brand-dark hover:underline">
             <a href="tel:19006828">1900 6828</a>
           </strong>
         </span>

@@ -16,24 +16,22 @@ export default function RouteErrorBoundary() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-20 sm:py-28 text-center">
-      <span className="material-symbols-outlined text-status-error text-6xl">error</span>
-      <h1 className="text-xl sm:text-2xl font-bold text-text-primary mt-3">{title}</h1>
-      <p className="text-sm text-text-secondary mt-2 leading-relaxed">{message}</p>
-      <div className="flex flex-wrap items-center justify-center gap-3 mt-6">
+    <div className="max-w-2xl mx-auto px-6 py-20 sm:py-28 text-center bg-brand-cream">
+      <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-4">Sự cố</p>
+      <h1 className="text-2xl sm:text-3xl text-brand-dark tracking-tight font-helvetica-neue">{title}</h1>
+      <p className="text-sm text-brand-dark/60 mt-3 leading-relaxed">{message}</p>
+      <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
         <Link
           to="/"
-          className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-lg shadow-sm transition-all flex items-center gap-2"
+          className="px-6 py-3 bg-brand-dark hover:bg-brand-green text-white text-sm tracking-wide uppercase rounded-full transition-colors"
         >
-          <span className="material-symbols-outlined text-[18px]">home</span>
-          <span>Về trang chủ</span>
+          Về trang chủ
         </Link>
         <button
           onClick={() => window.location.reload()}
-          className="px-5 py-2.5 border border-primary text-primary hover:bg-primary-light text-sm font-semibold rounded-lg transition-all flex items-center gap-2"
+          className="px-6 py-3 border border-brand-dark/25 text-brand-dark hover:bg-brand-light text-sm tracking-wide uppercase rounded-full transition-colors"
         >
-          <span className="material-symbols-outlined text-[18px]">refresh</span>
-          <span>Tải lại trang</span>
+          Tải lại trang
         </button>
       </div>
     </div>

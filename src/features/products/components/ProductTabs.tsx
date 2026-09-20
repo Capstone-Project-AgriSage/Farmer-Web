@@ -48,16 +48,16 @@ interface ProductTabsProps {
 
 export default function ProductTabs({ product, activeTab, onActiveTabChange }: ProductTabsProps) {
   return (
-    <div className="mt-12 bg-white rounded-2xl border border-border-subtle shadow-sm overflow-hidden">
-      <div className="flex border-b border-border-subtle bg-surface-subtle overflow-x-auto text-xs sm:text-sm font-semibold">
+    <div className="mt-12 bg-white border border-brand-dark/10 overflow-hidden">
+      <div className="flex border-b border-brand-dark/10 bg-brand-light overflow-x-auto text-xs sm:text-sm">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => onActiveTabChange(tab.id)}
-            className={`py-3.5 px-6 border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors ${
+            className={`py-3.5 px-6 border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors tracking-wide ${
               activeTab === tab.id
-                ? 'border-primary text-primary bg-white'
-                : 'border-transparent text-text-secondary hover:text-primary hover:bg-white/50'
+                ? 'border-brand-dark text-brand-dark bg-white'
+                : 'border-transparent text-brand-dark/55 hover:text-brand-dark hover:bg-white/50'
             }`}
           >
             <span className="material-symbols-outlined text-[18px]">{tab.icon}</span>
@@ -68,30 +68,30 @@ export default function ProductTabs({ product, activeTab, onActiveTabChange }: P
       <div className="p-6 sm:p-8 space-y-8">
         {activeTab === 'specs' && (
           <div>
-            <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary text-[18px]">biotech</span>
+            <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-4 flex items-center gap-2">
+              <span className="material-symbols-outlined text-brand-dark/60 text-[18px]">biotech</span>
               <span>Bảng thành phần hóa học &amp; Đặc tính sinh học</span>
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-              <div className="border border-border-subtle rounded-xl overflow-hidden">
+              <div className="border border-brand-dark/10 overflow-hidden">
                 <table className="w-full">
-                  <tbody className="divide-y divide-border-subtle text-text-secondary">
-                    <tr className="bg-surface-subtle">
-                      <td className="py-2.5 px-4 font-semibold text-text-primary w-1/3">Hoạt chất chính</td>
-                      <td className="py-2.5 px-4 font-medium text-text-primary">{product.activeIngredient}</td>
+                  <tbody className="divide-y divide-brand-dark/10 text-brand-dark/60">
+                    <tr className="bg-brand-cream">
+                      <td className="py-2.5 px-4 text-brand-dark w-1/3">Hoạt chất chính</td>
+                      <td className="py-2.5 px-4 text-brand-dark">{product.activeIngredient}</td>
                     </tr>
                     <tr>
-                      <td className="py-2.5 px-4 font-semibold text-text-primary">Cơ chế tác động</td>
+                      <td className="py-2.5 px-4 text-brand-dark">Cơ chế tác động</td>
                       <td className="py-2.5 px-4">Nội hấp, lưu dẫn 2 chiều (từ rễ lên ngọn và từ lá xuống cành)</td>
                     </tr>
-                    <tr className="bg-surface-subtle">
-                      <td className="py-2.5 px-4 font-semibold text-text-primary">Dạng thuốc phẩm</td>
+                    <tr className="bg-brand-cream">
+                      <td className="py-2.5 px-4 text-brand-dark">Dạng thuốc phẩm</td>
                       <td className="py-2.5 px-4">WG (Cốm phân tán trong nước - ít sinh bụi khi pha)</td>
                     </tr>
                     <tr>
-                      <td className="py-2.5 px-4 font-semibold text-text-primary">Độ độc GHS</td>
+                      <td className="py-2.5 px-4 text-brand-dark">Độ độc GHS</td>
                       <td className="py-2.5 px-4">
-                        <span className="px-2 py-0.5 rounded bg-emerald-50 text-status-success font-semibold">
+                        <span className="px-2.5 py-0.5 rounded-full bg-brand-light text-brand-dark/70 border border-brand-dark/10 tracking-wide">
                           Nhóm 5 - Rất ít độc với ong và gia súc
                         </span>
                       </td>
@@ -99,24 +99,24 @@ export default function ProductTabs({ product, activeTab, onActiveTabChange }: P
                   </tbody>
                 </table>
               </div>
-              <div className="border border-border-subtle rounded-xl overflow-hidden">
+              <div className="border border-brand-dark/10 overflow-hidden">
                 <table className="w-full">
-                  <tbody className="divide-y divide-border-subtle text-text-secondary">
-                    <tr className="bg-surface-subtle">
-                      <td className="py-2.5 px-4 font-semibold text-text-primary w-1/3">Thời gian cách ly (PHI)</td>
-                      <td className="py-2.5 px-4 font-medium text-text-primary">7 ngày trước khi thu hoạch</td>
+                  <tbody className="divide-y divide-brand-dark/10 text-brand-dark/60">
+                    <tr className="bg-brand-cream">
+                      <td className="py-2.5 px-4 text-brand-dark w-1/3">Thời gian cách ly (PHI)</td>
+                      <td className="py-2.5 px-4 text-brand-dark">7 ngày trước khi thu hoạch</td>
                     </tr>
                     <tr>
-                      <td className="py-2.5 px-4 font-semibold text-text-primary">Nhà sản xuất</td>
+                      <td className="py-2.5 px-4 text-brand-dark">Nhà sản xuất</td>
                       <td className="py-2.5 px-4">{product.brand}</td>
                     </tr>
-                    <tr className="bg-surface-subtle">
-                      <td className="py-2.5 px-4 font-semibold text-text-primary">Đóng gói &amp; Phân phối</td>
+                    <tr className="bg-brand-cream">
+                      <td className="py-2.5 px-4 text-brand-dark">Đóng gói &amp; Phân phối</td>
                       <td className="py-2.5 px-4">Kho Đại lý Hai Thắng (Thị trấn Thới Lai, TP. Cần Thơ)</td>
                     </tr>
                     <tr>
-                      <td className="py-2.5 px-4 font-semibold text-text-primary">Hạn sử dụng</td>
-                      <td className="py-2.5 px-4 font-medium text-status-success">
+                      <td className="py-2.5 px-4 text-brand-dark">Hạn sử dụng</td>
+                      <td className="py-2.5 px-4 text-brand-green">
                         24 tháng kể từ ngày sản xuất (Lô mới T05/2024)
                       </td>
                     </tr>
@@ -128,23 +128,25 @@ export default function ProductTabs({ product, activeTab, onActiveTabChange }: P
         )}
         {activeTab === 'dosage' && (
           <div>
-            <h3 className="text-sm font-bold text-text-primary uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary text-[18px]">water_drop</span>
+            <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-4 flex items-center gap-2">
+              <span className="material-symbols-outlined text-brand-dark/60 text-[18px]">water_drop</span>
               <span>Phác đồ điều trị thực tế theo nhóm cây trồng Tây Nguyên &amp; ĐBSCL</span>
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
               {dosageGuides.map((item) => (
-                <div key={item.crop} className="p-4 rounded-xl border border-border-subtle bg-surface-subtle/50 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-text-primary text-sm">{item.crop}</span>
-                    <span className="px-2 py-0.5 rounded bg-emerald-50 text-primary font-semibold text-[10px]">
+                <div key={item.crop} className="p-4 border border-brand-dark/10 bg-brand-light space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-helvetica-neue tracking-tight text-brand-dark text-sm">
+                      {item.crop}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-brand-dark text-white text-[10px] tracking-wide shrink-0">
                       {item.tag}
                     </span>
                   </div>
-                  <p className="text-text-secondary leading-relaxed">
-                    <strong>Bệnh hại:</strong> {item.disease}
+                  <p className="text-brand-dark/60 leading-relaxed">
+                    <span className="text-brand-dark">Bệnh hại:</span> {item.disease}
                   </p>
-                  <div className="p-2.5 rounded-lg bg-white border border-border-subtle space-y-1 text-text-primary">
+                  <div className="p-2.5 bg-white border border-brand-dark/10 space-y-1 text-brand-dark/70">
                     {item.guide.map((line) => (
                       <p key={line}>• {line}</p>
                     ))}
@@ -155,16 +157,16 @@ export default function ProductTabs({ product, activeTab, onActiveTabChange }: P
           </div>
         )}
         {activeTab === 'ai' && (
-          <div className="rounded-xl bg-gradient-to-r from-emerald-50 via-surface-secondary to-primary-light border border-primary/20 p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-5">
+          <div className="bg-brand-light border border-brand-dark/10 p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-5">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center shadow-md flex-shrink-0">
+              <div className="w-12 h-12 rounded-full bg-brand-dark text-white flex items-center justify-center flex-shrink-0">
                 <span className="material-symbols-outlined text-[26px]">psychology</span>
               </div>
               <div>
-                <h4 className="text-sm sm:text-base font-bold text-text-primary">
+                <h4 className="text-sm sm:text-base font-helvetica-neue tracking-tight text-brand-dark">
                   Vườn của bạn đang có biểu hiện lạ nhưng chưa dám chắc chắn?
                 </h4>
-                <p className="text-xs text-text-secondary mt-0.5">
+                <p className="text-xs text-brand-dark/60 mt-0.5">
                   Chụp ảnh lá hoặc vỏ thân rỉ mủ gửi cho Bác sĩ AI chẩn đoán ngay sau 3 giây,
                   nhận hướng dẫn pha kèm bám dính hoặc phân vi lượng thích hợp.
                 </p>
@@ -172,7 +174,7 @@ export default function ProductTabs({ product, activeTab, onActiveTabChange }: P
             </div>
             <Link
               to="/ai-doctor"
-              className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-lg shadow-sm transition-all flex items-center gap-2 whitespace-nowrap"
+              className="px-5 py-2.5 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide uppercase text-xs transition-colors flex items-center gap-2 whitespace-nowrap"
             >
               <span className="material-symbols-outlined text-[18px]">photo_camera</span>
               <span>Quét lá chẩn đoán ngay</span>

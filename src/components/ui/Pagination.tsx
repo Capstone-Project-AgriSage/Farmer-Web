@@ -18,11 +18,11 @@ export default function Pagination({
   itemLabel = 'sản phẩm',
 }: PaginationProps) {
   return (
-    <div className="mt-10 bg-white rounded-xl border border-border-subtle p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div className="flex items-center gap-2 text-xs text-text-muted">
+    <div className="mt-10 border border-brand-dark/10 bg-brand-light p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="flex items-center gap-2 text-xs text-brand-dark/55">
         <span>Hiển thị</span>
         <select
-          className="text-xs font-medium text-text-primary bg-surface-subtle border border-border-subtle rounded px-2 py-1 focus:outline-none focus:border-primary"
+          className="text-xs text-brand-dark bg-brand-cream border border-brand-dark/15 px-2.5 py-1.5 focus:outline-none focus:border-brand-dark/40"
           value={pageSize}
           onChange={(e) => onPageSizeChange(Number(e.target.value))}
         >
@@ -38,7 +38,7 @@ export default function Pagination({
           disabled={currentPage <= 1}
           onClick={() => onPageChange(Math.max(1, currentPage - 1))}
           aria-label="Trang trước"
-          className="w-8 h-8 rounded-lg border border-border-subtle flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-surface-subtle transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-8 h-8 border border-brand-dark/15 flex items-center justify-center text-brand-dark/50 hover:text-brand-dark hover:bg-brand-cream transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <span className="material-symbols-outlined text-[18px]">chevron_left</span>
         </button>
@@ -48,10 +48,10 @@ export default function Pagination({
             onClick={() => onPageChange(p)}
             aria-label={`Trang ${p}`}
             aria-current={p === currentPage ? 'page' : undefined}
-            className={`w-8 h-8 rounded-lg font-bold text-xs flex items-center justify-center transition-colors ${
+            className={`w-8 h-8 text-xs flex items-center justify-center transition-colors ${
               p === currentPage
-                ? 'bg-primary text-white shadow-sm'
-                : 'border border-border-subtle text-text-primary hover:bg-surface-subtle font-medium'
+                ? 'bg-brand-dark text-white'
+                : 'border border-brand-dark/15 text-brand-dark hover:bg-brand-cream'
             }`}
           >
             {p}
@@ -61,7 +61,7 @@ export default function Pagination({
           disabled={currentPage >= totalPages}
           onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
           aria-label="Trang sau"
-          className="w-8 h-8 rounded-lg border border-border-subtle flex items-center justify-center text-text-primary hover:bg-surface-subtle transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="w-8 h-8 border border-brand-dark/15 flex items-center justify-center text-brand-dark hover:bg-brand-cream transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <span className="material-symbols-outlined text-[18px]">chevron_right</span>
         </button>

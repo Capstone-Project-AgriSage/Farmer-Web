@@ -12,17 +12,24 @@ export default function ArticleDetailPage() {
 
   if (!article) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-16 text-center">
-        <h1 className="text-xl font-bold text-text-primary">Không tìm thấy bài viết</h1>
-        <Link to="/knowledge" className="text-primary font-semibold hover:underline mt-2 inline-block">
-          Quay lại Kiến thức nông nghiệp
-        </Link>
+      <div className="bg-brand-cream text-brand-dark">
+        <div className="max-w-3xl mx-auto px-6 lg:px-8 py-16 md:py-20 text-center">
+          <h1 className="text-xl font-helvetica-neue tracking-tight text-brand-dark">
+            Không tìm thấy bài viết
+          </h1>
+          <Link
+            to="/knowledge"
+            className="inline-flex items-center gap-1.5 mt-4 text-sm text-brand-dark/60 hover:text-brand-dark tracking-wide transition-colors"
+          >
+            Quay lại Kiến thức nông nghiệp
+          </Link>
+        </div>
       </div>
     )
   }
 
   return (
-    <>
+    <div className="bg-brand-cream text-brand-dark">
       <Breadcrumb
         items={[
           { label: 'Trang chủ', to: '/' },
@@ -30,25 +37,27 @@ export default function ArticleDetailPage() {
           { label: article.title },
         ]}
       />
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-3xl mx-auto px-6 lg:px-8 py-10 md:py-14">
         <div
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold mb-4 ${article.badge.className}`}
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs tracking-wide mb-5 border border-brand-dark/10 bg-brand-light text-brand-dark/70`}
         >
           <span className="material-symbols-outlined text-[14px]">{article.badge.icon}</span>
           <span>{article.badge.label}</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-snug">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-helvetica-neue tracking-tight text-brand-dark leading-[1.2]">
           {article.title}
         </h1>
-        <div className="text-xs text-text-muted mt-3 pb-6 border-b border-border-subtle">{article.date}</div>
-        <div className="space-y-4 pt-6 text-sm text-text-secondary leading-relaxed">
+        <div className="text-xs tracking-wide text-brand-dark/50 mt-4 pb-6 border-b border-brand-dark/10">
+          {article.date}
+        </div>
+        <div className="space-y-4 pt-6 text-base text-brand-dark/60 leading-relaxed">
           {article.content.map((paragraph, i) => (
             <p key={i}>{paragraph}</p>
           ))}
         </div>
         <Link
           to="/knowledge"
-          className="inline-flex items-center gap-1.5 mt-8 text-sm font-semibold text-primary hover:underline"
+          className="inline-flex items-center gap-1.5 mt-10 text-sm text-brand-dark/60 hover:text-brand-dark tracking-wide transition-colors"
         >
           <span className="material-symbols-outlined text-[16px]">arrow_back</span>
           <span>Quay lại Kiến thức nông nghiệp</span>
@@ -58,6 +67,6 @@ export default function ArticleDetailPage() {
           subtitle="Chụp ảnh lá gửi Bác sĩ AI hoặc gọi hotline kỹ sư nông học để được tư vấn miễn phí."
         />
       </div>
-    </>
+    </div>
   )
 }

@@ -121,28 +121,31 @@ export default function ProductsPage() {
           { label: 'Tất cả vật tư nông nghiệp' },
         ]}
       />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10 md:py-14 space-y-8">
         {/* Page Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">
+            <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2 font-helvetica-neue">
+              Cửa hàng vật tư
+            </p>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-helvetica-neue tracking-tight text-brand-dark leading-[1.15]">
               Vật Tư Nông Dược Chính Hãng
             </h1>
-            <p className="text-xs sm:text-sm text-text-secondary mt-1">
+            <p className="text-sm text-brand-dark/60 mt-2 max-w-xl">
               Phân bón NPK, lúa giống và thuốc BVTV đạt chuẩn VietGAP từ Đại lý Hai Thắng.
             </p>
           </div>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-primary rounded-xl border border-emerald-200 text-xs font-semibold self-start md:self-auto">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-light text-brand-dark/70 border border-brand-dark/10 text-xs tracking-wide self-start md:self-auto">
             <span className="material-symbols-outlined text-[18px]">verified</span>
             <span>100% Chính Hãng • Tem VAT</span>
           </div>
         </div>
 
         {/* Filter Toolbar: Category Chips + Search + Sort */}
-        <div className="bg-white rounded-2xl border border-border-subtle p-4 shadow-xs space-y-4">
+        <div className="border border-brand-dark/10 bg-white p-5 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             {/* Horizontal Category Chips */}
-            <div className="flex flex-wrap items-center gap-1.5">
+            <div className="flex flex-wrap items-center gap-2">
               {categoryChips.map((chip) => {
                 const isActive = currentGroup === chip.value
                 return (
@@ -150,10 +153,10 @@ export default function ProductsPage() {
                     key={chip.label}
                     type="button"
                     onClick={() => handleSelectGroup(chip.value)}
-                    className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                    className={`px-3.5 py-1.5 rounded-full text-xs tracking-wide transition-colors ${
                       isActive
-                        ? 'bg-primary text-white shadow-xs'
-                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                        ? 'bg-brand-dark text-white'
+                        : 'border border-brand-dark/15 text-brand-dark/70 hover:border-brand-dark/30'
                     }`}
                   >
                     {chip.label}
@@ -164,9 +167,9 @@ export default function ProductsPage() {
 
             {/* Sort & Count */}
             <div className="flex items-center gap-2">
-              <span className="text-xs text-text-muted">Sắp xếp:</span>
+              <span className="text-xs text-brand-dark/50 tracking-wide">Sắp xếp:</span>
               <select
-                className="text-xs font-medium text-text-primary bg-slate-50 border border-border-subtle rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-primary"
+                className="text-xs text-brand-dark bg-brand-cream border border-brand-dark/15 rounded-full px-3 py-1.5 focus:outline-none focus:border-brand-dark/40"
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortOption)}
               >
@@ -180,11 +183,11 @@ export default function ProductsPage() {
 
           {/* Search bar */}
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-3 top-2.5 text-text-muted text-[18px]">
+            <span className="material-symbols-outlined absolute left-3 top-2.5 text-brand-dark/40 text-[18px]">
               search
             </span>
             <input
-              className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm text-text-primary placeholder:text-text-muted bg-slate-50 border border-border-subtle rounded-xl focus:outline-none focus:border-primary"
+              className="w-full pl-9 pr-4 py-2.5 text-xs sm:text-sm text-brand-dark placeholder:text-brand-dark/40 bg-brand-cream border border-brand-dark/15 focus:outline-none focus:border-brand-dark/40"
               placeholder="Tìm theo tên thuốc (Beam 75WP, Anvil 5SC), hoạt chất hoặc loại phân bón..."
               type="text"
               value={filters.search}
@@ -195,23 +198,23 @@ export default function ProductsPage() {
 
         {/* Product Grid */}
         {pageItems.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
             {pageItems.map((product) => (
               <ProductCard key={product.slug} product={product} />
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-2xl border border-border-subtle p-12 text-center">
-            <span className="material-symbols-outlined text-text-muted text-5xl">search_off</span>
-            <h3 className="text-base font-bold text-text-primary mt-3">
+          <div className="border border-brand-dark/10 bg-white p-12 text-center">
+            <span className="material-symbols-outlined text-brand-dark/40 text-5xl">search_off</span>
+            <h3 className="text-base font-helvetica-neue tracking-tight text-brand-dark mt-3">
               Không tìm thấy sản phẩm phù hợp
             </h3>
-            <p className="text-xs text-text-secondary mt-1">
+            <p className="text-xs text-brand-dark/55 mt-1">
               Thử từ khóa tìm kiếm hoặc bấm chọn danh mục khác.
             </p>
             <button
               onClick={resetFilters}
-              className="mt-4 px-5 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl transition-colors"
+              className="mt-5 px-6 py-2.5 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide uppercase text-sm transition-colors"
             >
               Xem tất cả sản phẩm
             </button>

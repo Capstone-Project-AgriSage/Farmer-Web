@@ -7,19 +7,21 @@ export interface BreadcrumbItem {
 
 export default function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
   return (
-    <div className="w-full bg-surface-secondary border-b border-border-subtle py-3.5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-xs text-text-muted">
+    <div className="w-full border-b border-brand-dark/10 py-3.5 bg-brand-cream">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <nav
+          aria-label="Breadcrumb"
+          className="flex flex-wrap items-center gap-2 text-xs text-brand-dark/50 tracking-wide"
+        >
           {items.map((item, index) => (
             <span key={item.label} className="flex items-center gap-2">
-              {index > 0 && <span className="material-symbols-outlined text-[14px]">chevron_right</span>}
+              {index > 0 && <span className="text-brand-dark/30">/</span>}
               {item.to ? (
-                <Link className="hover:text-primary transition-colors flex items-center gap-1" to={item.to}>
-                  {index === 0 && <span className="material-symbols-outlined text-[16px]">home</span>}
-                  <span>{item.label}</span>
+                <Link className="hover:text-brand-dark transition-colors" to={item.to}>
+                  {item.label}
                 </Link>
               ) : (
-                <span className="text-text-primary font-semibold">{item.label}</span>
+                <span className="text-brand-dark">{item.label}</span>
               )}
             </span>
           ))}

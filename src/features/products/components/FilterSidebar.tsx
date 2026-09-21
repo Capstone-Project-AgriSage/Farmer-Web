@@ -64,70 +64,82 @@ export default function FilterSidebar({
 }: FilterSidebarProps) {
   return (
     <aside className="lg:col-span-3 space-y-5">
-      <div className="bg-white rounded-xl border border-border-subtle p-4 shadow-sm">
-        <div className="flex items-center justify-between pb-3 border-b border-border-subtle mb-3">
-          <h2 className="text-sm font-bold text-text-primary flex items-center gap-1.5">
-            <span className="material-symbols-outlined text-primary text-[18px]">filter_alt</span>
+      <div className="bg-white border border-brand-dark/10 p-5">
+        <div className="flex items-center justify-between pb-3 border-b border-brand-dark/10 mb-4">
+          <h2 className="text-sm font-helvetica-neue tracking-tight text-brand-dark flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-brand-dark/60 text-[18px]">filter_alt</span>
             <span>Bộ lọc tìm kiếm</span>
           </h2>
-          <button onClick={onReset} className="text-[11px] text-primary hover:underline font-semibold">
+          <button
+            onClick={onReset}
+            className="text-[11px] text-brand-dark/60 hover:text-brand-dark tracking-wide transition-colors"
+          >
             Thiết lập lại
           </button>
         </div>
         <div className="space-y-5">
           <div className="space-y-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-text-primary">
+            <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50">
               Danh mục sản phẩm
             </h3>
-            <div className="space-y-1.5 text-xs text-text-secondary">
+            <div className="space-y-1.5 text-xs text-brand-dark/60">
               {groupOptions.map((label) => (
-                <label key={label} className="flex items-center justify-between hover:text-primary cursor-pointer">
+                <label
+                  key={label}
+                  className="flex items-center justify-between hover:text-brand-dark cursor-pointer transition-colors"
+                >
                   <div className="flex items-center gap-2">
                     <input
                       checked={filters.groups.has(label)}
                       onChange={() => onFilterChange({ groups: toggleInSet(filters.groups, label) })}
-                      className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
+                      className="rounded border-brand-dark/20 text-brand-dark focus:ring-brand-dark/30 h-3.5 w-3.5"
                       type="checkbox"
                     />
                     <span>{label}</span>
                   </div>
-                  <span className="text-[11px] text-text-muted">({groupCounts.get(label) ?? 0})</span>
+                  <span className="text-[11px] text-brand-dark/40">({groupCounts.get(label) ?? 0})</span>
                 </label>
               ))}
             </div>
           </div>
-          <div className="pt-3 border-t border-border-subtle space-y-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-text-primary">
+          <div className="pt-3 border-t border-brand-dark/10 space-y-2">
+            <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50">
               Thương hiệu nổi bật
             </h3>
-            <div className="space-y-1.5 text-xs text-text-secondary">
+            <div className="space-y-1.5 text-xs text-brand-dark/60">
               {brandOptions.map((label) => (
-                <label key={label} className="flex items-center justify-between hover:text-primary cursor-pointer">
+                <label
+                  key={label}
+                  className="flex items-center justify-between hover:text-brand-dark cursor-pointer transition-colors"
+                >
                   <div className="flex items-center gap-2">
                     <input
                       checked={filters.brands.has(label)}
                       onChange={() => onFilterChange({ brands: toggleInSet(filters.brands, label) })}
-                      className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
+                      className="rounded border-brand-dark/20 text-brand-dark focus:ring-brand-dark/30 h-3.5 w-3.5"
                       type="checkbox"
                     />
                     <span>{label}</span>
                   </div>
-                  <span className="text-[11px] text-text-muted">({brandCounts.get(label) ?? 0})</span>
+                  <span className="text-[11px] text-brand-dark/40">({brandCounts.get(label) ?? 0})</span>
                 </label>
               ))}
             </div>
           </div>
-          <div className="pt-3 border-t border-border-subtle space-y-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-text-primary">
+          <div className="pt-3 border-t border-brand-dark/10 space-y-2">
+            <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50">
               Phòng trị bệnh cây trồng
             </h3>
-            <div className="space-y-1.5 text-xs text-text-secondary">
+            <div className="space-y-1.5 text-xs text-brand-dark/60">
               {diseaseOptions.map((label) => (
-                <label key={label} className="flex items-center gap-2 hover:text-primary cursor-pointer">
+                <label
+                  key={label}
+                  className="flex items-center gap-2 hover:text-brand-dark cursor-pointer transition-colors"
+                >
                   <input
                     checked={filters.diseases.has(label)}
                     onChange={() => onFilterChange({ diseases: toggleInSet(filters.diseases, label) })}
-                    className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
+                    className="rounded border-brand-dark/20 text-brand-dark focus:ring-brand-dark/30 h-3.5 w-3.5"
                     type="checkbox"
                   />
                   <span>{label}</span>
@@ -135,20 +147,20 @@ export default function FilterSidebar({
               ))}
             </div>
           </div>
-          <div className="pt-3 border-t border-border-subtle space-y-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-text-primary">
+          <div className="pt-3 border-t border-brand-dark/10 space-y-2">
+            <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50">
               Khoảng giá (VND)
             </h3>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <input
-                className="w-full px-2 py-1.5 rounded border border-border-subtle bg-surface-subtle text-text-primary focus:outline-none focus:border-primary"
+                className="w-full px-2.5 py-1.5 bg-brand-cream border border-brand-dark/15 text-brand-dark focus:outline-none focus:border-brand-dark/40"
                 placeholder="0 đ"
                 type="text"
                 value={filters.minPrice}
                 onChange={(e) => onFilterChange({ minPrice: e.target.value })}
               />
               <input
-                className="w-full px-2 py-1.5 rounded border border-border-subtle bg-surface-subtle text-text-primary focus:outline-none focus:border-primary"
+                className="w-full px-2.5 py-1.5 bg-brand-cream border border-brand-dark/15 text-brand-dark focus:outline-none focus:border-brand-dark/40"
                 placeholder="1.500.000 đ"
                 type="text"
                 value={filters.maxPrice}
@@ -156,34 +168,34 @@ export default function FilterSidebar({
               />
             </div>
           </div>
-          <div className="pt-3 border-t border-border-subtle space-y-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-text-primary">
+          <div className="pt-3 border-t border-brand-dark/10 space-y-2">
+            <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50">
               Tiện ích &amp; Dịch vụ
             </h3>
-            <div className="space-y-1.5 text-xs text-text-secondary">
-              <label className="flex items-center gap-2 hover:text-primary cursor-pointer">
+            <div className="space-y-1.5 text-xs text-brand-dark/60">
+              <label className="flex items-center gap-2 hover:text-brand-dark cursor-pointer transition-colors">
                 <input
                   checked={filters.onlyWarehouse}
                   onChange={(e) => onFilterChange({ onlyWarehouse: e.target.checked })}
-                  className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
+                  className="rounded border-brand-dark/20 text-brand-dark focus:ring-brand-dark/30 h-3.5 w-3.5"
                   type="checkbox"
                 />
                 <span>Sẵn hàng tại kho Thới Lai</span>
               </label>
-              <label className="flex items-center gap-2 hover:text-primary cursor-pointer">
+              <label className="flex items-center gap-2 hover:text-brand-dark cursor-pointer transition-colors">
                 <input
                   checked={filters.onlyCredit}
                   onChange={(e) => onFilterChange({ onlyCredit: e.target.checked })}
-                  className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
+                  className="rounded border-brand-dark/20 text-brand-dark focus:ring-brand-dark/30 h-3.5 w-3.5"
                   type="checkbox"
                 />
                 <span>Hỗ trợ nợ vụ (AgriCredit)</span>
               </label>
-              <label className="flex items-center gap-2 hover:text-primary cursor-pointer">
+              <label className="flex items-center gap-2 hover:text-brand-dark cursor-pointer transition-colors">
                 <input
                   checked={filters.onlyExpress}
                   onChange={(e) => onFilterChange({ onlyExpress: e.target.checked })}
-                  className="rounded text-primary focus:ring-primary h-3.5 w-3.5"
+                  className="rounded border-brand-dark/20 text-brand-dark focus:ring-brand-dark/30 h-3.5 w-3.5"
                   type="checkbox"
                 />
                 <span>Giao hỏa tốc 2-4h</span>

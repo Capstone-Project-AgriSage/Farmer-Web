@@ -5,17 +5,17 @@ const guarantees = [
 
 export default function PostPurchaseGuarantees() {
   return (
-    <div className="bg-white rounded-xl p-5 border border-[#E1E8E2] shadow-sm space-y-3 text-xs text-[#465348]">
+    <div className="bg-white border border-brand-dark/10 p-5 space-y-3 text-xs text-brand-dark/60">
       {guarantees.map(([icon, text]) => (
         <div key={text} className="flex items-center gap-2.5">
-          <span className="material-symbols-outlined text-base text-[#2E7D32]">{icon}</span>
+          <span className="material-symbols-outlined text-base text-brand-green">{icon}</span>
           <span>{text}</span>
         </div>
       ))}
       <div className="flex items-center gap-2.5">
-        <span className="material-symbols-outlined text-base text-[#2E7D32]">psychology</span>
+        <span className="material-symbols-outlined text-base text-brand-green">psychology</span>
         <span>
-          Được dùng miễn phí tính năng <strong>Bác sĩ AI quét lá nhận phác đồ</strong> trọn
+          Được dùng miễn phí tính năng <strong className="text-brand-dark">Bác sĩ AI quét lá nhận phác đồ</strong> trọn
           đời.
         </span>
       </div>

@@ -22,9 +22,14 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-16 text-center">
-        <h1 className="text-xl font-bold text-text-primary">Không tìm thấy sản phẩm</h1>
-        <Link to="/products" className="text-primary font-semibold hover:underline mt-2 inline-block">
+      <div className="max-w-3xl mx-auto px-6 py-16 text-center">
+        <h1 className="text-xl font-helvetica-neue tracking-tight text-brand-dark">
+          Không tìm thấy sản phẩm
+        </h1>
+        <Link
+          to="/products"
+          className="inline-block mt-4 text-sm text-brand-dark/70 hover:text-brand-dark tracking-wide transition-colors"
+        >
           Quay lại danh sách sản phẩm
         </Link>
       </div>
@@ -43,7 +48,7 @@ export default function ProductDetailPage() {
           { label: product.name },
         ]}
       />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10 md:py-14">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           <ProductImagePanel product={product} />
           <PurchasePanel

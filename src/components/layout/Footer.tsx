@@ -1,161 +1,99 @@
+import { Link } from 'react-router-dom'
+
 export default function Footer() {
   return (
-    <footer className="w-full bg-[#144d1a] border-t border-white/10 mt-auto text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-12">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12">
+    <footer className="w-full bg-brand-dark mt-auto text-white">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12 lg:py-14">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-12">
           <div className="md:col-span-5 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg border border-white/20 bg-white p-1 flex items-center justify-center shadow-sm">
-                <img
-                  alt="AgriCARE-AI"
-                  className="w-full h-full object-contain"
-                  src="https://placehold.co/80x80/2F7D3A/FFFFFF?text=AS"
-                />
-              </div>
-              <div>
-                <span className="font-bold text-white text-base tracking-tight leading-none block">
-                  AgriSage
-                </span>
-                <span className="text-xs text-emerald-200/80">
-                  Hệ sinh thái Nông nghiệp Thông minh
-                </span>
-              </div>
+            <div>
+              <span className="text-xl text-white tracking-tight font-helvetica-neue block">AgriSage</span>
+              <span className="text-xs tracking-[0.2em] uppercase text-white/50 mt-1 block">
+                Nông nghiệp số &amp; chẩn đoán AI
+              </span>
             </div>
-            <p className="text-sm text-emerald-100/80 leading-relaxed">
-              Nền tảng quản trị vật tư nông nghiệp toàn diện và trợ lý AI nhận diện bệnh hại cây
-              trồng qua ảnh chụp. Giúp đại lý quản lý tồn kho, sổ nợ mùa vụ minh bạch và hỗ trợ
-              nông dân canh tác hiệu quả.
+            <p className="text-sm text-white/65 leading-relaxed max-w-md">
+              Nền tảng quản trị vật tư nông nghiệp và trợ lý AI nhận diện bệnh hại cây trồng qua ảnh
+              chụp. Đồng hành cùng đại lý và nhà nông ĐBSCL.
             </p>
-            <div className="space-y-2 text-xs text-emerald-100/90 pt-1">
-              <div className="flex items-start gap-2">
-                <span className="material-symbols-outlined text-[16px] text-emerald-300 mt-0.5 flex-shrink-0">
-                  location_on
-                </span>
-                <span>
-                  <strong className="text-white">Trung tâm điều hành:</strong> Tòa nhà AgriTech,
-                  Khu Công nghệ cao, TP. Hồ Chí Minh.
-                </span>
-              </div>
-              <div className="flex items-start gap-2">
-                <span className="material-symbols-outlined text-[16px] text-emerald-300 mt-0.5 flex-shrink-0">
-                  store
-                </span>
-                <span>
-                  <strong className="text-white">Đại lý Vật tư Nông nghiệp Hai Thắng:</strong> Thị trấn Thới Lai,
-                  Huyện Thới Lai, TP. Cần Thơ (Đồng bằng Sông Cửu Long).
-                </span>
-              </div>
+            <div className="space-y-2 text-xs text-white/60 pt-1">
+              <p>
+                <span className="text-white/90">Trung tâm điều hành:</span> Tòa nhà AgriTech, Khu Công
+                nghệ cao, TP. Hồ Chí Minh.
+              </p>
+              <p>
+                <span className="text-white/90">Đại lý Hai Thắng:</span> Thị trấn Thới Lai, TP. Cần Thơ.
+              </p>
             </div>
           </div>
 
-          <div className="md:col-span-3 space-y-3">
-            <h3 className="text-sm font-bold text-emerald-300 uppercase tracking-wider">
-              Danh mục &amp; Giải pháp
-            </h3>
-            <ul className="space-y-2.5 text-xs text-emerald-100/80">
+          <div className="md:col-span-3 space-y-4">
+            <h3 className="text-xs tracking-[0.25em] uppercase text-white/45">Danh mục</h3>
+            <ul className="space-y-2.5 text-sm text-white/70">
               <li>
-                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="/products">
-                  <span className="material-symbols-outlined text-[14px] text-emerald-300/60">
-                    chevron_right
-                  </span>
-                  <span>Phân bón NPK &amp; Hữu cơ cho lúa</span>
-                </a>
+                <Link className="hover:text-white transition-colors" to="/products">
+                  Phân bón NPK &amp; hữu cơ
+                </Link>
               </li>
               <li>
-                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="/products">
-                  <span className="material-symbols-outlined text-[14px] text-emerald-300/60">
-                    chevron_right
-                  </span>
-                  <span>Thuốc BVTV trừ bệnh đạo ôn, bạc lá</span>
-                </a>
+                <Link className="hover:text-white transition-colors" to="/products">
+                  Thuốc BVTV trừ bệnh lúa
+                </Link>
               </li>
               <li>
-                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="/products">
-                  <span className="material-symbols-outlined text-[14px] text-emerald-300/60">
-                    chevron_right
-                  </span>
-                  <span>Lúa giống xác nhận ST25, OM5451</span>
-                </a>
+                <Link className="hover:text-white transition-colors" to="/products">
+                  Lúa giống xác nhận
+                </Link>
               </li>
               <li>
-                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="/ai-doctor">
-                  <span className="material-symbols-outlined text-[14px] text-emerald-300 font-medium">
-                    psychology
-                  </span>
-                  <span className="font-medium text-white">Chẩn đoán bệnh lá lúa AI</span>
-                </a>
+                <Link className="hover:text-white transition-colors" to="/ai-doctor">
+                  Chẩn đoán bệnh lá lúa AI
+                </Link>
               </li>
               <li>
-                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="/account?tab=credit">
-                  <span className="material-symbols-outlined text-[14px] text-emerald-300/60">
-                    chevron_right
-                  </span>
-                  <span>Sổ nợ mùa vụ &amp; Xác nhận 2 chiều</span>
-                </a>
+                <Link className="hover:text-white transition-colors" to="/account?tab=credit">
+                  Sổ nợ mùa vụ
+                </Link>
               </li>
             </ul>
           </div>
 
-          <div className="md:col-span-4 space-y-3">
-            <h3 className="text-sm font-bold text-emerald-300 uppercase tracking-wider">
-              Hỗ trợ khách hàng &amp; Nông dân
-            </h3>
-            <ul className="space-y-2.5 text-xs text-emerald-100/80">
-              <li className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[16px] text-emerald-300">
-                  support_agent
-                </span>
-                <span>
-                  Tổng đài kỹ sư tư vấn mùa vụ:{' '}
-                  <strong className="text-white font-semibold">1900 6828</strong> (7:00 - 20:00)
-                </span>
+          <div className="md:col-span-4 space-y-4">
+            <h3 className="text-xs tracking-[0.25em] uppercase text-white/45">Hỗ trợ</h3>
+            <ul className="space-y-2.5 text-sm text-white/70">
+              <li>
+                Tổng đài kỹ sư:{' '}
+                <span className="text-white">1900 6828</span> (7:00 – 20:00)
               </li>
               <li>
-                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="#">
-                  <span className="material-symbols-outlined text-[14px] text-emerald-300/60">
-                    chevron_right
-                  </span>
-                  <span>Quy trình giao nhận vật tư tận vườn</span>
-                </a>
+                <Link className="hover:text-white transition-colors" to="/contact">
+                  Liên hệ đại lý
+                </Link>
               </li>
               <li>
-                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="#">
-                  <span className="material-symbols-outlined text-[14px] text-emerald-300/60">
-                    chevron_right
-                  </span>
-                  <span>Chính sách bảo mật dữ liệu nông hộ</span>
-                </a>
+                <Link className="hover:text-white transition-colors" to="/knowledge">
+                  Kiến thức nông nghiệp
+                </Link>
               </li>
               <li>
-                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="#">
-                  <span className="material-symbols-outlined text-[14px] text-emerald-300/60">
-                    chevron_right
-                  </span>
-                  <span>Điều khoản sử dụng nền tảng AgriSage</span>
-                </a>
-              </li>
-              <li>
-                <a className="hover:text-white transition-colors flex items-center gap-1.5" href="#">
-                  <span className="material-symbols-outlined text-[14px] text-emerald-300/60">
-                    chevron_right
-                  </span>
-                  <span>Tài liệu hướng dẫn đại lý tích hợp POS</span>
-                </a>
+                <Link className="hover:text-white transition-colors" to="/about">
+                  Giới thiệu AgriSage
+                </Link>
               </li>
             </ul>
             <div className="pt-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 border border-white/15 text-xs text-emerald-100">
-                <span className="w-2 h-2 rounded-full bg-status-success animate-pulse"></span>
-                <span>Đại lý Hai Thắng (Thới Lai, Cần Thơ) đang trực tuyến</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 border border-white/15 text-xs text-white/70 rounded-full">
+                <span className="w-1.5 h-1.5 rounded-full bg-white/80"></span>
+                <span>Đại lý Hai Thắng đang trực tuyến</span>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div className="border-t border-white/10 py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-emerald-100/70 gap-2">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-white/45 gap-2">
           <p>© 2024 AgriSage. Bản quyền kỹ thuật.</p>
-          <p className="text-emerald-200/60">Phát triển vì nền nông nghiệp số Việt Nam</p>
+          <p>Phát triển vì nền nông nghiệp số Việt Nam</p>
         </div>
       </div>
     </footer>

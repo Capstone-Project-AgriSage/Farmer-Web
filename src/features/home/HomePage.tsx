@@ -10,12 +10,12 @@ export default function HomePage() {
   useDocumentTitle()
 
   return (
-    <>
+    <div className="bg-brand-cream text-brand-dark">
       <HeroSection />
       <AiDiagnosisBanner />
       <CategoryGrid />
       <FeaturedProducts products={products.slice(0, 4)} />
       <CommitmentSection />
-    </>
+    </div>
   )
 }

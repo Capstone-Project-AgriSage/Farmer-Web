@@ -91,18 +91,18 @@ export default function AboutPage() {
   useDocumentTitle('Giới thiệu')
 
   return (
-    <>
+    <div className="bg-brand-cream text-brand-dark">
       <Breadcrumb items={[{ label: 'Trang chủ', to: '/' }, { label: 'Giới thiệu' }]} />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10 md:py-14">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           <div className="lg:col-span-7">
-            <div className="text-xs font-bold uppercase tracking-wider text-primary mb-1">
-              VỀ AGRISAGE
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">
-              Hệ Sinh Thái Nông Nghiệp Số Đồng Hành Cùng Nhà Nông
+            <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2 font-helvetica-neue">
+              Về AgriSage
+            </p>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-helvetica-neue tracking-tight text-brand-dark leading-[1.15]">
+              Hệ sinh thái nông nghiệp số đồng hành cùng nhà nông
             </h1>
-            <p className="text-sm text-text-secondary mt-3 leading-relaxed">
+            <p className="text-base text-brand-dark/60 mt-4 leading-relaxed max-w-xl">
               AgriSage là nền tảng quản trị vật tư nông nghiệp toàn diện, kết hợp trợ lý AI nhận diện
               bệnh hại cây trồng qua ảnh chụp. Chúng tôi giúp đại lý quản lý tồn kho, sổ nợ mùa vụ
               minh bạch, đồng thời hỗ trợ nông dân tiếp cận vật tư chính hãng và kỹ thuật canh tác
@@ -110,7 +110,7 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="lg:col-span-5">
-            <div className="rounded-2xl overflow-hidden shadow-md border border-border-subtle aspect-[4/3]">
+            <div className="overflow-hidden border border-brand-dark/10 aspect-[4/3]">
               <img
                 src="/images/misc/hero-farmer-phone.jpg"
                 alt="Nông dân dùng điện thoại chụp ảnh cây trồng để chẩn đoán AI ngoài đồng"
@@ -121,68 +121,73 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-12 md:mt-16 border-t border-brand-dark/10 pt-10">
           {stats.map((s) => (
-            <div key={s.label} className="bg-white rounded-xl border border-border-subtle p-5 text-center shadow-sm">
-              <div className="text-2xl sm:text-3xl font-extrabold text-primary">{s.value}</div>
-              <div className="text-xs text-text-secondary mt-1">{s.label}</div>
+            <div key={s.label} className="text-center md:text-left">
+              <div className="text-2xl sm:text-3xl font-helvetica-neue tracking-tight text-brand-dark">
+                {s.value}
+              </div>
+              <div className="text-xs text-brand-dark/60 mt-1.5 leading-relaxed">{s.label}</div>
             </div>
           ))}
         </div>
 
-        <div className="mt-12">
-          <div className="text-xs font-bold uppercase tracking-wider text-primary mb-1">
-            HÀNH TRÌNH
-          </div>
-          <h2 className="text-xl font-bold text-text-primary tracking-tight mb-6">
+        <div className="mt-14 md:mt-16">
+          <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2 font-helvetica-neue">
+            Hành trình
+          </p>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-helvetica-neue tracking-tight text-brand-dark mb-8">
             Từ một đại lý nhỏ ở Di Linh đến hệ sinh thái số
           </h2>
-          <div className="relative pl-8 sm:pl-10 space-y-8 before:content-[''] before:absolute before:left-[11px] sm:before:left-[13px] before:top-2 before:bottom-2 before:w-px before:bg-border-subtle">
+          <div className="relative pl-8 sm:pl-10 space-y-8 before:content-[''] before:absolute before:left-[11px] sm:before:left-[13px] before:top-2 before:bottom-2 before:w-px before:bg-brand-dark/15">
             {timeline.map((t) => (
               <div key={t.year} className="relative">
-                <span className="absolute -left-8 sm:-left-10 top-0.5 w-6 h-6 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center ring-4 ring-surface-subtle">
+                <span className="absolute -left-8 sm:-left-10 top-0.5 w-6 h-6 rounded-full bg-brand-dark text-white text-[10px] tracking-wide flex items-center justify-center ring-4 ring-brand-cream">
                   {t.year.slice(2)}
                 </span>
-                <div className="text-xs font-bold text-primary">{t.year}</div>
-                <h3 className="text-sm font-bold text-text-primary mt-0.5">{t.title}</h3>
-                <p className="text-xs text-text-secondary mt-1 leading-relaxed max-w-2xl">{t.desc}</p>
+                <div className="text-xs tracking-[0.2em] text-brand-dark/50 font-helvetica-neue">{t.year}</div>
+                <h3 className="text-sm font-helvetica-neue tracking-tight text-brand-dark mt-1">{t.title}</h3>
+                <p className="text-sm text-brand-dark/60 mt-1.5 leading-relaxed max-w-2xl">{t.desc}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="mt-12">
-          <h2 className="text-xl font-bold text-text-primary tracking-tight mb-6">
+        <div className="mt-14 md:mt-16">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-helvetica-neue tracking-tight text-brand-dark mb-8">
             Giá trị cốt lõi
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {values.map((v) => (
-              <div key={v.title} className="bg-white rounded-xl border border-border-subtle p-5 flex items-start gap-4 shadow-sm">
-                <div className="w-11 h-11 rounded-lg bg-primary-light text-primary flex items-center justify-center flex-shrink-0">
-                  <span className="material-symbols-outlined text-[22px]">{v.icon}</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+            {values.map((v, index) => (
+              <div key={v.title} className="border-t border-brand-dark/15 pt-6 flex items-start gap-4">
+                <div className="text-xs tracking-[0.2em] text-brand-dark/35 font-helvetica-neue shrink-0 pt-1">
+                  {String(index + 1).padStart(2, '0')}
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-text-primary">{v.title}</h3>
-                  <p className="text-xs text-text-secondary mt-1 leading-relaxed">{v.desc}</p>
+                  <div className="w-10 h-10 flex items-center justify-center text-brand-dark mb-3 -ml-1">
+                    <span className="material-symbols-outlined text-[28px]">{v.icon}</span>
+                  </div>
+                  <h3 className="text-base font-medium text-brand-dark">{v.title}</h3>
+                  <p className="text-sm text-brand-dark/60 mt-1.5 leading-relaxed">{v.desc}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="mt-12">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+        <div className="mt-14 md:mt-16">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
             <div>
-              <div className="text-xs font-bold uppercase tracking-wider text-primary mb-1">
-                LĨNH VỰC VẬT TƯ
-              </div>
-              <h2 className="text-xl font-bold text-text-primary tracking-tight">
+              <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2 font-helvetica-neue">
+                Lĩnh vực vật tư
+              </p>
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-helvetica-neue tracking-tight text-brand-dark">
                 6 nhóm vật tư chúng tôi cung ứng chính hãng
               </h2>
             </div>
             <Link
               to="/products"
-              className="text-sm font-semibold text-primary hover:text-primary-dark flex items-center gap-1 hover:underline shrink-0"
+              className="text-sm text-brand-dark/60 hover:text-brand-dark flex items-center gap-1 tracking-wide transition-colors shrink-0"
             >
               <span>Xem toàn bộ sản phẩm</span>
               <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -193,7 +198,7 @@ export default function AboutPage() {
               <Link
                 key={cat.name}
                 to={`/products?group=${encodeURIComponent(cat.group)}`}
-                className="group rounded-xl overflow-hidden border border-border-subtle shadow-sm hover:shadow-md hover:border-primary transition-all bg-white"
+                className="group overflow-hidden border border-brand-dark/10 bg-white hover:border-brand-dark/30 transition-colors"
               >
                 <div className="aspect-square overflow-hidden">
                   <img
@@ -204,7 +209,7 @@ export default function AboutPage() {
                   />
                 </div>
                 <div className="p-2.5 text-center">
-                  <h3 className="text-[11px] sm:text-xs font-bold text-text-primary group-hover:text-primary transition-colors leading-snug">
+                  <h3 className="text-[11px] sm:text-xs text-brand-dark group-hover:text-brand-green transition-colors leading-snug">
                     {cat.name}
                   </h3>
                 </div>
@@ -213,43 +218,48 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <div className="mt-12">
-          <div className="text-xs font-bold uppercase tracking-wider text-primary mb-1">
-            MẠNG LƯỚI
-          </div>
-          <h2 className="text-xl font-bold text-text-primary tracking-tight mb-6">
+        <div className="mt-14 md:mt-16">
+          <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2 font-helvetica-neue">
+            Mạng lưới
+          </p>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-helvetica-neue tracking-tight text-brand-dark mb-8">
             2 chi nhánh kho vận, 1 trung tâm điều hành
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
             {branches.map((b) => (
-              <div key={b.title} className="bg-white rounded-xl border border-border-subtle p-5 shadow-sm">
-                <div className="w-11 h-11 rounded-lg bg-primary-light text-primary flex items-center justify-center mb-3">
-                  <span className="material-symbols-outlined text-[22px]">{b.icon}</span>
+              <div key={b.title} className="border border-brand-dark/10 bg-white p-6">
+                <div className="w-10 h-10 flex items-center justify-center text-brand-dark mb-4">
+                  <span className="material-symbols-outlined text-[28px]">{b.icon}</span>
                 </div>
-                <h3 className="text-sm font-bold text-text-primary">{b.title}</h3>
-                <p className="text-xs text-text-secondary mt-1 leading-relaxed">{b.address}</p>
-                <p className="text-[11px] text-text-muted mt-2">{b.note}</p>
+                <h3 className="text-base font-medium text-brand-dark">{b.title}</h3>
+                <p className="text-sm text-brand-dark/60 mt-1.5 leading-relaxed">{b.address}</p>
+                <p className="text-xs text-brand-dark/45 mt-3">{b.note}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="mt-12 rounded-2xl bg-gradient-to-r from-primary-dark via-[#1a5b22] to-primary text-white p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div>
-            <h3 className="text-lg sm:text-xl font-bold">Sẵn sàng số hóa mùa vụ cùng AgriSage?</h3>
-            <p className="text-sm text-emerald-100/90 mt-1">
+        <div className="mt-14 md:mt-16 border border-brand-dark/10 bg-brand-light p-8 md:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div className="max-w-xl">
+            <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2 font-helvetica-neue">
+              Tham gia
+            </p>
+            <h3 className="text-xl md:text-2xl font-helvetica-neue tracking-tight text-brand-dark leading-snug">
+              Sẵn sàng số hóa mùa vụ cùng AgriSage?
+            </h3>
+            <p className="text-sm text-brand-dark/60 mt-2 leading-relaxed">
               Đăng ký tài khoản để trải nghiệm mua vật tư chính hãng và chẩn đoán AI miễn phí.
             </p>
           </div>
           <Link
             to="/register"
-            className="px-5 py-2.5 bg-white text-primary-dark hover:bg-emerald-50 text-sm font-bold rounded-lg shadow-md transition-all flex items-center gap-2 whitespace-nowrap"
+            className="inline-flex items-center gap-2 px-7 py-3 bg-brand-dark text-white text-sm tracking-wide uppercase rounded-full hover:bg-brand-green transition-colors whitespace-nowrap shrink-0"
           >
             <span>Đăng ký ngay</span>
             <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
           </Link>
         </div>
       </div>
-    </>
+    </div>
   )
 }

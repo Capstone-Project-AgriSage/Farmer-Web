@@ -61,31 +61,33 @@ export default function RegisterPage() {
     }
   }
 
+  const inputBase =
+    'w-full pl-9 pr-3 py-2.5 bg-brand-cream border text-brand-dark text-sm placeholder:text-brand-dark/40 focus:outline-none transition-colors'
+  const inputOk = 'border-brand-dark/15 focus:border-brand-green'
+  const inputErr = 'border-status-error focus:border-status-error'
+
   return (
     <AuthLayout showTags>
       <div className="mb-5 text-left">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-text-primary">
+        <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2">AgriSage</p>
+        <h1 className="text-2xl sm:text-3xl font-helvetica-neue tracking-tight text-brand-dark">
           Đăng ký tài khoản
         </h1>
-        <p className="text-sm text-text-secondary mt-1">
+        <p className="text-sm text-brand-dark/60 mt-1">
           Gia nhập hệ sinh thái nông nghiệp thông minh AgriSage
         </p>
       </div>
       <form className="space-y-3.5" onSubmit={handleSubmit} noValidate>
         <div className="text-left">
-          <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-1" htmlFor="fullName">
+          <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1" htmlFor="fullName">
             Họ và tên
           </label>
-          <div className="relative rounded-md shadow-sm">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text-muted">
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-brand-dark/40">
               <span className="material-symbols-outlined text-[18px]">person</span>
             </div>
             <input
-              className={`w-full pl-9 pr-3 py-2.5 bg-white border rounded-lg text-text-primary text-sm placeholder:text-text-muted focus:ring-2 focus:outline-none transition-all ${
-                errors.fullName
-                  ? 'border-status-error focus:border-status-error focus:ring-status-error/20'
-                  : 'border-border-subtle focus:border-primary focus:ring-primary/20'
-              }`}
+              className={`${inputBase} ${errors.fullName ? inputErr : inputOk}`}
               id="fullName"
               name="fullName"
               placeholder="Nguyễn Văn Nông"
@@ -98,19 +100,15 @@ export default function RegisterPage() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
           <div>
-            <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-1" htmlFor="regContact">
+            <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1" htmlFor="regContact">
               Email / Số điện thoại
             </label>
-            <div className="relative rounded-md shadow-sm">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text-muted">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-brand-dark/40">
                 <span className="material-symbols-outlined text-[18px]">call</span>
               </div>
               <input
-                className={`w-full pl-9 pr-3 py-2.5 bg-white border rounded-lg text-text-primary text-sm placeholder:text-text-muted focus:ring-2 focus:outline-none transition-all ${
-                  errors.contact
-                    ? 'border-status-error focus:border-status-error focus:ring-status-error/20'
-                    : 'border-border-subtle focus:border-primary focus:ring-primary/20'
-                }`}
+                className={`${inputBase} ${errors.contact ? inputErr : inputOk}`}
                 id="regContact"
                 name="contact"
                 placeholder="0912 345 678"
@@ -122,15 +120,15 @@ export default function RegisterPage() {
             <FieldError message={errors.contact} />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-1" htmlFor="farmRegion">
+            <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1" htmlFor="farmRegion">
               Khu vực canh tác
             </label>
-            <div className="relative rounded-md shadow-sm">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text-muted">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-brand-dark/40">
                 <span className="material-symbols-outlined text-[18px]">location_on</span>
               </div>
               <select
-                className="w-full pl-9 pr-3 py-2.5 bg-white border border-border-subtle rounded-lg text-text-primary text-sm focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition-all cursor-pointer"
+                className="w-full pl-9 pr-3 py-2.5 bg-brand-cream border border-brand-dark/15 text-brand-dark text-sm focus:border-brand-green focus:outline-none transition-colors cursor-pointer"
                 id="farmRegion"
                 name="region"
                 defaultValue="Cần Thơ (Thới Lai, Cờ Đỏ, Ô Môn...)"
@@ -146,19 +144,15 @@ export default function RegisterPage() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
           <div>
-            <label className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-1" htmlFor="regPassword">
+            <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1" htmlFor="regPassword">
               Mật khẩu
             </label>
-            <div className="relative rounded-md shadow-sm">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text-muted">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-brand-dark/40">
                 <span className="material-symbols-outlined text-[18px]">lock</span>
               </div>
               <input
-                className={`w-full pl-9 pr-8 py-2.5 bg-white border rounded-lg text-text-primary text-sm placeholder:text-text-muted focus:ring-2 focus:outline-none transition-all ${
-                  errors.password
-                    ? 'border-status-error focus:border-status-error focus:ring-status-error/20'
-                    : 'border-border-subtle focus:border-primary focus:ring-primary/20'
-                }`}
+                className={`${inputBase} pr-8 ${errors.password ? inputErr : inputOk}`}
                 id="regPassword"
                 name="password"
                 placeholder="Tối thiểu 8 ký tự"
@@ -170,7 +164,7 @@ export default function RegisterPage() {
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
                 aria-label={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
-                className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-text-muted cursor-pointer hover:text-text-primary"
+                className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-brand-dark/40 cursor-pointer hover:text-brand-dark"
               >
                 <span className="material-symbols-outlined text-[18px]">
                   {showPassword ? 'visibility_off' : 'visibility'}
@@ -181,21 +175,17 @@ export default function RegisterPage() {
           </div>
           <div>
             <label
-              className="block text-xs font-semibold text-text-secondary uppercase tracking-wider mb-1"
+              className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1"
               htmlFor="regConfirmPassword"
             >
               Xác nhận mật khẩu
             </label>
-            <div className="relative rounded-md shadow-sm">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text-muted">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-brand-dark/40">
                 <span className="material-symbols-outlined text-[18px]">verified_user</span>
               </div>
               <input
-                className={`w-full pl-9 pr-8 py-2.5 bg-white border rounded-lg text-text-primary text-sm placeholder:text-text-muted focus:ring-2 focus:outline-none transition-all ${
-                  errors.confirmPassword
-                    ? 'border-status-error focus:border-status-error focus:ring-status-error/20'
-                    : 'border-border-subtle focus:border-primary focus:ring-primary/20'
-                }`}
+                className={`${inputBase} pr-8 ${errors.confirmPassword ? inputErr : inputOk}`}
                 id="regConfirmPassword"
                 name="confirmPassword"
                 placeholder="Nhập lại mật khẩu"
@@ -207,7 +197,7 @@ export default function RegisterPage() {
                 type="button"
                 onClick={() => setShowConfirmPassword((v) => !v)}
                 aria-label={showConfirmPassword ? 'Ẩn mật khẩu xác nhận' : 'Hiện mật khẩu xác nhận'}
-                className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-text-muted cursor-pointer hover:text-text-primary"
+                className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-brand-dark/40 cursor-pointer hover:text-brand-dark"
               >
                 <span className="material-symbols-outlined text-[18px]">
                   {showConfirmPassword ? 'visibility_off' : 'visibility'}
@@ -225,15 +215,15 @@ export default function RegisterPage() {
               id="termsCheck"
               name="terms"
               type="checkbox"
-              className="mt-1"
+              className="mt-1 accent-brand-dark"
             />
-            <span className="text-xs text-text-secondary leading-snug">
+            <span className="text-xs text-brand-dark/60 leading-snug">
               Tôi đồng ý với{' '}
-              <a href="#" className="text-primary font-semibold hover:underline">
+              <a href="#" className="text-brand-green hover:underline">
                 Điều khoản dịch vụ
               </a>{' '}
               và{' '}
-              <a href="#" className="text-primary font-semibold hover:underline">
+              <a href="#" className="text-brand-green hover:underline">
                 Chính sách bảo mật nông hộ
               </a>{' '}
               của AgriSage.
@@ -243,7 +233,7 @@ export default function RegisterPage() {
         </div>
         <div className="pt-2">
           <button
-            className="w-full h-11 bg-primary hover:bg-primary-hover active:bg-primary-dark text-white font-semibold text-sm rounded-lg shadow-sm transition-all flex items-center justify-center gap-2 focus:ring-2 focus:ring-primary/40 focus:outline-none cursor-pointer disabled:opacity-70"
+            className="w-full h-11 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide uppercase text-sm transition-colors flex items-center justify-center gap-2 focus:outline-none cursor-pointer disabled:opacity-70"
             type="submit"
             disabled={isSubmitting}
           >
@@ -254,9 +244,9 @@ export default function RegisterPage() {
       </form>
       <div className="relative my-5 text-center">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-border-subtle"></div>
+          <div className="w-full border-t border-brand-dark/10"></div>
         </div>
-        <span className="relative bg-white px-3 text-[11px] text-text-muted uppercase tracking-wider">
+        <span className="relative bg-white px-3 text-[11px] text-brand-dark/50 uppercase tracking-[0.25em]">
           Hoặc tiếp tục với
         </span>
       </div>
@@ -264,10 +254,10 @@ export default function RegisterPage() {
         label="Đăng ký bằng Google"
         onClick={() => register('google-oauth', 'google-oauth', 'google-oauth').then(() => navigate('/'))}
       />
-      <div className="text-center pt-4 text-xs text-text-secondary">
+      <div className="text-center pt-4 text-xs text-brand-dark/60">
         <span>Đã có tài khoản?</span>
         <Link
-          className="font-semibold text-primary hover:text-primary-dark hover:underline ml-1 inline-flex items-center gap-0.5"
+          className="text-brand-green hover:text-brand-dark hover:underline ml-1 inline-flex items-center gap-0.5 transition-colors"
           to="/login"
         >
           <span>Đăng nhập ngay</span>

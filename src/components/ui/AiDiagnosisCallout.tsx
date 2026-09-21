@@ -1,3 +1,4 @@
+import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 interface AiDiagnosisCalloutProps {
@@ -7,22 +8,20 @@ interface AiDiagnosisCalloutProps {
 
 export default function AiDiagnosisCallout({ title, subtitle }: AiDiagnosisCalloutProps) {
   return (
-    <div className="mt-8 rounded-2xl bg-gradient-to-r from-emerald-50 via-surface-secondary to-primary-light border border-primary/20 p-6 flex flex-col sm:flex-row items-center justify-between gap-6">
-      <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center shadow-md flex-shrink-0">
-          <span className="material-symbols-outlined text-[26px]">psychology</span>
-        </div>
-        <div>
-          <h4 className="text-sm sm:text-base font-bold text-text-primary">{title}</h4>
-          <p className="text-xs text-text-secondary mt-0.5">{subtitle}</p>
-        </div>
+    <div className="mt-10 border border-brand-dark/10 bg-brand-light p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+      <div className="space-y-2 max-w-xl">
+        <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50">Bác sĩ cây trồng AI</p>
+        <h4 className="text-lg md:text-xl text-brand-dark tracking-tight font-helvetica-neue leading-snug">
+          {title}
+        </h4>
+        <p className="text-sm text-brand-dark/60 leading-relaxed">{subtitle}</p>
       </div>
       <Link
         to="/ai-doctor"
-        className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-lg shadow-sm transition-all flex items-center gap-2 whitespace-nowrap"
+        className="inline-flex items-center gap-2 px-6 py-3 bg-brand-dark hover:bg-brand-green text-white text-sm tracking-wide uppercase rounded-full transition-colors whitespace-nowrap"
       >
-        <span className="material-symbols-outlined text-[18px]">photo_camera</span>
-        <span>Quét lá cây với AI</span>
+        Quét lá với AI
+        <ArrowRight className="w-3.5 h-3.5" />
       </Link>
     </div>
   )

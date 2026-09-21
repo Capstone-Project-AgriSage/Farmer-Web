@@ -106,23 +106,22 @@ export default function AiDoctorPage() {
   return (
     <>
       <Breadcrumb items={[{ label: 'Trang chủ', to: '/' }, { label: 'Bác sĩ cây trồng AI' }]} />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 bg-brand-cream">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-primary text-xs font-semibold">
-              <span className="material-symbols-outlined text-[15px]">psychology</span>
-              <span>AI Vision v2.1 • Chuyên Biệt 5 Bệnh Lúa</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight mt-1.5">
+            <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 font-helvetica-neue">
+              AI Vision v2.1 · Chuyên biệt 5 bệnh lúa
+            </p>
+            <h1 className="text-2xl sm:text-3xl font-helvetica-neue tracking-tight text-brand-dark mt-1.5">
               Bác Sĩ Cây Trồng AI
             </h1>
-            <p className="text-xs sm:text-sm text-text-secondary mt-1">
+            <p className="text-xs sm:text-sm text-brand-dark/60 mt-1">
               Chẩn đoán tức thì đạo ôn, bạc lá vi khuẩn, đốm nâu, khô vằn. Phác đồ được kỹ sư Hai Thắng thẩm định.
             </p>
           </div>
           <Link
             to="/account?tab=diagnosis"
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs rounded-xl transition-all self-start sm:self-auto shrink-0"
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 border border-brand-dark/15 bg-white text-brand-dark/80 hover:border-brand-dark/30 hover:text-brand-dark tracking-wide uppercase text-sm rounded-full transition-colors self-start sm:self-auto shrink-0"
           >
             <span className="material-symbols-outlined text-[16px]">history</span>
             <span>Lịch sử ({mockDiagnosisCases.length} ca)</span>
@@ -130,9 +129,9 @@ export default function AiDoctorPage() {
         </div>
 
         {/* QUICK SAMPLE SELECTOR */}
-        <div className="bg-white p-3.5 rounded-2xl border border-border-subtle flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 shadow-2xs">
-          <div className="flex items-center gap-1.5 text-xs text-text-muted">
-            <span className="material-symbols-outlined text-primary text-[18px]">collections_bookmark</span>
+        <div className="bg-white p-3.5 border border-brand-dark/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
+          <div className="flex items-center gap-1.5 text-xs text-brand-dark/60">
+            <span className="material-symbols-outlined text-brand-green text-[18px]">collections_bookmark</span>
             <span>Thử nhanh mẫu lá bệnh thực tế:</span>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -141,11 +140,10 @@ export default function AiDoctorPage() {
                 key={c.id}
                 type="button"
                 onClick={() => handleSelectVerifiedCase(c)}
-                className={`px-3 py-1 rounded-xl text-xs font-semibold border transition-all ${
-                  selectedCaseId === c.id
-                    ? 'bg-primary text-white border-primary shadow-2xs'
-                    : 'bg-slate-50 text-slate-700 border-border-subtle hover:border-primary hover:text-primary'
-                }`}
+                className={`px-3 py-1 rounded-full text-xs tracking-wide uppercase border transition-colors ${selectedCaseId === c.id
+                    ? 'bg-brand-dark text-white border-brand-dark'
+                    : 'bg-brand-light text-brand-dark/70 border-brand-dark/10 hover:border-brand-dark/30 hover:text-brand-dark'
+                  }`}
               >
                 {c.predictedDiseaseName}
               </button>

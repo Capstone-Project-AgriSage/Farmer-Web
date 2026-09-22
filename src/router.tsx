@@ -20,6 +20,9 @@ const ContactPage = lazy(() => import('./features/contact/ContactPage'))
 const MyRequestsPage = lazy(() => import('./features/contact/MyRequestsPage'))
 const AccountPage = lazy(() => import('./features/account/AccountPage'))
 const AiDoctorPage = lazy(() => import('./features/ai-doctor/AiDoctorPage'))
+const OrdersPage = lazy(() => import('./features/order/OrdersPage'))
+const OrderDetailPage = lazy(() => import('./features/order/OrderDetailPage'))
+const NotificationsPage = lazy(() => import('./features/notifications/NotificationsPage'))
 const NotFoundPage = lazy(() => import('./features/misc/NotFoundPage'))
 
 const publicRoutes = [
@@ -44,6 +47,9 @@ const protectedRoutes = [
   { path: 'checkout', element: <CheckoutPage /> },
   { path: 'contact/requests', element: <MyRequestsPage /> },
   { path: 'account', element: <AccountPage /> },
+  { path: 'orders', element: <OrdersPage /> },
+  { path: 'orders/:code', element: <OrderDetailPage /> },
+  { path: 'notifications', element: <NotificationsPage /> },
 ].map((route) => ({ ...route, errorElement: <RouteErrorBoundary /> }))
 
 export const router = createBrowserRouter([

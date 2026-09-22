@@ -40,7 +40,7 @@ export interface CartItem {
   quantity: number
 }
 
-export type OrderStatus = 'PENDING_PAYMENT' | 'PROCESSING' | 'SHIPPING' | 'COMPLETED' | 'CANCELLED'
+export type OrderStatus = 'PENDING_CONFIRMATION' | 'PENDING_PAYMENT' | 'PROCESSING' | 'SHIPPING' | 'COMPLETED' | 'CANCELLED'
 
 export type PaymentMethod = 'VIETQR' | 'SEASONAL_CREDIT'
 
@@ -111,7 +111,7 @@ export interface DiagnosisCase {
   predictedDiseaseId: string
   predictedDiseaseName: string
   aiConfidence: number
-  status: 'PENDING_AGENT_REVIEW' | 'VERIFIED' | 'REJECTED_INCONCLUSIVE'
+  status: 'PENDING_AGENT_REVIEW' | 'CONFIRMED' | 'CORRECTED' | 'INCONCLUSIVE'
   verifiedDiseaseId?: string
   verifiedDiseaseName?: string
   reviewerNote?: string

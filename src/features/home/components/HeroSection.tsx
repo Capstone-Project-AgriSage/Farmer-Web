@@ -49,7 +49,7 @@ export default function HeroSection() {
           <ArrowRight className="w-3.5 h-3.5 text-brand-dark" />
         </Link>
 
-        <h1 className="text-left text-5xl sm:text-6xl md:text-7xl lg:text-[80px] text-brand-dark leading-[1.05] tracking-tight max-w-5xl font-hero font-light animate-fade-up stagger-4">
+        <h1 className="text-left text-3xl sm:text-4xl md: text-6xl lg:text-7xl text-brand-dark leading-[1.1] tracking-tight max-w-5xl font-hero font-light italic animate-fade-up stagger-4">
           Một hệ thống thống nhất
           <br className="hidden md:block" />{' '}
           để mua, chẩn đoán

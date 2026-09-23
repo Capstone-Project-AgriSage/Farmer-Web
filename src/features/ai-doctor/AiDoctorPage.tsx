@@ -24,6 +24,8 @@ export default function AiDoctorPage() {
   const [selectedCaseId, setSelectedCaseId] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const analyzeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const resultRef = useRef<HTMLDivElement>(null)
+  const scrollToResultRef = useRef(false)
 
   useEffect(() => {
     return () => {
@@ -36,6 +38,12 @@ export default function AiDoctorPage() {
       if (analyzeTimeoutRef.current) clearTimeout(analyzeTimeoutRef.current)
     }
   }, [])
+
+  useEffect(() => {
+    if (!result || !scrollToResultRef.current) return
+    scrollToResultRef.current = false
+    resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [result])
 
   const applyFile = (file: File | undefined) => {
     if (!file || !file.type.startsWith('image/')) return
@@ -52,6 +60,7 @@ export default function AiDoctorPage() {
     setSelectedCaseId(null)
     if (analyzeTimeoutRef.current) clearTimeout(analyzeTimeoutRef.current)
     analyzeTimeoutRef.current = setTimeout(() => {
+      scrollToResultRef.current = true
       setResult(diagnosisScenarios[riceStage])
       setIsAnalyzing(false)
       analyzeTimeoutRef.current = null
@@ -170,14 +179,16 @@ export default function AiDoctorPage() {
             />
 
             {result && (
-              <DiagnosisResultCard
-                result={result}
-                previewUrl={previewUrl}
-                showAlternatives={showAlternatives}
-                onToggleAlternatives={() => setShowAlternatives((v) => !v)}
-                onReset={handleReset}
-                isInconclusive={isInconclusive}
-              />
+              <div ref={resultRef} className="scroll-mt-24">
+                <DiagnosisResultCard
+                  result={result}
+                  previewUrl={previewUrl}
+                  showAlternatives={showAlternatives}
+                  onToggleAlternatives={() => setShowAlternatives((v) => !v)}
+                  onReset={handleReset}
+                  isInconclusive={isInconclusive}
+                />
+              </div>
             )}
           </div>
 

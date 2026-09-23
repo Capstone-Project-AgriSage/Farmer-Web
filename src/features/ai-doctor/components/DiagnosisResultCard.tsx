@@ -8,6 +8,7 @@ interface DiagnosisResultCardProps {
   onToggleAlternatives: () => void
   onReset: () => void
   onSubmittedToAgent?: () => void
+  isInconclusive?: boolean
 }
 
 export default function DiagnosisResultCard({
@@ -17,6 +18,7 @@ export default function DiagnosisResultCard({
   onToggleAlternatives,
   onReset,
   onSubmittedToAgent,
+  isInconclusive,
 }: DiagnosisResultCardProps) {
   const tone = confidenceTone(result.confidence)
   const [sentForReview, setSentForReview] = useState(false)
@@ -36,7 +38,7 @@ export default function DiagnosisResultCard({
       <div className="flex items-center justify-between pb-4 border-b border-brand-dark/10">
         <h2 className="text-base font-helvetica-neue tracking-tight text-brand-dark flex items-center gap-2">
           <span className="material-symbols-outlined text-brand-green text-[20px]">summarize</span>
-          <span>Kết quả nhận diện ban đầu từ AI Vision</span>
+          <span>Chẩn đoán AI đề xuất</span>
         </h2>
         <button
           onClick={onReset}
@@ -90,32 +92,46 @@ export default function DiagnosisResultCard({
         </p>
       </div>
 
-      <div>
-        <h4 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2">
-          Triệu chứng bệnh lá lúa được AI nhận diện
-        </h4>
-        <ul className="space-y-1.5 text-xs text-brand-dark/60">
-          {result.symptomsDetected.map((s) => (
-            <li key={s} className="flex items-start gap-2">
-              <span className="material-symbols-outlined text-brand-green text-[15px] flex-shrink-0 mt-0.5">
-                check_circle
-              </span>
-              <span>{s}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {isInconclusive ? (
+        <div className="p-4 border border-rose-300/60 bg-rose-50/80 text-rose-900 text-xs leading-relaxed space-y-2">
+          <div className="flex items-center gap-2 text-rose-950 tracking-wide font-bold">
+            <span className="material-symbols-outlined text-rose-600 text-[18px]">error</span>
+            <span>Chưa đủ cơ sở kết luận</span>
+          </div>
+          <p>
+            Hình ảnh không đủ rõ hoặc triệu chứng chưa điển hình. Hệ thống không thể cấp phác đồ tự động để đảm bảo an toàn. Vui lòng gửi ảnh để kỹ sư đại lý Hai Thắng kiểm tra lại và đưa ra khuyến nghị điều trị phù hợp.
+          </p>
+        </div>
+      ) : (
+        <>
+          <div>
+            <h4 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2">
+              Triệu chứng bệnh lá lúa được AI nhận diện
+            </h4>
+            <ul className="space-y-1.5 text-xs text-brand-dark/60">
+              {result.symptomsDetected.map((s) => (
+                <li key={s} className="flex items-start gap-2">
+                  <span className="material-symbols-outlined text-brand-green text-[15px] flex-shrink-0 mt-0.5">
+                    check_circle
+                  </span>
+                  <span>{s}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-      <div>
-        <h4 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2">
-          Biện pháp canh tác &amp; xử lý an toàn ngay tại ruộng
-        </h4>
-        <ol className="space-y-1.5 text-xs text-brand-dark/60 list-decimal list-inside">
-          {result.treatmentSteps.map((s) => (
-            <li key={s}>{s}</li>
-          ))}
-        </ol>
-      </div>
+          <div>
+            <h4 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2">
+              Biện pháp canh tác &amp; xử lý an toàn ngay tại ruộng
+            </h4>
+            <ol className="space-y-1.5 text-xs text-brand-dark/60 list-decimal list-inside">
+              {result.treatmentSteps.map((s) => (
+                <li key={s}>{s}</li>
+              ))}
+            </ol>
+          </div>
+        </>
+      )}
 
       <div className="border-t border-brand-dark/10 pt-3">
         <button

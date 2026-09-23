@@ -96,10 +96,11 @@ export default function AiDoctorPage() {
   }
 
   const selectedCase = mockDiagnosisCases.find((c) => c.id === selectedCaseId)
-  const isVerifiedCase = selectedCase?.status === 'VERIFIED'
+  const isVerifiedCase = selectedCase?.status === 'CONFIRMED' || selectedCase?.status === 'CORRECTED'
+  const isInconclusive = selectedCase ? selectedCase.status === 'INCONCLUSIVE' : (result ? result.confidence < 70 : false)
   const recommendedProducts = isVerifiedCase
     ? selectedCase.recommendedProducts
-    : result
+    : (result && !isInconclusive)
       ? products.filter((p) => p.diseaseTags?.includes(result.diseaseTag))
       : []
 
@@ -110,7 +111,7 @@ export default function AiDoctorPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 font-helvetica-neue">
-              AI Vision v2.1 · Chuyên biệt 5 bệnh lúa
+              Chẩn đoán AI đề xuất · Chuyên biệt 5 bệnh lúa
             </p>
             <h1 className="text-2xl sm:text-3xl font-helvetica-neue tracking-tight text-brand-dark mt-1.5">
               Bác Sĩ Cây Trồng AI
@@ -175,12 +176,13 @@ export default function AiDoctorPage() {
                 showAlternatives={showAlternatives}
                 onToggleAlternatives={() => setShowAlternatives((v) => !v)}
                 onReset={handleReset}
+                isInconclusive={isInconclusive}
               />
             )}
           </div>
 
           <div className="lg:col-span-5 space-y-5 lg:sticky lg:top-20">
-            {result && (
+            {result && !isInconclusive && (
               <RecommendedProductsCard
                 diseaseName={result.diseaseName}
                 reviewerName={selectedCase?.reviewerName}

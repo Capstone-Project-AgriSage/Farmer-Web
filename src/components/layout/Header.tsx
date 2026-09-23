@@ -10,6 +10,7 @@ const navLinks = [
   { to: '/', label: 'Trang chủ' },
   { to: '/products', label: 'Vật tư lúa' },
   { to: '/ai-doctor', label: 'Chẩn đoán AI' },
+  { to: '/orders', label: 'Đơn hàng' },
   { to: '/account?tab=credit', label: 'Sổ nợ mùa vụ' },
   { to: '/about', label: 'Giới thiệu' },
 ]
@@ -87,12 +88,23 @@ export default function Header({ cartCount }: HeaderProps) {
               Giỏ ({cartCount})
             </Link>
             {isAuthenticated && (
-              <Link
-                to="/account"
-                className="text-sm text-brand-dark/80 tracking-wide uppercase hover:text-brand-dark transition-colors"
-              >
-                Tài khoản
-              </Link>
+              <>
+                <Link
+                  to="/notifications"
+                  className="relative text-brand-dark/80 hover:text-brand-dark transition-colors mr-2"
+                >
+                  <span className="material-symbols-outlined text-[24px]">notifications</span>
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center border border-white">
+                    1
+                  </span>
+                </Link>
+                <Link
+                  to="/account"
+                  className="text-sm text-brand-dark/80 tracking-wide uppercase hover:text-brand-dark transition-colors"
+                >
+                  Tài khoản
+                </Link>
+              </>
             )}
             {isAuthenticated ? (
               <button

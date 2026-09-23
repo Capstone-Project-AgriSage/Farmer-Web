@@ -4,6 +4,7 @@ import type { Product } from '../../../types'
 const tabs = [
   { id: 'specs', label: 'Thông số kỹ thuật & Hoạt chất', icon: 'science' },
   { id: 'dosage', label: 'Phác đồ điều trị & Liều lượng phun xịt', icon: 'spa' },
+  { id: 'reviews', label: 'Đánh giá sản phẩm', icon: 'star' },
   { id: 'ai', label: 'Bác sĩ cây trồng AI - Chẩn đoán tích hợp', icon: 'psychology' },
 ] as const
 
@@ -179,6 +180,67 @@ export default function ProductTabs({ product, activeTab, onActiveTabChange }: P
               <span className="material-symbols-outlined text-[18px]">photo_camera</span>
               <span>Quét lá chẩn đoán ngay</span>
             </Link>
+          </div>
+        )}
+        {activeTab === 'reviews' && (
+          <div className="space-y-6">
+            <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-4 flex items-center gap-2 border-b border-brand-dark/10 pb-3">
+              <span className="material-symbols-outlined text-brand-dark/60 text-[18px]">star</span>
+              <span>Đánh giá từ nhà nông</span>
+            </h3>
+            
+            {/* Reviews list mock */}
+            <div className="space-y-4">
+              {[
+                { name: 'Nguyễn Văn Minh', date: '12/09/2024', rating: 5, content: 'Thuốc xịt rất êm, lúa sau 3 ngày thấy vết bệnh khô lại. Nhân viên giao hàng tận ruộng nhanh nhẹn.' },
+                { name: 'Trần Hữu Khang', date: '05/10/2024', rating: 4, content: 'Giá cả hợp lý, chất lượng ổn định. Mong đại lý nhập thêm nhiều dòng vi lượng.' }
+              ].map((review, idx) => (
+                <div key={idx} className="p-4 border border-brand-dark/10 bg-white">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="font-bold text-brand-dark">{review.name}</span>
+                      <span className="text-brand-dark/40">•</span>
+                      <span className="text-brand-dark/50 font-mono">{review.date}</span>
+                    </div>
+                    <div className="flex text-amber-500">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <span key={i} className="material-symbols-outlined text-[14px]">
+                          {i < review.rating ? 'star' : 'star_border'}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-sm text-brand-dark/70 leading-relaxed">{review.content}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Write review form */}
+            <div className="mt-8 pt-6 border-t border-brand-dark/10">
+              <h4 className="text-sm font-bold text-brand-dark mb-4">Viết đánh giá của bác</h4>
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-brand-dark/70 uppercase tracking-wide">Chất lượng:</span>
+                  <div className="flex text-brand-dark/20 cursor-pointer">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <span key={i} className="material-symbols-outlined text-[24px] hover:text-amber-500 transition-colors">
+                        star
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <textarea
+                  className="w-full h-24 p-3 text-sm bg-brand-light border border-brand-dark/10 focus:border-brand-dark focus:outline-none resize-none"
+                  placeholder="Chia sẻ kinh nghiệm sử dụng sản phẩm này của bác..."
+                />
+                <button
+                  type="button"
+                  className="px-6 py-2.5 bg-brand-dark text-white hover:bg-brand-green text-xs uppercase tracking-wide rounded-full transition-colors"
+                >
+                  Gửi đánh giá
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>

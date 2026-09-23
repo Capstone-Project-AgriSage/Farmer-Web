@@ -1,6 +1,6 @@
 import { formatVnd } from '../../../data/format'
 
-export type PaymentMethod = 'vietqr' | 'cod' | 'credit'
+export type PaymentMethod = 'vietqr' | 'cash' | 'credit'
 export type CopyField = 'account' | 'memo'
 
 interface PaymentMethodSelectorProps {
@@ -128,9 +128,9 @@ export default function PaymentMethodSelector({
           )}
         </div>
         <div
-          onClick={() => onPaymentMethodChange('cod')}
+          onClick={() => onPaymentMethodChange('cash')}
           className={`p-4 cursor-pointer transition-colors ${
-            paymentMethod === 'cod'
+            paymentMethod === 'cash'
               ? 'border border-brand-dark'
               : 'border border-brand-dark/10 hover:bg-brand-cream'
           }`}
@@ -139,21 +139,21 @@ export default function PaymentMethodSelector({
             <div className="flex items-start gap-3">
               <input
                 readOnly
-                checked={paymentMethod === 'cod'}
+                checked={paymentMethod === 'cash'}
                 className="text-brand-dark focus:ring-0 mt-0.5 w-4 h-4 accent-brand-dark"
                 name="payment_method"
                 type="radio"
               />
               <div>
                 <span className="text-xs text-brand-dark">
-                  Tiền mặt khi nhận hàng (Đại lý giao tận ruộng / nhà)
+                  Thanh toán tiền mặt (Nhận hàng tại cửa hàng)
                 </span>
                 <p className="text-xs text-brand-dark/60 mt-1">
-                  Bác nông dân kiểm tra quy cách bao bì vật tư chính hãng, đúng hạn sử dụng trước khi giao tiền cho nhân viên đại lý Hai Thắng.
+                  Đến trực tiếp quầy thu ngân của đại lý Hai Thắng để thanh toán tiền mặt và nhận vật tư.
                 </p>
               </div>
             </div>
-            <span className="material-symbols-outlined text-brand-dark/40 text-[22px]">payments</span>
+            <span className="material-symbols-outlined text-brand-dark/40 text-[22px]">store</span>
           </label>
         </div>
         <div

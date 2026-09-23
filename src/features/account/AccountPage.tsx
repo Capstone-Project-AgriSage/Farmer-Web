@@ -12,7 +12,6 @@ import type { DebtEntry, DebtPayment, Order } from '../../types'
 const tabs = [
   { id: 'overview', label: 'Tổng quan nông hộ', icon: 'dashboard' },
   { id: 'credit', label: 'Sổ nợ mùa vụ (Hai bên ký xác nhận)', icon: 'credit_score' },
-  { id: 'orders', label: 'Lịch sử đơn hàng vật tư', icon: 'receipt_long' },
   { id: 'diagnosis', label: 'Lịch sử chẩn đoán AI', icon: 'psychology' },
 ] as const
 
@@ -40,7 +39,9 @@ export default function AccountPage() {
   const [repayAmount, setRepayAmount] = useState<string>('')
   const [repayMethod, setRepayMethod] = useState<'VIETQR' | 'CASH'>('VIETQR')
   const [repayNote, setRepayNote] = useState('')
-  const [selectedOrderForQr, setSelectedOrderForQr] = useState<Order | null>(null)
+  const [isRequestCreditModalOpen, setIsRequestCreditModalOpen] = useState(false)
+  const [creditRequestAmount, setCreditRequestAmount] = useState('')
+
   const [notification, setNotification] = useState<string | null>(null)
 
   const showNotification = (msg: string) => {
@@ -131,6 +132,14 @@ export default function AccountPage() {
       `Đã gửi thông báo trả nợ ${formatVnd(amountNum)}! Trạng thái: Chờ đại lý Hai Thắng xác nhận thu tiền.`,
     )
     setRepayModalDebt(null)
+  }
+
+  const handleSubmitCreditRequest = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!creditRequestAmount) return
+    showNotification(`Đã gửi yêu cầu cấp hạn mức mua chịu ${formatVnd(Number(creditRequestAmount))}. Vui lòng chờ đại lý duyệt.`)
+    setIsRequestCreditModalOpen(false)
+    setCreditRequestAmount('')
   }
 
   return (
@@ -304,13 +313,13 @@ export default function AccountPage() {
                     {mockOrders[0].code}
                   </div>
                   <div className="text-xs text-brand-dark/50">{formatVnd(mockOrders[0].total)}</div>
-                  <button
-                    onClick={() => setActiveTab('orders')}
+                  <Link
+                    to="/orders"
                     className="text-xs tracking-wide text-brand-dark/60 hover:text-brand-dark inline-flex items-center gap-1 transition-colors"
                   >
                     <span>Xem lịch sử đơn hàng</span>
                     <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-                  </button>
+                  </Link>
                 </div>
 
                 <div className="border border-brand-dark/10 bg-brand-light p-5 space-y-2">
@@ -340,11 +349,20 @@ export default function AccountPage() {
             <div className="p-6 md:p-8 space-y-8">
               {/* TWO-PARTY CONFIRMATION SECTION (WF-03) */}
               <div className="space-y-4">
-                <div className="flex items-center justify-between gap-3 flex-wrap">
-                  <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 font-helvetica-neue">
-                    Danh sách khoản nợ vụ lúa
-                  </h3>
-                  <span className="text-xs text-brand-dark/50">Đại lý lập nợ → Bác Bảy xác nhận</span>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 font-helvetica-neue">
+                      Danh sách khoản nợ vụ lúa
+                    </h3>
+                    <span className="text-xs text-brand-dark/50 mt-1 block">Đại lý lập nợ → Bác Bảy xác nhận</span>
+                  </div>
+                  <button
+                    onClick={() => setIsRequestCreditModalOpen(true)}
+                    className="px-5 py-2 rounded-full border border-brand-dark text-brand-dark hover:bg-brand-dark hover:text-white text-xs tracking-wide uppercase transition-colors shrink-0 flex items-center justify-center gap-2"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">add_box</span>
+                    Gửi yêu cầu mua chịu
+                  </button>
                 </div>
 
                 <div className="space-y-3">
@@ -491,78 +509,13 @@ export default function AccountPage() {
             </div>
           )}
 
-          {/* TAB 3: ORDERS */}
-          {activeTab === 'orders' && (
-            <div className="divide-y divide-brand-dark/10">
-              {mockOrders.map((order) => {
-                const isPendingVerification = order.paymentStatus === 'AWAITING_AGENT_VERIFICATION'
 
-                return (
-                  <div key={order.code} className="p-5 md:p-6 space-y-3">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-mono text-brand-dark text-sm">{order.code}</span>
-                        <span
-                          className={`px-2.5 py-0.5 rounded-full text-[10px] tracking-wide border ${
-                            order.status === 'SHIPPING'
-                              ? 'border-brand-dark/20 text-brand-dark/70'
-                              : order.status === 'PROCESSING'
-                                ? 'border-brand-dark/20 text-brand-dark/70'
-                                : 'bg-brand-light border-brand-dark/10 text-brand-dark'
-                          }`}
-                        >
-                          {order.status === 'SHIPPING'
-                            ? 'Đang giao tận ruộng'
-                            : order.status === 'PROCESSING'
-                              ? 'Đang đóng gói'
-                              : 'Hoàn thành'}
-                        </span>
-                        <span className="text-xs text-brand-dark/50">
-                          · {order.paymentMethod === 'SEASONAL_CREDIT' ? 'Gối nợ mùa vụ' : 'VietQR'}
-                        </span>
-                      </div>
-                      <div className="font-mono font-helvetica-neue tracking-tight text-brand-dark text-sm">
-                        {formatVnd(order.total)}
-                      </div>
-                    </div>
-
-                    <div className="bg-brand-light border border-brand-dark/10 p-3 text-xs space-y-1.5">
-                      {order.items.map((item, idx) => (
-                        <div key={idx} className="flex justify-between items-center text-brand-dark/60 gap-3">
-                          <span>
-                            {item.product.name} ({item.product.packaging})
-                          </span>
-                          <span className="font-mono text-brand-dark shrink-0">
-                            x{item.quantity} · {formatVnd(item.product.price * item.quantity)}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="flex items-center justify-between text-xs text-brand-dark/50 gap-3">
-                      <span>Đặt ngày {order.createdAt}</span>
-                      {isPendingVerification && (
-                        <button
-                          type="button"
-                          onClick={() => setSelectedOrderForQr(order)}
-                          className="text-brand-dark hover:text-brand-green tracking-wide inline-flex items-center gap-1 transition-colors"
-                        >
-                          <span className="material-symbols-outlined text-[16px]">qr_code_2</span>
-                          <span>Xem lại mã VietQR</span>
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          )}
 
           {/* TAB 4: DIAGNOSIS */}
           {activeTab === 'diagnosis' && (
             <div className="divide-y divide-brand-dark/10">
               {mockDiagnosisCases.map((c) => {
-                const isVerified = c.status === 'VERIFIED'
+                const isVerified = c.status === 'CONFIRMED' || c.status === 'CORRECTED'
                 return (
                   <div
                     key={c.id}
@@ -809,68 +762,67 @@ export default function AccountPage() {
         </div>
       )}
 
-      {/* MODAL: VIETQR DETAILS FOR ORDER */}
-      {selectedOrderForQr && (
+      {/* MODAL: REQUEST SEASONAL CREDIT */}
+      {isRequestCreditModalOpen && (
         <div className="fixed inset-0 z-50 bg-brand-dark/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-brand-cream border border-brand-dark/10 max-w-md w-full p-6 space-y-4 animate-fade-in">
-            <div className="flex items-center justify-between pb-3 border-b border-brand-dark/10">
-              <h3 className="font-helvetica-neue tracking-tight text-base text-brand-dark flex items-center gap-2">
-                <span className="material-symbols-outlined text-brand-green">qr_code_2</span>
-                <span>Thông tin chuyển khoản đơn {selectedOrderForQr.code}</span>
+          <div className="bg-brand-cream border border-brand-dark/10 max-w-md w-full p-6 sm:p-8 space-y-6 animate-fade-in">
+            <div className="flex items-center justify-between">
+              <h3 className="font-helvetica-neue tracking-tight text-xl text-brand-dark">
+                Yêu cầu mua chịu mùa vụ
               </h3>
               <button
                 type="button"
-                onClick={() => setSelectedOrderForQr(null)}
+                onClick={() => setIsRequestCreditModalOpen(false)}
                 className="text-brand-dark/50 hover:text-brand-dark transition-colors"
               >
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
-            <div className="space-y-3 text-xs">
-              <div className="p-3 bg-brand-light border border-brand-dark/10 flex items-center gap-4">
-                <div className="w-24 h-24 bg-white p-1 border border-brand-dark/10 flex-shrink-0">
-                  <img
-                    src="/images/misc/vietqr-demo.png"
-                    alt="VietQR"
-                    className="w-full h-full object-contain"
+            
+            <p className="text-xs text-brand-dark/70 leading-relaxed">
+              Bác vui lòng nhập số tiền dự kiến cần mua chịu cho vụ mùa sắp tới để đại lý Hai Thắng xem xét cấp hạn mức.
+            </p>
+
+            <form onSubmit={handleSubmitCreditRequest} className="space-y-5">
+              <div>
+                <label className="block text-xs uppercase tracking-wider text-brand-dark/50 mb-2">
+                  Số tiền cần cấp (VNĐ)
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    value={creditRequestAmount}
+                    onChange={(e) => setCreditRequestAmount(e.target.value)}
+                    placeholder="VD: 5000000"
+                    className="w-full bg-white border border-brand-dark/20 p-3 pr-10 text-sm focus:border-brand-dark focus:outline-none font-mono"
+                    required
+                    min="100000"
                   />
+                  <span className="absolute right-3 top-3 text-brand-dark/40 font-mono text-sm">đ</span>
                 </div>
-                <div className="space-y-1 text-brand-dark/60">
-                  <div>
-                    Ngân hàng: <span className="text-brand-dark">Vietcombank (VCB)</span>
+                {creditRequestAmount && (
+                  <div className="text-[11px] text-brand-dark/50 mt-1.5 font-mono">
+                    = {formatVnd(Number(creditRequestAmount))}
                   </div>
-                  <div>
-                    STK: <span className="font-mono text-brand-dark text-sm">19006828999</span>
-                  </div>
-                  <div>
-                    Chủ TK: <span className="text-brand-dark">NGUYEN VAN THANG</span>
-                  </div>
-                  <div>
-                    Số tiền:{' '}
-                    <span className="font-mono text-brand-dark">{formatVnd(selectedOrderForQr.total)}</span>
-                  </div>
-                  <div>
-                    Nội dung:{' '}
-                    <span className="font-mono text-brand-dark">
-                      {selectedOrderForQr.code.replace('#', '')}
-                    </span>
-                  </div>
-                </div>
+                )}
               </div>
-              <div className="p-3 border border-amber-600/30 bg-amber-50/50 text-amber-950 text-[11px] leading-relaxed">
-                Đơn hàng đang chờ đại lý Hai Thắng đối soát thủ công trên sao kê Vietcombank. Bác nông dân không cần
-                chuyển lại nếu đã thực hiện giao dịch.
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsRequestCreditModalOpen(false)}
+                  className="flex-1 py-3 border border-brand-dark/20 text-brand-dark text-xs uppercase tracking-wide hover:bg-brand-light transition-colors"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 bg-brand-dark text-white text-xs uppercase tracking-wide hover:bg-brand-green transition-colors"
+                >
+                  Gửi yêu cầu
+                </button>
               </div>
-            </div>
-            <div className="flex justify-end pt-2">
-              <button
-                type="button"
-                onClick={() => setSelectedOrderForQr(null)}
-                className="px-5 py-2 rounded-full bg-brand-dark hover:bg-brand-green text-white text-xs tracking-wide uppercase transition-colors"
-              >
-                Đã hiểu
-              </button>
-            </div>
+            </form>
           </div>
         </div>
       )}

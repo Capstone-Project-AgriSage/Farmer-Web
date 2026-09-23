@@ -37,19 +37,19 @@ export default function AiDiagnosisBanner() {
             </div>
           </div>
 
-          <div className="lg:col-span-5 flex flex-col justify-center bg-brand-light border border-brand-dark/10 p-8 md:p-10 space-y-5">
-            <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 font-helvetica-neue">
+          <div className="lg:col-span-5 flex flex-col justify-center bg-brand-green rounded-lg p-8 md:p-10 space-y-5">
+            <p className="text-xs tracking-[0.25em] uppercase text-white/60 font-helvetica-neue">
               Khám bệnh đồng ruộng
             </p>
-            <h3 className="text-xl md:text-2xl text-brand-dark tracking-tight font-helvetica-neue leading-snug">
+            <h3 className="text-xl md:text-2xl text-white tracking-tight font-helvetica-neue leading-snug">
               Miễn phí 100% cho bà con nông dân
             </h3>
-            <p className="text-sm text-brand-dark/60 leading-relaxed">
+            <p className="text-sm text-white/75 leading-relaxed">
               Chỉ cần một tấm ảnh lá lúa — nhận phác đồ và gợi ý thuốc chính hãng ngay trên điện thoại.
             </p>
             <Link
               to="/ai-doctor"
-              className="inline-flex items-center justify-center gap-2 self-start mt-2 px-7 py-3 bg-brand-dark text-white text-sm tracking-wide uppercase rounded-full hover:bg-brand-green transition-colors"
+              className="inline-flex items-center justify-center gap-2 self-start mt-2 px-7 py-3 bg-white text-brand-green text-sm tracking-wide uppercase rounded-full hover:bg-brand-light transition-colors"
             >
               Tải ảnh quét bệnh
               <ArrowRight className="w-3.5 h-3.5" />

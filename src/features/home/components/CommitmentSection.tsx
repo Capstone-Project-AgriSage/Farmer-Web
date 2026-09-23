@@ -38,16 +38,16 @@ export default function CommitmentSection() {
           {commitments.map((item, index) => (
             <div
               key={item.title}
-              className="border-t border-brand-dark/15 pt-6 flex flex-col items-start"
+              className="bg-brand-green rounded-lg p-6 flex flex-col items-start"
             >
-              <div className="text-xs tracking-[0.2em] text-brand-dark/35 font-helvetica-neue mb-4">
+              <div className="text-xs tracking-[0.2em] text-white/60 font-helvetica-neue mb-4">
                 {String(index + 1).padStart(2, '0')}
               </div>
-              <div className="w-10 h-10 flex items-center justify-center text-brand-dark mb-4">
-                <span className="material-symbols-outlined text-[28px]">{item.icon}</span>
+              <div className="w-12 h-12 rounded-full bg-white/15 border border-white/25 text-white flex items-center justify-center mb-4">
+                <span className="material-symbols-outlined text-[24px]">{item.icon}</span>
               </div>
-              <h3 className="text-base font-medium text-brand-dark mb-2">{item.title}</h3>
-              <p className="text-sm text-brand-dark/60 leading-relaxed">{item.desc}</p>
+              <h3 className="text-base font-medium text-white mb-2">{item.title}</h3>
+              <p className="text-sm text-white/75 leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>

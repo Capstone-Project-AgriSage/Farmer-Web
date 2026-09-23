@@ -5,14 +5,6 @@ import { Link } from 'react-router-dom'
 const HERO_VIDEO_URL =
   'https://assets.mixkit.co/videos/13001/13001-720.mp4'
 
-const partners = [
-  { name: 'Syngenta', className: 'font-playfair' },
-  { name: 'Bình Điền', className: 'font-oswald uppercase' },
-  { name: 'Cà Mau', className: 'font-montserrat' },
-  { name: 'VietGAP', className: 'font-roboto-slab uppercase' },
-  { name: 'Hai Thắng', className: 'font-raleway' },
-] as const
-
 export default function HeroSection() {
   return (
     <section className="relative w-full h-screen min-h-[700px] overflow-hidden bg-brand-cream">
@@ -75,22 +67,6 @@ export default function HeroSection() {
             Chẩn đoán AI
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
-        </div>
-
-        <div className="w-full mt-10 md:mt-14 animate-fade-up stagger-5">
-          <p className="text-left text-xs tracking-[0.25em] uppercase text-brand-dark/55 mb-5 md:mb-6 font-sans">
-            Đối tác tin cậy
-          </p>
-          <div className="flex flex-wrap items-center justify-start gap-6 md:gap-12 lg:gap-16 animate-fade-up stagger-6">
-            {partners.map((partner) => (
-              <span
-                key={partner.name}
-                className={`text-lg md:text-xl lg:text-2xl text-brand-dark/75 whitespace-nowrap ${partner.className}`}
-              >
-                {partner.name}
-              </span>
-            ))}
-          </div>
         </div>
       </div>
     </section>

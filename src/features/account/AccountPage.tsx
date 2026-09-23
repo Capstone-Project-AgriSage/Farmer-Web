@@ -555,7 +555,7 @@ export default function AccountPage() {
                     </div>
 
                     <Link
-                      to="/ai-doctor"
+                      to="/ai-doctor/history"
                       className="px-4 py-1.5 rounded-full border border-brand-dark/20 text-brand-dark hover:bg-brand-light text-xs tracking-wide uppercase transition-colors inline-flex items-center gap-1 self-end sm:self-center"
                     >
                       <span>Xem chi tiết ca bệnh</span>

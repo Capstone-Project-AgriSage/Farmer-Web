@@ -11,12 +11,17 @@ export const mockDiagnosisCases: DiagnosisCase[] = [
     predictedDiseaseId: 'leaf_blast',
     predictedDiseaseName: 'Bệnh đạo ôn lá',
     aiConfidence: 94,
-    status: 'PENDING_AGENT_REVIEW',
+    status: 'CONFIRMED',
+    verifiedDiseaseId: 'leaf_blast',
+    verifiedDiseaseName: 'Bệnh đạo ôn lá',
+    reviewerName: 'Đại lý Nguyễn Văn Minh (Hai Thắng)',
+    reviewerNote: 'Hình ảnh rất rõ nét. Bệnh đạo ôn đang chớm phát. Bác Hùng lập tức tháo cạn nước trong ruộng, ngừng bón đạm và phun ngay Beam 75WP nhé.',
     recommendedProducts: [
       products.find((p) => p.slug === 'beam-75wp')!,
       products.find((p) => p.slug === 'fuji-one-40ec')!,
     ].filter(Boolean),
     createdAt: '09:25 Hôm nay',
+    reviewedAt: '09:45 Hôm nay',
   },
   {
     id: 'AI-2403',

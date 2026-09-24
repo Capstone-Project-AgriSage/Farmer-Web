@@ -14,8 +14,7 @@ export default function ProductDetailPage() {
   const navigate = useNavigate()
   const { addToCart } = useCart()
   const product = getProductBySlug(slug ?? '')
-  const [quantity, setQuantity] = useState(5)
-  const [activeSpec, setActiveSpec] = useState(0)
+  const [quantity, setQuantity] = useState(1)
   const [activeTab, setActiveTab] = useState<ProductTabId>('specs')
 
   useDocumentTitle(product ? product.name : 'Không tìm thấy sản phẩm')
@@ -55,8 +54,6 @@ export default function ProductDetailPage() {
             product={product}
             quantity={quantity}
             onQuantityChange={setQuantity}
-            activeSpec={activeSpec}
-            onActiveSpecChange={setActiveSpec}
             onAddToCart={() => addToCart(product, quantity)}
             onBuyNow={() => {
               addToCart(product, quantity)

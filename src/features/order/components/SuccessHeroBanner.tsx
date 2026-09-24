@@ -48,13 +48,13 @@ export default function SuccessHeroBanner() {
             <span className="material-symbols-outlined text-lg text-brand-dark/60">print</span>
             <span>In phiếu giao nhận &amp; hóa đơn</span>
           </button>
-          <a
-            href="#"
+          <Link
+            to="/orders"
             className="px-5 py-2.5 rounded-full bg-brand-dark text-white hover:bg-brand-green text-xs tracking-wide uppercase flex items-center gap-2 transition-colors"
           >
             <span className="material-symbols-outlined text-lg">local_shipping</span>
             <span>Theo dõi xe giao hàng</span>
-          </a>
+          </Link>
           <Link
             to="/products"
             className="px-5 py-2.5 rounded-full border border-brand-dark text-brand-dark hover:bg-brand-light text-xs tracking-wide uppercase flex items-center gap-1.5 transition-colors"

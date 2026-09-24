@@ -2,18 +2,10 @@ import { formatVnd } from '../../../data/format'
 import { stockStatusTone } from '../../../utils/stockStatus'
 import type { Product } from '../../../types'
 
-export const specOptions = [
-  { label: 'Gói 100g', note: 'Pha 40 - 50L nước', price: 48000 },
-  { label: 'Gói 500g', note: 'Pha 1 phuy 200L', price: 225000 },
-  { label: 'Thùng 100 gói (10kg)', note: 'Giá sỉ trang trại', price: 4600000 },
-]
-
 interface PurchasePanelProps {
   product: Product
   quantity: number
   onQuantityChange: (quantity: number) => void
-  activeSpec: number
-  onActiveSpecChange: (index: number) => void
   onAddToCart: () => void
   onBuyNow: () => void
 }
@@ -22,8 +14,6 @@ export default function PurchasePanel({
   product,
   quantity,
   onQuantityChange,
-  activeSpec,
-  onActiveSpecChange,
   onAddToCart,
   onBuyNow,
 }: PurchasePanelProps) {
@@ -81,10 +71,10 @@ export default function PurchasePanel({
         <div className="bg-brand-light border border-brand-dark/10 p-4 sm:p-5 space-y-3.5">
           <div className="flex items-baseline flex-wrap gap-2.5">
             <span className="text-3xl sm:text-4xl font-helvetica-neue tracking-tight text-brand-dark">
-              {formatVnd(specOptions[activeSpec].price)}
+              {formatVnd(product.price)}
             </span>
             <span className="text-xs sm:text-sm text-brand-dark/55">
-              / {specOptions[activeSpec].label}
+              / {product.packaging}
             </span>
             {product.originalPrice && (
               <>
@@ -93,7 +83,7 @@ export default function PurchasePanel({
                 </span>
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs tracking-wide bg-white text-brand-dark/70 border border-brand-dark/10">
                   <span className="material-symbols-outlined text-[13px]">trending_down</span> Tiết
-                  kiệm 13%
+                  kiệm {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
                 </span>
               </>
             )}
@@ -118,49 +108,7 @@ export default function PurchasePanel({
           </div>
         </div>
 
-        <div className="space-y-2 pt-1">
-          <span className="text-xs tracking-[0.25em] uppercase text-brand-dark/50">
-            Chọn quy cách đóng gói:
-          </span>
-          <div className="grid grid-cols-3 gap-3">
-            {specOptions.map((opt, i) => (
-              <button
-                key={opt.label}
-                onClick={() => onActiveSpecChange(i)}
-                className={`p-3 text-left flex flex-col justify-between transition-colors ${
-                  activeSpec === i
-                    ? 'border border-brand-dark bg-brand-dark text-white'
-                    : 'border border-brand-dark/15 bg-white text-brand-dark/70 hover:border-brand-dark/40'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span
-                    className={`text-xs tracking-tight ${
-                      activeSpec === i ? 'text-white' : 'text-brand-dark'
-                    }`}
-                  >
-                    {opt.label}
-                  </span>
-                  {activeSpec === i && <span className="w-2 h-2 rounded-full bg-white"></span>}
-                </div>
-                <span
-                  className={`text-[11px] mt-1 ${
-                    activeSpec === i ? 'text-white/70' : 'text-brand-dark/45'
-                  }`}
-                >
-                  {opt.note}
-                </span>
-                <span
-                  className={`text-xs tracking-tight mt-2 ${
-                    activeSpec === i ? 'text-white' : 'text-brand-dark'
-                  }`}
-                >
-                  {formatVnd(opt.price)}
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
+
 
         <div className="space-y-3 pt-2">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">

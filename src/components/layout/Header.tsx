@@ -52,9 +52,8 @@ export default function Header({ cartCount }: HeaderProps) {
 
   return (
     <header
-      className={`${isHome ? 'fixed' : 'sticky'} top-0 left-0 right-0 z-50 transition duration-300 ${
-        solidBar ? 'bg-brand-cream/95 backdrop-blur-md shadow-sm border-b border-brand-dark/10' : 'bg-transparent'
-      }`}
+      className={`${isHome ? 'fixed' : 'sticky'} top-0 left-0 right-0 z-50 transition duration-300 ${solidBar ? 'bg-brand-cream/95 backdrop-blur-md shadow-sm border-b border-brand-dark/10' : 'bg-transparent'
+        }`}
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="relative flex items-center h-16 md:h-20">
@@ -68,10 +67,9 @@ export default function Header({ cartCount }: HeaderProps) {
                 key={link.label}
                 to={link.to}
                 className={({ isActive }) =>
-                  `relative text-sm tracking-wide uppercase transition-colors py-1 ${
-                    isActive
-                      ? 'text-brand-dark font-bold after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-brand-green after:rounded-full'
-                      : 'text-brand-dark/70 hover:text-brand-dark after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-brand-green after:rounded-full after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left'
+                  `relative text-sm tracking-wide uppercase transition-colors py-1 ${isActive
+                    ? 'text-brand-dark font-bold after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-brand-green after:rounded-full'
+                    : 'text-brand-dark/70 hover:text-brand-dark after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-brand-green after:rounded-full after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left'
                   }`
                 }
               >
@@ -131,28 +129,24 @@ export default function Header({ cartCount }: HeaderProps) {
             className="md:hidden ml-auto z-50 relative w-10 h-10"
           >
             <span
-              className={`absolute left-2 w-6 h-[2px] bg-brand-dark rounded transition-all duration-300 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)] top-[14px] ${
-                isMenuOpen ? 'rotate-45 translate-y-[5px]' : ''
-              }`}
+              className={`absolute left-2 w-6 h-[2px] bg-brand-dark rounded transition-all duration-300 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)] top-[14px] ${isMenuOpen ? 'rotate-45 translate-y-[5px]' : ''
+                }`}
             />
             <span
-              className={`absolute left-2 w-6 h-[2px] bg-brand-dark rounded transition-all duration-300 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)] top-[21px] ${
-                isMenuOpen ? '-rotate-45 -translate-y-[2px]' : ''
-              }`}
+              className={`absolute left-2 w-6 h-[2px] bg-brand-dark rounded transition-all duration-300 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)] top-[21px] ${isMenuOpen ? '-rotate-45 -translate-y-[2px]' : ''
+                }`}
             />
           </button>
         </div>
       </div>
 
       <div
-        className={`md:hidden fixed inset-0 bg-brand-cream z-40 transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
+        className={`md:hidden fixed inset-0 bg-brand-cream z-40 transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
       >
         <div
-          className={`flex flex-col items-center justify-center h-full gap-8 transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] delay-100 ${
-            isMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-8 opacity-0'
-          }`}
+          className={`flex flex-col items-center justify-center h-full gap-8 transition duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] delay-100 ${isMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-8 opacity-0'
+            }`}
         >
           {navLinks.map((link) => (
             <NavLink
@@ -161,8 +155,7 @@ export default function Header({ cartCount }: HeaderProps) {
               end={link.to === '/'}
               onClick={() => setIsMenuOpen(false)}
               className={({ isActive }) =>
-                `text-3xl tracking-tight transition-colors ${
-                  isActive ? 'text-brand-green font-bold' : 'text-brand-dark'
+                `text-3xl tracking-tight transition-colors ${isActive ? 'text-brand-green font-bold' : 'text-brand-dark'
                 }`
               }
             >

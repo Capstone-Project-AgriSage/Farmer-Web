@@ -32,7 +32,7 @@ export default function ProductsPage() {
   const [searchParams] = useSearchParams()
   const [filters, setFilters] = useState<Filters>(() => filtersFromSearchParams(searchParams))
   const [sort, setSort] = useState<SortOption>('best-selling')
-  const [pageSize] = useState(48)
+  const pageSize = 8
   const [page, setPage] = useState(1)
 
   const searchParamsKey = searchParams.toString()
@@ -198,10 +198,50 @@ export default function ProductsPage() {
 
         {/* Product Grid */}
         {pageItems.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
-            {pageItems.map((product) => (
-              <ProductCard key={product.slug} product={product} />
-            ))}
+          <div className="space-y-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
+              {pageItems.map((product) => (
+                <ProductCard key={product.slug} product={product} />
+              ))}
+            </div>
+            
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-2">
+                <button 
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="w-10 h-10 flex items-center justify-center rounded-full border border-brand-dark/15 text-brand-dark disabled:opacity-30 disabled:cursor-not-allowed hover:bg-brand-cream transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[20px]">chevron_left</span>
+                </button>
+                
+                {Array.from({ length: totalPages }).map((_, i) => {
+                  const p = i + 1;
+                  return (
+                    <button
+                      key={p}
+                      onClick={() => setPage(p)}
+                      className={`w-10 h-10 flex items-center justify-center rounded-full text-sm font-medium transition-colors ${
+                        currentPage === p 
+                          ? 'bg-brand-dark text-white border border-brand-dark' 
+                          : 'border border-brand-dark/15 text-brand-dark hover:bg-brand-cream'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  )
+                })}
+                
+                <button 
+                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="w-10 h-10 flex items-center justify-center rounded-full border border-brand-dark/15 text-brand-dark disabled:opacity-30 disabled:cursor-not-allowed hover:bg-brand-cream transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[20px]">chevron_right</span>
+                </button>
+              </div>
+            )}
           </div>
         ) : (
           <div className="border border-brand-dark/10 bg-white p-12 text-center">

@@ -48,10 +48,10 @@ export interface DiagnosisScenario {
 }
 
 export const riceStageOptions = [
+  { value: 'seedling', label: 'Giai đoạn Mạ non (10-20 ngày sau sạ)' },
   { value: 'tillering', label: 'Giai đoạn Đẻ nhánh (20-35 ngày sau sạ)' },
   { value: 'panicle', label: 'Giai đoạn Làm đòng (40-55 ngày sau sạ)' },
   { value: 'ripening', label: 'Giai đoạn Trổ chín (60-90 ngày sau sạ)' },
-  { value: 'seedling', label: 'Giai đoạn Mạ non (10-20 ngày sau sạ)' },
 ] as const
 
 export type RiceStageValue = (typeof riceStageOptions)[number]['value']

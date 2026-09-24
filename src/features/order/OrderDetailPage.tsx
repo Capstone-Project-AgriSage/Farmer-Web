@@ -149,7 +149,7 @@ export default function OrderDetailPage() {
             {order.items.map((item, idx) => (
               <div key={idx} className="py-4 flex gap-4">
                 <img
-                  src={item.product.imageUrl}
+                  src={item.product.image}
                   alt={item.product.name}
                   className="w-16 h-16 object-cover border border-brand-dark/10"
                 />

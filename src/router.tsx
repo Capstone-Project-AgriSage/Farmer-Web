@@ -40,7 +40,6 @@ const publicRoutes = [
   { path: 'knowledge/:slug', element: <ArticleDetailPage /> },
   { path: 'contact', element: <ContactPage /> },
   { path: 'ai-doctor', element: <AiDoctorPage /> },
-  { path: '*', element: <NotFoundPage /> },
 ].map((route) => ({ ...route, errorElement: <RouteErrorBoundary /> }))
 
 // Requires an authenticated farmer session — see src/context/AuthContext.tsx.
@@ -62,6 +61,7 @@ export const router = createBrowserRouter([
     children: [
       ...publicRoutes,
       { element: <ProtectedRoute />, children: protectedRoutes },
+      { path: '*', element: <NotFoundPage />, errorElement: <RouteErrorBoundary /> },
     ],
   },
 ])

@@ -44,6 +44,18 @@ export type OrderStatus = 'PENDING_CONFIRMATION' | 'PENDING_PAYMENT' | 'PROCESSI
 
 export type PaymentMethod = 'VIETQR' | 'SEASONAL_CREDIT'
 
+export type DeliveryStatus = 'PENDING' | 'IN_TRANSIT' | 'DELIVERED' | 'FAILED'
+
+export interface DeliveryPhase {
+  id: string
+  status: DeliveryStatus
+  items: CartItem[]
+  deliveryDate?: string
+  driverName?: string
+  driverPhone?: string
+  failReason?: string
+}
+
 export interface Order {
   code: string
   items: CartItem[]
@@ -66,6 +78,7 @@ export interface Order {
   createdAt: string
   estimatedDelivery?: string
   notes?: string
+  deliveries?: DeliveryPhase[]
 }
 
 export interface FarmerUser {

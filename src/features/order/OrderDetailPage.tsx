@@ -35,13 +35,23 @@ export default function OrderDetailPage() {
     }
   }
 
-  // Delivery tracking mock steps
-  const trackingSteps = [
-    { label: 'Chờ duyệt', active: true, completed: order.status !== 'PENDING_CONFIRMATION' },
-    { label: 'Đóng gói', active: order.status === 'PROCESSING', completed: order.status === 'SHIPPING' || order.status === 'COMPLETED' },
-    { label: 'Đang giao', active: order.status === 'SHIPPING', completed: order.status === 'COMPLETED' },
-    { label: 'Hoàn thành', active: order.status === 'COMPLETED', completed: order.status === 'COMPLETED' },
-  ]
+  const getCurrentStepIndex = () => {
+    switch (order.status) {
+      case 'PENDING_CONFIRMATION':
+      case 'PENDING_PAYMENT':
+        return 0
+      case 'PROCESSING':
+        return 1
+      case 'SHIPPING':
+        return 2
+      case 'COMPLETED':
+        return 3
+      default:
+        return -1
+    }
+  }
+  const currentStepIdx = getCurrentStepIndex()
+  const stepLabels = ['Chờ duyệt', 'Đóng gói', 'Đang giao', 'Hoàn thành']
 
   return (
     <div className="bg-brand-cream text-brand-dark min-h-screen">
@@ -80,30 +90,98 @@ export default function OrderDetailPage() {
         {order.status !== 'CANCELLED' && (
           <div className="bg-white border border-brand-dark/10 p-6">
             <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-6">Trạng thái đơn hàng</h3>
-            <div className="flex items-center justify-between relative">
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-[1px] bg-brand-dark/10 -z-10"></div>
-              {trackingSteps.map((step, idx) => (
-                <div key={idx} className="flex flex-col items-center gap-2 bg-white px-2">
-                  <div
-                    className={`w-4 h-4 rounded-full border-2 ${
-                      step.completed
-                        ? 'bg-brand-green border-brand-green'
-                        : step.active
-                          ? 'bg-brand-dark border-brand-dark'
-                          : 'bg-white border-brand-dark/20'
-                    }`}
-                  />
-                  <span
-                    className={`text-[10px] sm:text-xs tracking-wide uppercase ${
-                      step.completed || step.active ? 'text-brand-dark' : 'text-brand-dark/40'
-                    }`}
-                  >
-                    {step.label}
-                  </span>
-                </div>
-              ))}
+            <div className="flex items-start w-full">
+              {stepLabels.map((label, idx) => {
+                const isCurrent = idx === currentStepIdx
+                return (
+                  <div key={idx} className="flex flex-col items-center flex-1 relative">
+                    <div className="flex items-center w-full">
+                      {/* Left Line */}
+                      <div className={`flex-1 h-[1px] ${idx === 0 ? 'bg-transparent' : 'bg-brand-dark/15'}`}></div>
+                      
+                      {/* Dot */}
+                      <div
+                        className={`w-4 h-4 rounded-full border-2 shrink-0 transition-colors z-10 ${
+                          isCurrent
+                            ? 'bg-brand-dark border-brand-dark'
+                            : 'bg-white border-brand-dark/20'
+                        }`}
+                      />
+                      
+                      {/* Right Line */}
+                      <div className={`flex-1 h-[1px] relative flex items-center ${idx === stepLabels.length - 1 ? 'bg-transparent' : 'bg-brand-dark/15'}`}>
+                         {idx < stepLabels.length - 1 && (
+                           <span className="material-symbols-outlined text-[16px] text-brand-dark/30 bg-white absolute right-0 translate-x-1/2 z-10">
+                             chevron_right
+                           </span>
+                         )}
+                      </div>
+                    </div>
+                    
+                    {/* Label */}
+                    <span
+                      className={`text-[10px] sm:text-[11px] tracking-wide uppercase transition-colors text-center mt-2 px-1 ${
+                        isCurrent ? 'text-brand-dark font-medium' : 'text-brand-dark/40'
+                      }`}
+                    >
+                      {label}
+                    </span>
+                  </div>
+                )
+              })}
             </div>
-            {order.status === 'SHIPPING' && (
+            {order.deliveries && order.deliveries.length > 0 ? (
+              <div className="mt-8 space-y-4">
+                <h4 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50">Chi tiết các đợt giao hàng</h4>
+                {order.deliveries.map((delivery, idx) => {
+                  const isFailed = delivery.status === 'FAILED'
+                  const isDelivered = delivery.status === 'DELIVERED'
+                  return (
+                    <div key={delivery.id} className={`p-4 border ${isFailed ? 'border-rose-300 bg-rose-50/30' : 'border-brand-dark/10 bg-brand-light'}`}>
+                      <div className="flex justify-between items-start gap-4 mb-3">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-sm text-brand-dark">{delivery.id}</span>
+                            <span className={`px-2 py-0.5 text-[10px] uppercase tracking-wide rounded-full border ${
+                              isFailed ? 'border-rose-600 text-rose-700' :
+                              isDelivered ? 'border-brand-green text-brand-green' :
+                              'border-amber-600 text-amber-700'
+                            }`}>
+                              {isFailed ? 'Giao thất bại' : isDelivered ? 'Đã giao' : 'Đang giao'}
+                            </span>
+                          </div>
+                          {delivery.deliveryDate && <div className="text-xs text-brand-dark/50 mt-1">{delivery.deliveryDate}</div>}
+                        </div>
+                      </div>
+                      
+                      {isFailed && delivery.failReason && (
+                        <div className="mb-3 text-xs text-rose-700 flex gap-1.5 items-start">
+                          <span className="material-symbols-outlined text-[16px]">error</span>
+                          <span>Lý do: {delivery.failReason}</span>
+                        </div>
+                      )}
+
+                      <div className="text-sm text-brand-dark/70 space-y-1 mb-3">
+                        <p>Nhân viên giao: <strong className="text-brand-dark">{delivery.driverName}</strong></p>
+                        <p>Số điện thoại: <strong className="text-brand-dark">{delivery.driverPhone}</strong></p>
+                      </div>
+
+                      <div className="pt-3 border-t border-brand-dark/10">
+                        <div className="text-xs text-brand-dark/50 mb-2">Sản phẩm đợt này:</div>
+                        <ul className="space-y-1">
+                          {delivery.items.map((item, i) => (
+                            <li key={i} className="text-xs flex justify-between">
+                              <span className="text-brand-dark">{item.product.name}</span>
+                              <span className="font-mono text-brand-dark/60">x {item.quantity}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            ) : order.status === 'SHIPPING' && (
               <div className="mt-6 p-4 bg-brand-light border border-brand-dark/10 flex items-start gap-3">
                 <span className="material-symbols-outlined text-brand-dark">local_shipping</span>
                 <div className="text-sm text-brand-dark/70 space-y-1">

@@ -20,6 +20,27 @@ export const mockOrders: Order[] = [
     createdAt: '08:35 Hôm nay',
     estimatedDelivery: '14:00 Hôm nay',
     notes: 'Giao tại bến xuồng Kênh Xáng, gọi trước 15 phút.',
+    deliveries: [
+      {
+        id: 'DEL-1082-1',
+        status: 'FAILED',
+        items: [{ product: products.find((p) => p.slug === 'dau-trau-npk-20-20-15')!, quantity: 5 }],
+        deliveryDate: '10:00 Hôm nay',
+        driverName: 'Nguyễn Văn A',
+        driverPhone: '0901234567',
+        failReason: 'Khách hàng đi vắng, không liên lạc được',
+      },
+      {
+        id: 'DEL-1082-2',
+        status: 'IN_TRANSIT',
+        items: [
+          { product: products.find((p) => p.slug === 'dau-trau-npk-20-20-15')!, quantity: 10 },
+          { product: products.find((p) => p.slug === 'beam-75wp')!, quantity: 5 }
+        ],
+        driverName: 'Nguyễn Văn B',
+        driverPhone: '0909876543',
+      }
+    ]
   },
   {
     code: '#DH-2024-1080',

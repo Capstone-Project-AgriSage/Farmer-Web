@@ -1,3 +1,4 @@
+import { useAuth } from '../../../context/AuthContext'
 import { formatVnd } from '../../../data/format'
 
 export type PaymentMethod = 'vietqr' | 'cash' | 'credit'
@@ -18,6 +19,10 @@ export default function PaymentMethodSelector({
   copiedField,
   onCopy,
 }: PaymentMethodSelectorProps) {
+  const { farmer } = useAuth()
+  const availableCredit = farmer.creditLimit - farmer.creditUsed
+  const isCreditDisabled = total > availableCredit
+
   return (
     <div className="bg-white border border-brand-dark/10 p-5 sm:p-6">
       <div className="flex items-center gap-2.5 pb-4 border-b border-brand-dark/10 mb-4">
@@ -157,19 +162,20 @@ export default function PaymentMethodSelector({
           </label>
         </div>
         <div
-          onClick={() => onPaymentMethodChange('credit')}
-          className={`p-4 cursor-pointer transition-colors bg-brand-light/60 ${
+          onClick={() => !isCreditDisabled && onPaymentMethodChange('credit')}
+          className={`p-4 transition-colors ${isCreditDisabled ? 'opacity-60 cursor-not-allowed bg-brand-light/30' : 'cursor-pointer bg-brand-light/60 hover:bg-brand-cream'} ${
             paymentMethod === 'credit'
               ? 'border border-brand-dark'
-              : 'border border-brand-dark/10 hover:bg-brand-cream'
+              : 'border border-brand-dark/10'
           }`}
         >
-          <label className="flex items-start justify-between cursor-pointer">
+          <label className={`flex items-start justify-between ${isCreditDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
             <div className="flex items-start gap-3">
               <input
                 readOnly
                 checked={paymentMethod === 'credit'}
-                className="text-brand-dark focus:ring-0 mt-0.5 w-4 h-4 accent-brand-dark"
+                disabled={isCreditDisabled}
+                className="text-brand-dark focus:ring-0 mt-0.5 w-4 h-4 accent-brand-dark disabled:opacity-50"
                 name="payment_method"
                 type="radio"
               />
@@ -181,14 +187,23 @@ export default function PaymentMethodSelector({
                   </span>
                 </div>
                 <p className="text-xs text-brand-dark/60 mt-1">
-                  Được đại lý cấp hạn mức mua trước vật tư trả sau vụ gặt lúa Đông Xuân 2025. Hai bên ký nhận và theo dõi minh bạch trên hệ thống.
+                  Được đại lý cấp hạn mức mua trước vật tư trả sau vụ gặt lúa. Hai bên ký nhận và theo dõi minh bạch trên hệ thống.
                 </p>
                 <div className="mt-2 text-[11px] text-brand-dark/60 flex items-center gap-2">
                   <span>
-                    Hạn mức khả dụng: <strong className="text-brand-dark">50.000.000 đ</strong>
+                    Hạn mức khả dụng: <strong className="text-brand-dark font-mono">{formatVnd(availableCredit)}</strong>
                   </span>
-                  <span className="text-brand-green">• Đủ điều kiện thanh toán</span>
+                  {isCreditDisabled ? (
+                    <span className="text-rose-600 font-medium bg-rose-50 px-1.5 py-0.5 border border-rose-200">Không đủ hạn mức</span>
+                  ) : (
+                    <span className="text-brand-green">• Đủ điều kiện thanh toán</span>
+                  )}
                 </div>
+                {isCreditDisabled && (
+                  <p className="text-[11px] text-rose-600 mt-1.5">
+                    * Đơn hàng ({formatVnd(total)}) vượt quá hạn mức công nợ còn lại của bác. Vui lòng thanh toán một phần nợ cũ hoặc chọn hình thức thanh toán khác.
+                  </p>
+                )}
               </div>
             </div>
             <span className="material-symbols-outlined text-brand-green text-[22px]">credit_score</span>

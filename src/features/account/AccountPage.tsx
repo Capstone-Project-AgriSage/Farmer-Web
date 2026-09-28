@@ -39,8 +39,6 @@ export default function AccountPage() {
   const [repayAmount, setRepayAmount] = useState<string>('')
   const [repayMethod, setRepayMethod] = useState<'VIETQR' | 'CASH'>('VIETQR')
   const [repayNote, setRepayNote] = useState('')
-  const [isRequestCreditModalOpen, setIsRequestCreditModalOpen] = useState(false)
-  const [creditRequestAmount, setCreditRequestAmount] = useState('')
 
   const [notification, setNotification] = useState<string | null>(null)
 
@@ -132,14 +130,6 @@ export default function AccountPage() {
       `Đã gửi thông báo trả nợ ${formatVnd(amountNum)}! Trạng thái: Chờ đại lý Hai Thắng xác nhận thu tiền.`,
     )
     setRepayModalDebt(null)
-  }
-
-  const handleSubmitCreditRequest = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!creditRequestAmount) return
-    showNotification(`Đã gửi yêu cầu cấp hạn mức mua chịu ${formatVnd(Number(creditRequestAmount))}. Vui lòng chờ đại lý duyệt.`)
-    setIsRequestCreditModalOpen(false)
-    setCreditRequestAmount('')
   }
 
   return (
@@ -356,13 +346,6 @@ export default function AccountPage() {
                     </h3>
                     <span className="text-xs text-brand-dark/50 mt-1 block">Đại lý lập nợ → Bác Bảy xác nhận</span>
                   </div>
-                  <button
-                    onClick={() => setIsRequestCreditModalOpen(true)}
-                    className="px-5 py-2 rounded-full border border-brand-dark text-brand-dark hover:bg-brand-dark hover:text-white text-xs tracking-wide uppercase transition-colors shrink-0 flex items-center justify-center gap-2"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">add_box</span>
-                    Gửi yêu cầu mua chịu
-                  </button>
                 </div>
 
                 <div className="space-y-3">
@@ -758,71 +741,6 @@ export default function AccountPage() {
                 <span>Xác nhận đã gửi thanh toán</span>
               </button>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL: REQUEST SEASONAL CREDIT */}
-      {isRequestCreditModalOpen && (
-        <div className="fixed inset-0 z-50 bg-brand-dark/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-brand-cream border border-brand-dark/10 max-w-md w-full p-6 sm:p-8 space-y-6 animate-fade-in">
-            <div className="flex items-center justify-between">
-              <h3 className="font-helvetica-neue tracking-tight text-xl text-brand-dark">
-                Yêu cầu mua chịu mùa vụ
-              </h3>
-              <button
-                type="button"
-                onClick={() => setIsRequestCreditModalOpen(false)}
-                className="text-brand-dark/50 hover:text-brand-dark transition-colors"
-              >
-                <span className="material-symbols-outlined">close</span>
-              </button>
-            </div>
-            
-            <p className="text-xs text-brand-dark/70 leading-relaxed">
-              Bác vui lòng nhập số tiền dự kiến cần mua chịu cho vụ mùa sắp tới để đại lý Hai Thắng xem xét cấp hạn mức.
-            </p>
-
-            <form onSubmit={handleSubmitCreditRequest} className="space-y-5">
-              <div>
-                <label className="block text-xs uppercase tracking-wider text-brand-dark/50 mb-2">
-                  Số tiền cần cấp (VNĐ)
-                </label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    value={creditRequestAmount}
-                    onChange={(e) => setCreditRequestAmount(e.target.value)}
-                    placeholder="VD: 5000000"
-                    className="w-full bg-white border border-brand-dark/20 p-3 pr-10 text-sm focus:border-brand-dark focus:outline-none font-mono"
-                    required
-                    min="100000"
-                  />
-                  <span className="absolute right-3 top-3 text-brand-dark/40 font-mono text-sm">đ</span>
-                </div>
-                {creditRequestAmount && (
-                  <div className="text-[11px] text-brand-dark/50 mt-1.5 font-mono">
-                    = {formatVnd(Number(creditRequestAmount))}
-                  </div>
-                )}
-              </div>
-
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setIsRequestCreditModalOpen(false)}
-                  className="flex-1 py-3 border border-brand-dark/20 text-brand-dark text-xs uppercase tracking-wide hover:bg-brand-light transition-colors"
-                >
-                  Hủy
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 py-3 bg-brand-dark text-white text-xs uppercase tracking-wide hover:bg-brand-green transition-colors"
-                >
-                  Gửi yêu cầu
-                </button>
-              </div>
-            </form>
           </div>
         </div>
       )}

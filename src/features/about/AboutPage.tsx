@@ -96,7 +96,7 @@ export default function AboutPage() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10 md:py-14">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           <div className="lg:col-span-7">
-            <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2 font-helvetica-neue">
+            <p className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2 font-helvetica-neue">
               Về AgriSage
             </p>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-helvetica-neue tracking-tight text-brand-dark leading-[1.15]">
@@ -133,7 +133,7 @@ export default function AboutPage() {
         </div>
 
         <div className="mt-14 md:mt-16">
-          <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2 font-helvetica-neue">
+          <p className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2 font-helvetica-neue">
             Hành trình
           </p>
           <h2 className="text-xl sm:text-2xl md:text-3xl font-helvetica-neue tracking-tight text-brand-dark mb-8">
@@ -178,7 +178,7 @@ export default function AboutPage() {
         <div className="mt-14 md:mt-16">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
             <div>
-              <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2 font-helvetica-neue">
+              <p className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2 font-helvetica-neue">
                 Lĩnh vực vật tư
               </p>
               <h2 className="text-xl sm:text-2xl md:text-3xl font-helvetica-neue tracking-tight text-brand-dark">
@@ -219,7 +219,7 @@ export default function AboutPage() {
         </div>
 
         <div className="mt-14 md:mt-16">
-          <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2 font-helvetica-neue">
+          <p className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2 font-helvetica-neue">
             Mạng lưới
           </p>
           <h2 className="text-xl sm:text-2xl md:text-3xl font-helvetica-neue tracking-tight text-brand-dark mb-8">
@@ -241,7 +241,7 @@ export default function AboutPage() {
 
         <div className="mt-14 md:mt-16 border border-brand-dark/10 bg-brand-light p-8 md:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="max-w-xl">
-            <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2 font-helvetica-neue">
+            <p className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2 font-helvetica-neue">
               Tham gia
             </p>
             <h3 className="text-xl md:text-2xl font-helvetica-neue tracking-tight text-brand-dark leading-snug">
@@ -253,7 +253,7 @@ export default function AboutPage() {
           </div>
           <Link
             to="/register"
-            className="inline-flex items-center gap-2 px-7 py-3 bg-brand-dark text-white text-sm tracking-wide uppercase rounded-full hover:bg-brand-green transition-colors whitespace-nowrap shrink-0"
+            className="inline-flex items-center gap-2 px-7 py-3 bg-brand-dark text-white text-sm tracking-wide  rounded-full hover:bg-brand-green transition-colors whitespace-nowrap shrink-0"
           >
             <span>Đăng ký ngay</span>
             <span className="material-symbols-outlined text-[18px]">arrow_forward</span>

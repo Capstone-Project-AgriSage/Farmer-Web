@@ -79,7 +79,7 @@ export default function FilterSidebar({
         </div>
         <div className="space-y-5">
           <div className="space-y-2">
-            <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50">
+            <h3 className="text-xs tracking-[0.25em]  text-brand-dark/50">
               Danh mục sản phẩm
             </h3>
             <div className="space-y-1.5 text-xs text-brand-dark/60">
@@ -103,7 +103,7 @@ export default function FilterSidebar({
             </div>
           </div>
           <div className="pt-3 border-t border-brand-dark/10 space-y-2">
-            <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50">
+            <h3 className="text-xs tracking-[0.25em]  text-brand-dark/50">
               Thương hiệu nổi bật
             </h3>
             <div className="space-y-1.5 text-xs text-brand-dark/60">
@@ -127,7 +127,7 @@ export default function FilterSidebar({
             </div>
           </div>
           <div className="pt-3 border-t border-brand-dark/10 space-y-2">
-            <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50">
+            <h3 className="text-xs tracking-[0.25em]  text-brand-dark/50">
               Phòng trị bệnh cây trồng
             </h3>
             <div className="space-y-1.5 text-xs text-brand-dark/60">
@@ -148,7 +148,7 @@ export default function FilterSidebar({
             </div>
           </div>
           <div className="pt-3 border-t border-brand-dark/10 space-y-2">
-            <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50">
+            <h3 className="text-xs tracking-[0.25em]  text-brand-dark/50">
               Khoảng giá (VND)
             </h3>
             <div className="grid grid-cols-2 gap-2 text-xs">
@@ -169,7 +169,7 @@ export default function FilterSidebar({
             </div>
           </div>
           <div className="pt-3 border-t border-brand-dark/10 space-y-2">
-            <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50">
+            <h3 className="text-xs tracking-[0.25em]  text-brand-dark/50">
               Tiện ích &amp; Dịch vụ
             </h3>
             <div className="space-y-1.5 text-xs text-brand-dark/60">

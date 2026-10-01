@@ -9,7 +9,7 @@ export default function ArticleCard({ article }: { article: Article }) {
       className="bg-brand-light border border-brand-dark/10 overflow-hidden hover:border-brand-dark/25 transition-all group flex flex-col justify-between"
     >
       <div className="p-6">
-        <div className="inline-flex items-center gap-1.5 text-xs tracking-[0.2em] uppercase text-brand-dark/50 mb-4">
+        <div className="inline-flex items-center gap-1.5 text-xs tracking-[0.2em]  text-brand-dark/50 mb-4">
           <span className="material-symbols-outlined text-[14px]">{article.badge.icon}</span>
           <span>{article.badge.label}</span>
         </div>

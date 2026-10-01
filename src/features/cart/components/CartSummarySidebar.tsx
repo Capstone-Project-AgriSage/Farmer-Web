@@ -45,7 +45,7 @@ export default function CartSummarySidebar({
           </div>
           <div className="flex items-center justify-between text-brand-dark/60">
             <span>Phí vận chuyển xe tải tận vườn:</span>
-            <span className="text-brand-green uppercase tracking-wide">
+            <span className="text-brand-green  tracking-wide">
               {shippingFee === 0 ? 'Miễn phí' : formatVnd(shippingFee)}
             </span>
           </div>
@@ -57,7 +57,7 @@ export default function CartSummarySidebar({
         <OrderTotalSummary total={total} discount={discount} />
         <button
           onClick={onCheckout}
-          className="w-full py-3.5 px-4 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide uppercase text-sm transition-colors flex items-center justify-center gap-2 group"
+          className="w-full py-3.5 px-4 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-sm transition-colors flex items-center justify-center gap-2 group"
         >
           <span>Tiến hành đặt hàng &amp; thanh toán</span>
           <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">

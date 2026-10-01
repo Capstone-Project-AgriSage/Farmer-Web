@@ -34,7 +34,7 @@ export default function UploadForm({
   return (
     <div className="bg-white border border-brand-dark/10 p-5 sm:p-6 space-y-5">
       <div>
-        <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2">
+        <label className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-2">
           1. Ảnh chụp lá hoặc thân lúa bị bệnh
         </label>
         <div
@@ -90,7 +90,7 @@ export default function UploadForm({
       </div>
 
       <div>
-        <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2">
+        <label className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-2">
           2. Giai đoạn sinh trưởng của cây lúa
         </label>
         <select
@@ -107,7 +107,7 @@ export default function UploadForm({
       </div>
 
       <div>
-        <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2">
+        <label className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-2">
           3. Mô tả triệu chứng đồng ruộng (tùy chọn)
         </label>
         <textarea
@@ -123,7 +123,7 @@ export default function UploadForm({
         type="button"
         onClick={onAnalyze}
         disabled={!previewUrl || isAnalyzing}
-        className="w-full h-12 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide uppercase text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full h-12 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isAnalyzing ? (
           <>

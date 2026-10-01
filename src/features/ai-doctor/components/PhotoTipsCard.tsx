@@ -7,7 +7,7 @@ const tips = [
 export default function PhotoTipsCard() {
   return (
     <div className="bg-amber-50 border border-amber-200 border-l-4 border-l-amber-500 p-5 space-y-3">
-      <h4 className="text-xs tracking-[0.25em] uppercase text-amber-900 flex items-center gap-1.5">
+      <h4 className="text-xs tracking-[0.25em]  text-amber-900 flex items-center gap-1.5">
         <span className="material-symbols-outlined text-amber-600 text-[18px]">tips_and_updates</span>
         <span>Mẹo chụp ảnh chuẩn xác</span>
       </h4>

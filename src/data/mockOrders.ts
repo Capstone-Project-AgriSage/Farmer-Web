@@ -40,7 +40,13 @@ export const mockOrders: Order[] = [
         driverName: 'Nguyễn Văn B',
         driverPhone: '0909876543',
       }
-    ]
+    ],
+    hallmark: {
+      certification: 'Sản Phẩm Đạt Chuẩn VietGAP',
+      traceCode: 'VG-2024-1082',
+      qrUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=VG-2024-1082',
+      description: 'Lô hàng được kiểm định bởi Sở Nông nghiệp & PTNT Cần Thơ. Đảm bảo 100% không dư lượng thuốc BVTV.'
+    }
   },
   {
     code: '#DH-2024-1080',

@@ -13,7 +13,7 @@ export default function CrossSellSection({ products, onAddToCart }: CrossSellSec
     <div className="mt-12">
       <div className="flex items-center justify-between mb-8 gap-4">
         <div>
-          <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2 font-helvetica-neue">
+          <p className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2 font-helvetica-neue">
             Gợi ý mua kèm
           </p>
           <h3 className="text-lg sm:text-xl font-helvetica-neue tracking-tight text-brand-dark">
@@ -49,7 +49,7 @@ export default function CrossSellSection({ products, onAddToCart }: CrossSellSec
                   className="w-full h-40 object-contain p-2 mix-blend-multiply group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
-              <span className="text-[10px] uppercase tracking-[0.15em] text-brand-dark/45">
+              <span className="text-[10px]  tracking-[0.15em] text-brand-dark/45">
                 {p.category}
               </span>
               <h4 className="text-xs font-helvetica-neue tracking-tight text-brand-dark group-hover:text-brand-green transition-colors line-clamp-2 mt-0.5">

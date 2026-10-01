@@ -60,7 +60,7 @@ export default function DiagnosisResultCard({
         <div className="flex-1 space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="text-lg font-helvetica-neue tracking-tight text-brand-dark">{result.diseaseName}</h3>
-            <span className={`px-2 py-0.5 text-[10px] tracking-wide uppercase ${tone.badgeBg} ${tone.text}`}>
+            <span className={`px-2 py-0.5 text-[10px] tracking-wide  ${tone.badgeBg} ${tone.text}`}>
               Mức độ: {result.severity}
             </span>
           </div>
@@ -94,7 +94,7 @@ export default function DiagnosisResultCard({
 
       {isInconclusive ? (
         <div className="p-4 border border-rose-300/60 bg-rose-50/80 text-rose-900 text-xs leading-relaxed space-y-2">
-          <div className="flex items-center gap-2 text-rose-950 tracking-wide font-bold">
+          <div className="flex items-center gap-2 text-rose-950 tracking-wide font-medium">
             <span className="material-symbols-outlined text-rose-600 text-[18px]">error</span>
             <span>Chưa đủ cơ sở kết luận</span>
           </div>
@@ -105,7 +105,7 @@ export default function DiagnosisResultCard({
       ) : (
         <>
           <div>
-            <h4 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2">
+            <h4 className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2">
               Triệu chứng bệnh lá lúa được AI nhận diện
             </h4>
             <ul className="space-y-1.5 text-xs text-brand-dark/60">
@@ -121,7 +121,7 @@ export default function DiagnosisResultCard({
           </div>
 
           <div>
-            <h4 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2">
+            <h4 className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2">
               Biện pháp canh tác &amp; xử lý an toàn ngay tại ruộng
             </h4>
             <ol className="space-y-1.5 text-xs text-brand-dark/60 list-decimal list-inside">
@@ -136,7 +136,7 @@ export default function DiagnosisResultCard({
       <div className="border-t border-brand-dark/10 pt-3">
         <button
           onClick={onToggleAlternatives}
-          className="w-full flex items-center justify-between text-xs tracking-[0.25em] uppercase text-brand-dark/50"
+          className="w-full flex items-center justify-between text-xs tracking-[0.25em]  text-brand-dark/50"
         >
           <span>Khả năng khác ({result.alternatives.length})</span>
           <span className="material-symbols-outlined text-[18px]">
@@ -174,7 +174,7 @@ export default function DiagnosisResultCard({
         ) : (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs tracking-[0.25em] uppercase text-brand-dark/50">
+              <span className="text-xs tracking-[0.25em]  text-brand-dark/50">
                 Yêu cầu phác đồ thương mại
               </span>
               <span className="text-[11px] text-brand-dark/50">Đại lý: Hai Thắng (Thới Lai)</span>
@@ -183,7 +183,7 @@ export default function DiagnosisResultCard({
               type="button"
               onClick={handleSendForReview}
               disabled={isSendingReview}
-              className="w-full h-11 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide uppercase text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+              className="w-full h-11 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
             >
               <span className="material-symbols-outlined text-[18px]">send</span>
               <span>{isSendingReview ? 'Đang chuyển hình ảnh...' : 'Gửi đại lý Hai Thắng duyệt nhanh thuốc điều trị'}</span>

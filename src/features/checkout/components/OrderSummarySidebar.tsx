@@ -32,7 +32,7 @@ export default function OrderSummarySidebar({
           </h2>
           <Link
             to="/cart"
-            className="text-xs text-brand-green hover:text-brand-dark transition-colors tracking-wide uppercase flex items-center gap-0.5"
+            className="text-xs text-brand-green hover:text-brand-dark transition-colors tracking-wide  flex items-center gap-0.5"
           >
             <span className="material-symbols-outlined text-[14px]">edit</span> Sửa
           </Link>
@@ -80,7 +80,7 @@ export default function OrderSummarySidebar({
           </div>
           <div className="flex items-center justify-between">
             <span>Phí vận chuyển:</span>
-            <span className="text-brand-green uppercase tracking-wide">
+            <span className="text-brand-green  tracking-wide">
               {shippingFee === 0 ? 'Miễn phí' : formatVnd(shippingFee)}
             </span>
           </div>
@@ -106,7 +106,7 @@ export default function OrderSummarySidebar({
         <button
           onClick={onConfirm}
           type="button"
-          className="w-full py-3.5 px-4 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide uppercase text-sm transition-colors flex items-center justify-center gap-2 group cursor-pointer"
+          className="w-full py-3.5 px-4 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-sm transition-colors flex items-center justify-center gap-2 group cursor-pointer"
         >
           <span className="material-symbols-outlined text-[20px]">verified_user</span>
           <span>Xác nhận đặt hàng ngay</span>

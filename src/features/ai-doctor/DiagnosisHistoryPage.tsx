@@ -67,7 +67,7 @@ export default function DiagnosisHistoryPage() {
           </div>
           <Link
             to="/ai-doctor"
-            className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-brand-dark text-white hover:bg-brand-dark/90 tracking-wide uppercase text-sm rounded-full transition-colors self-start sm:self-auto shrink-0"
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-brand-dark text-white hover:bg-brand-dark/90 tracking-wide  text-sm rounded-full transition-colors self-start sm:self-auto shrink-0"
           >
             <span className="material-symbols-outlined text-[16px]">add_a_photo</span>
             <span>Chẩn đoán mới</span>
@@ -82,7 +82,7 @@ export default function DiagnosisHistoryPage() {
                 key={f.id}
                 type="button"
                 onClick={() => setFilterId(f.id)}
-                className={`px-3 py-1 rounded-full text-xs tracking-wide uppercase border transition-colors ${
+                className={`px-3 py-1 rounded-full text-xs tracking-wide  border transition-colors ${
                   filterId === f.id
                     ? 'bg-brand-dark text-white border-brand-dark'
                     : 'bg-white text-brand-dark/70 border-brand-dark/10 hover:border-brand-dark/30 hover:text-brand-dark'
@@ -119,7 +119,7 @@ export default function DiagnosisHistoryPage() {
                       <span className="font-helvetica-neue tracking-tight text-sm sm:text-base text-brand-dark">
                         {diseaseName}
                       </span>
-                      <span className="text-xs font-mono text-brand-dark/50">({c.id})</span>
+                      <span className="text-xs font-helvetica-neue text-brand-dark/50">({c.id})</span>
                     </div>
                     <div className="text-xs text-brand-dark/60 mt-1">
                       {c.cropStage} · AI tin cậy {c.aiConfidence}%
@@ -179,7 +179,7 @@ export default function DiagnosisHistoryPage() {
 
                     {isReviewed(c) && c.recommendedProducts.length > 0 && (
                       <div className="space-y-2">
-                        <div className="text-brand-dark/50 tracking-wide uppercase">Thuốc được đề xuất</div>
+                        <div className="text-brand-dark/50 tracking-wide ">Thuốc được đề xuất</div>
                         <div className="flex flex-wrap gap-2">
                           {c.recommendedProducts.map((p) => (
                             <Link

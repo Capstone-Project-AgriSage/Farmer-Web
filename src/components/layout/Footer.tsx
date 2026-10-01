@@ -8,7 +8,7 @@ export default function Footer() {
           <div className="md:col-span-5 space-y-4">
             <div>
               <span className="text-xl text-white tracking-tight font-helvetica-neue block">AgriSage</span>
-              <span className="text-xs tracking-[0.2em] uppercase text-white/50 mt-1 block">
+              <span className="text-xs tracking-[0.2em]  text-white/50 mt-1 block">
                 Nông nghiệp số &amp; chẩn đoán AI
               </span>
             </div>
@@ -28,7 +28,7 @@ export default function Footer() {
           </div>
 
           <div className="md:col-span-3 space-y-4">
-            <h3 className="text-xs tracking-[0.25em] uppercase text-white/45">Danh mục</h3>
+            <h3 className="text-xs tracking-[0.25em]  text-white/45">Danh mục</h3>
             <ul className="space-y-2.5 text-sm text-white/70">
               <li>
                 <Link className="hover:text-white transition-colors" to="/products">
@@ -51,7 +51,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link className="hover:text-white transition-colors" to="/account?tab=credit">
+                <Link className="hover:text-white transition-colors" to="/debt">
                   Sổ nợ mùa vụ
                 </Link>
               </li>
@@ -59,7 +59,7 @@ export default function Footer() {
           </div>
 
           <div className="md:col-span-4 space-y-4">
-            <h3 className="text-xs tracking-[0.25em] uppercase text-white/45">Hỗ trợ</h3>
+            <h3 className="text-xs tracking-[0.25em]  text-white/45">Hỗ trợ</h3>
             <ul className="space-y-2.5 text-sm text-white/70">
               <li>
                 Tổng đài kỹ sư:{' '}

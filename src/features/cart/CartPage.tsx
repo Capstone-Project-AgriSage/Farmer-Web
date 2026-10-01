@@ -50,7 +50,7 @@ export default function CartPage() {
           </h1>
           <Link
             to="/products"
-            className="inline-block mt-5 px-6 py-2.5 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide uppercase text-sm transition-colors"
+            className="inline-block mt-5 px-6 py-2.5 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-sm transition-colors"
           >
             Tiếp tục mua vật tư
           </Link>
@@ -72,7 +72,7 @@ export default function CartPage() {
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-4 border-b border-brand-dark/10">
           <div className="flex items-center gap-3">
             <div>
-              <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1 font-helvetica-neue">
+              <p className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-1 font-helvetica-neue">
                 Đơn hàng
               </p>
               <h1 className="text-xl sm:text-2xl font-helvetica-neue tracking-tight text-brand-dark flex items-center gap-2">
@@ -98,7 +98,7 @@ export default function CartPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-8 space-y-6">
             <div className="bg-white border border-brand-dark/10 overflow-hidden">
-              <div className="hidden sm:grid sm:grid-cols-12 gap-4 px-6 py-3.5 bg-brand-light border-b border-brand-dark/10 text-xs tracking-[0.15em] uppercase text-brand-dark/50">
+              <div className="hidden sm:grid sm:grid-cols-12 gap-4 px-6 py-3.5 bg-brand-light border-b border-brand-dark/10 text-xs tracking-[0.15em]  text-brand-dark/50">
                 <div className="col-span-6">Sản phẩm vật tư</div>
                 <div className="col-span-2 text-center">Đơn giá</div>
                 <div className="col-span-2 text-center">Số lượng</div>

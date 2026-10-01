@@ -6,7 +6,7 @@ export default function AgronomistCard() {
           <span className="material-symbols-outlined text-2xl text-white/80">support_agent</span>
         </div>
         <div className="flex flex-col">
-          <span className="text-xs tracking-[0.25em] uppercase text-white/50">
+          <span className="text-xs tracking-[0.25em]  text-white/50">
             Kỹ sư nông học phụ trách đơn
           </span>
           <h3 className="text-base font-helvetica-neue tracking-tight mt-0.5">
@@ -18,7 +18,7 @@ export default function AgronomistCard() {
           <div className="mt-4 flex items-center gap-3 flex-wrap">
             <a
               href="tel:19006828"
-              className="px-5 py-2 rounded-full bg-white text-brand-dark hover:bg-brand-light tracking-wide uppercase text-xs flex items-center gap-1.5 transition-colors"
+              className="px-5 py-2 rounded-full bg-white text-brand-dark hover:bg-brand-light tracking-wide  text-xs flex items-center gap-1.5 transition-colors"
             >
               <span className="material-symbols-outlined text-lg">call</span>
               <span>1900 6828 (Phím 1)</span>

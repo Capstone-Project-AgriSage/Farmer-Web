@@ -8,13 +8,13 @@ export default function DeliveryInfoCard() {
             Thông tin giao nhận &amp; Địa chỉ vườn
           </h2>
         </div>
-        <span className="px-2.5 py-0.5 rounded-full bg-brand-light text-brand-green text-xs tracking-wide uppercase">
+        <span className="px-2.5 py-0.5 rounded-full bg-brand-light text-brand-green text-xs tracking-wide ">
           Giao tận vườn
         </span>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
         <div className="flex flex-col">
-          <span className="text-xs tracking-[0.15em] uppercase text-brand-dark/50">Người nhận hàng:</span>
+          <span className="text-xs tracking-[0.15em]  text-brand-dark/50">Người nhận hàng:</span>
           <span className="text-brand-dark text-base mt-0.5 font-helvetica-neue tracking-tight">
             Nguyễn Văn Hùng
           </span>
@@ -24,13 +24,13 @@ export default function DeliveryInfoCard() {
           </span>
         </div>
         <div className="flex flex-col">
-          <span className="text-xs tracking-[0.15em] uppercase text-brand-dark/50">Kho hàng xuất phát:</span>
+          <span className="text-xs tracking-[0.15em]  text-brand-dark/50">Kho hàng xuất phát:</span>
           <span className="text-brand-dark mt-0.5">Kho Đại lý Vật tư Hai Thắng</span>
           <span className="text-xs text-brand-dark/50">Thị trấn Thới Lai, Huyện Thới Lai, Cần Thơ</span>
         </div>
       </div>
       <div className="mt-4 pt-3 border-t border-brand-dark/10">
-        <span className="text-xs tracking-[0.15em] uppercase text-brand-dark/50 block">
+        <span className="text-xs tracking-[0.15em]  text-brand-dark/50 block">
           Địa chỉ nhận hàng &amp; Vị trí ruộng lúa:
         </span>
         <p className="text-brand-dark text-sm mt-1">

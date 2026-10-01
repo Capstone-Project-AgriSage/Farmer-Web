@@ -8,7 +8,7 @@ export default function NewsSection({ articles }: { articles: Article[] }) {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-10 md:mb-12 gap-4">
           <div className="max-w-xl">
-            <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2 font-helvetica-neue">
+            <p className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2 font-helvetica-neue">
               Bản tin nông nghiệp &amp; dịch bệnh vùng
             </p>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-helvetica-neue tracking-tight text-brand-dark leading-[1.15]">

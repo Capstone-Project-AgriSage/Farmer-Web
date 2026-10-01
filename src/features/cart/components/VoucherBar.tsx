@@ -21,7 +21,7 @@ export default function VoucherBar({
   return (
     <div className="bg-white border border-brand-dark/10 p-5 sm:p-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
       <div className="flex-1">
-        <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1.5">
+        <label className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-1.5">
           Mã ưu đãi mùa vụ / Voucher AgriSage
         </label>
         <div className="flex items-center gap-2 max-w-md">
@@ -30,7 +30,7 @@ export default function VoucherBar({
               confirmation_number
             </span>
             <input
-              className="w-full pl-9 pr-3 py-2 text-xs font-mono uppercase bg-brand-cream border border-brand-dark/15 focus:outline-none focus:border-brand-dark/40 text-brand-dark"
+              className="w-full pl-9 pr-3 py-2 text-xs font-helvetica-neue  bg-brand-cream border border-brand-dark/15 focus:outline-none focus:border-brand-dark/40 text-brand-dark"
               type="text"
               value={voucherInput}
               onChange={(e) => onVoucherInputChange(e.target.value)}
@@ -38,7 +38,7 @@ export default function VoucherBar({
           </div>
           <button
             onClick={onApply}
-            className="px-4 py-2 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide uppercase text-xs transition-colors flex-shrink-0"
+            className="px-4 py-2 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-xs transition-colors flex-shrink-0"
           >
             Áp dụng
           </button>

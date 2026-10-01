@@ -22,7 +22,7 @@ export default function ForgotPasswordPage() {
   return (
     <AuthLayout>
       <div className="mb-6 text-left">
-        <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2">AgriSage</p>
+        <p className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2">AgriSage</p>
         <h1 className="text-2xl sm:text-3xl font-helvetica-neue tracking-tight text-brand-dark">
           Quên mật khẩu?
         </h1>
@@ -43,7 +43,7 @@ export default function ForgotPasswordPage() {
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label
-              className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1.5"
+              className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-1.5"
               htmlFor="recoveryInput"
             >
               Email hoặc số điện thoại đã đăng ký
@@ -75,7 +75,7 @@ export default function ForgotPasswordPage() {
           </div>
           <div className="pt-2">
             <button
-              className="w-full h-11 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide uppercase text-sm transition-colors flex items-center justify-center gap-2 focus:outline-none disabled:opacity-70"
+              className="w-full h-11 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-sm transition-colors flex items-center justify-center gap-2 focus:outline-none disabled:opacity-70"
               type="submit"
               disabled={isSubmitting}
             >

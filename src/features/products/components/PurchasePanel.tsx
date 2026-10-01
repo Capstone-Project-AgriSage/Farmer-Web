@@ -139,7 +139,7 @@ export default function PurchasePanel({
             <button
               onClick={onAddToCart}
               disabled={outOfStock}
-              className="flex-1 py-2.5 px-4 border border-brand-dark/20 text-brand-dark hover:bg-brand-light tracking-wide uppercase text-xs sm:text-sm rounded-full transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
+              className="flex-1 py-2.5 px-4 border border-brand-dark/20 text-brand-dark hover:bg-brand-light tracking-wide  text-xs sm:text-sm rounded-full transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
             >
               <span className="material-symbols-outlined text-[18px]">add_shopping_cart</span>
               <span>Thêm vào giỏ</span>
@@ -147,7 +147,7 @@ export default function PurchasePanel({
             <button
               onClick={onBuyNow}
               disabled={outOfStock}
-              className="flex-1 py-2.5 px-4 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide uppercase text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
+              className="flex-1 py-2.5 px-4 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50"
             >
               <span className="material-symbols-outlined text-[18px]">credit_card</span>
               <span>{outOfStock ? 'Tạm hết' : 'Mua ngay / Gối nợ'}</span>

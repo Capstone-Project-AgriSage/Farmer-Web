@@ -11,7 +11,7 @@ const navLinks = [
   { to: '/products', label: 'Vật tư lúa' },
   { to: '/ai-doctor', label: 'Chẩn đoán AI' },
   { to: '/orders', label: 'Đơn hàng' },
-  { to: '/account?tab=credit', label: 'Sổ nợ mùa vụ' },
+  { to: '/debt', label: 'Sổ nợ mùa vụ' },
   { to: '/about', label: 'Giới thiệu' },
 ]
 
@@ -67,8 +67,8 @@ export default function Header({ cartCount }: HeaderProps) {
                 key={link.label}
                 to={link.to}
                 className={({ isActive }) =>
-                  `relative text-sm tracking-wide uppercase transition-colors py-1 ${isActive
-                    ? 'text-brand-dark font-bold after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-brand-green after:rounded-full'
+                  `relative text-sm tracking-wide  transition-colors py-1 ${isActive
+                    ? 'text-brand-dark font-medium after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-brand-green after:rounded-full'
                     : 'text-brand-dark/70 hover:text-brand-dark after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-brand-green after:rounded-full after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-left'
                   }`
                 }
@@ -81,7 +81,7 @@ export default function Header({ cartCount }: HeaderProps) {
           <div className="hidden md:flex items-center gap-3 ml-auto">
             <Link
               to="/cart"
-              className="text-sm text-brand-dark/80 tracking-wide uppercase hover:text-brand-dark transition-colors"
+              className="text-sm text-brand-dark/80 tracking-wide  hover:text-brand-dark transition-colors"
             >
               Giỏ ({cartCount})
             </Link>
@@ -92,13 +92,13 @@ export default function Header({ cartCount }: HeaderProps) {
                   className="relative text-brand-dark/80 hover:text-brand-dark transition-colors mr-2"
                 >
                   <span className="material-symbols-outlined text-[24px]">notifications</span>
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center border border-white">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white text-[9px] font-medium rounded-full flex items-center justify-center border border-white">
                     1
                   </span>
                 </Link>
                 <Link
                   to="/account"
-                  className="text-sm text-brand-dark/80 tracking-wide uppercase hover:text-brand-dark transition-colors"
+                  className="text-sm text-brand-dark/80 tracking-wide  hover:text-brand-dark transition-colors"
                 >
                   Tài khoản
                 </Link>
@@ -108,14 +108,14 @@ export default function Header({ cartCount }: HeaderProps) {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="inline-flex items-center px-5 py-2.5 bg-brand-dark text-white text-sm tracking-wide uppercase rounded-full hover:bg-brand-green transition-colors"
+                className="inline-flex items-center px-5 py-2.5 bg-brand-dark text-white text-sm tracking-wide  rounded-full hover:bg-brand-green transition-colors"
               >
                 Đăng xuất
               </button>
             ) : (
               <Link
                 to="/login"
-                className="inline-flex items-center px-5 py-2.5 bg-brand-dark text-white text-sm tracking-wide uppercase rounded-full hover:bg-brand-green transition-colors"
+                className="inline-flex items-center px-5 py-2.5 bg-brand-dark text-white text-sm tracking-wide  rounded-full hover:bg-brand-green transition-colors"
               >
                 Đăng nhập
               </Link>
@@ -155,7 +155,7 @@ export default function Header({ cartCount }: HeaderProps) {
               end={link.to === '/'}
               onClick={() => setIsMenuOpen(false)}
               className={({ isActive }) =>
-                `text-3xl tracking-tight transition-colors ${isActive ? 'text-brand-green font-bold' : 'text-brand-dark'
+                `text-3xl tracking-tight transition-colors ${isActive ? 'text-brand-green font-medium' : 'text-brand-dark'
                 }`
               }
             >

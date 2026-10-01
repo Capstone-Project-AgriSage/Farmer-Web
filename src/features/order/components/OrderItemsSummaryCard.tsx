@@ -48,7 +48,7 @@ export default function OrderItemsSummaryCard() {
         <h2 className="font-helvetica-neue tracking-tight text-base text-brand-dark">
           Danh sách vật tư đặt mua (4 sản phẩm)
         </h2>
-        <span className="font-mono text-xs text-brand-dark/40">Mã: #DH-2024-8842</span>
+        <span className="font-helvetica-neue text-xs text-brand-dark/40">Mã: #DH-2024-8842</span>
       </div>
       <div className="divide-y divide-brand-dark/10">
         {orderItems.map((item) => (
@@ -85,7 +85,7 @@ export default function OrderItemsSummaryCard() {
         </div>
         <div className="flex justify-between text-brand-dark/60">
           <span>Phí vận chuyển xe tải tận vườn:</span>
-          <span className="text-brand-green uppercase tracking-wide">Miễn phí</span>
+          <span className="text-brand-green  tracking-wide">Miễn phí</span>
         </div>
         <div className="flex justify-between text-brand-dark/40">
           <span>Thuế VAT (Hóa đơn điện tử):</span>
@@ -98,7 +98,7 @@ export default function OrderItemsSummaryCard() {
             </span>
             <span className="text-[11px] text-brand-green">Đã tiết kiệm 50.000 đ cho mùa vụ</span>
           </div>
-          <span className="text-2xl font-helvetica-neue tracking-tight text-brand-dark font-mono">
+          <span className="text-2xl font-helvetica-neue tracking-tight text-brand-dark font-helvetica-neue">
             2.600.000 đ
           </span>
         </div>

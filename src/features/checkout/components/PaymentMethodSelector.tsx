@@ -51,7 +51,7 @@ export default function PaymentMethodSelector({
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-brand-dark">Chuyển khoản VietQR / Napas 247</span>
-                  <span className="px-2 py-0.5 rounded-full bg-brand-light text-brand-green text-[10px] tracking-wide uppercase">
+                  <span className="px-2 py-0.5 rounded-full bg-brand-light text-brand-green text-[10px] tracking-wide ">
                     Khuyên dùng
                   </span>
                 </div>
@@ -72,7 +72,7 @@ export default function PaymentMethodSelector({
                     src="/images/misc/vietqr-demo.png"
                   />
                 </div>
-                <span className="text-[10px] text-brand-green mt-1.5 flex items-center gap-1 tracking-wide uppercase">
+                <span className="text-[10px] text-brand-green mt-1.5 flex items-center gap-1 tracking-wide ">
                   <span className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse"></span>
                   Vietcombank Napas247
                 </span>
@@ -84,16 +84,16 @@ export default function PaymentMethodSelector({
                 </div>
                 <div className="flex items-center justify-between py-1 border-b border-brand-dark/10">
                   <span className="text-brand-dark/50">Chủ tài khoản:</span>
-                  <span className="text-brand-dark uppercase">NGUYEN VAN THANG (ĐẠI LÝ HAI THẮNG)</span>
+                  <span className="text-brand-dark ">NGUYEN VAN THANG (ĐẠI LÝ HAI THẮNG)</span>
                 </div>
                 <div className="flex items-center justify-between py-1 border-b border-brand-dark/10">
                   <span className="text-brand-dark/50">Số tài khoản:</span>
                   <div className="flex items-center gap-1.5">
-                    <span className="font-mono text-brand-dark text-sm">19006828999</span>
+                    <span className="font-helvetica-neue text-brand-dark text-sm">19006828999</span>
                     <button
                       type="button"
                       onClick={() => onCopy('account', '19006828999')}
-                      className="text-[10px] text-brand-green hover:underline tracking-wide uppercase"
+                      className="text-[10px] text-brand-green hover:underline tracking-wide "
                       title="Sao chép số TK"
                     >
                       {copiedField === 'account' ? 'Đã copy' : 'Copy'}
@@ -107,13 +107,13 @@ export default function PaymentMethodSelector({
                 <div className="flex items-center justify-between py-1">
                   <span className="text-brand-dark/50">Nội dung CK:</span>
                   <div className="flex items-center gap-1.5">
-                    <span className="font-mono text-brand-dark bg-white px-2 py-0.5 border border-brand-dark/15">
+                    <span className="font-helvetica-neue text-brand-dark bg-white px-2 py-0.5 border border-brand-dark/15">
                       AGR8842
                     </span>
                     <button
                       type="button"
                       onClick={() => onCopy('memo', 'AGR8842')}
-                      className="text-[10px] text-brand-green hover:underline tracking-wide uppercase"
+                      className="text-[10px] text-brand-green hover:underline tracking-wide "
                       title="Sao chép cú pháp"
                     >
                       {copiedField === 'memo' ? 'Đã copy' : 'Copy'}
@@ -182,7 +182,7 @@ export default function PaymentMethodSelector({
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-brand-dark">Gối nợ mùa vụ (Sổ nợ Hai Thắng)</span>
-                  <span className="px-2 py-0.5 rounded-full bg-brand-dark text-white text-[10px] tracking-wide uppercase">
+                  <span className="px-2 py-0.5 rounded-full bg-brand-dark text-white text-[10px] tracking-wide ">
                     0% Lãi suất
                   </span>
                 </div>
@@ -191,7 +191,7 @@ export default function PaymentMethodSelector({
                 </p>
                 <div className="mt-2 text-[11px] text-brand-dark/60 flex items-center gap-2">
                   <span>
-                    Hạn mức khả dụng: <strong className="text-brand-dark font-mono">{formatVnd(availableCredit)}</strong>
+                    Hạn mức khả dụng: <strong className="text-brand-dark font-helvetica-neue">{formatVnd(availableCredit)}</strong>
                   </span>
                   {isCreditDisabled ? (
                     <span className="text-rose-600 font-medium bg-rose-50 px-1.5 py-0.5 border border-rose-200">Không đủ hạn mức</span>

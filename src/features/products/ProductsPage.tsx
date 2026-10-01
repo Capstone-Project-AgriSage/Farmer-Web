@@ -125,7 +125,7 @@ export default function ProductsPage() {
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
           <div>
-            <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2 font-helvetica-neue">
+            <p className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2 font-helvetica-neue">
               Cửa hàng vật tư
             </p>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-helvetica-neue tracking-tight text-brand-dark leading-[1.15]">
@@ -254,7 +254,7 @@ export default function ProductsPage() {
             </p>
             <button
               onClick={resetFilters}
-              className="mt-5 px-6 py-2.5 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide uppercase text-sm transition-colors"
+              className="mt-5 px-6 py-2.5 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-sm transition-colors"
             >
               Xem tất cả sản phẩm
             </button>

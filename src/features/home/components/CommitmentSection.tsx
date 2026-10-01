@@ -26,7 +26,7 @@ export default function CommitmentSection() {
     <section className="w-full py-16 md:py-20 bg-brand-light border-t border-brand-dark/10">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="max-w-2xl mb-10 md:mb-12">
-          <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2 font-helvetica-neue">
+          <p className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2 font-helvetica-neue">
             Cam kết dịch vụ
           </p>
           <h2 className="text-2xl sm:text-3xl md:text-4xl text-brand-dark tracking-tight font-helvetica-neue leading-[1.15]">

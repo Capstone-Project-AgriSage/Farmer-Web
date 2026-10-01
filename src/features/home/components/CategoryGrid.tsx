@@ -30,7 +30,7 @@ export default function CategoryGrid() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-10 gap-4">
           <div>
-            <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2 font-helvetica-neue">
+            <p className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2 font-helvetica-neue">
               Danh mục vật tư
             </p>
             <h2 className="text-2xl sm:text-3xl md:text-4xl text-brand-dark tracking-tight font-helvetica-neue leading-[1.15]">

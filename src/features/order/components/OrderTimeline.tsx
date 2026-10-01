@@ -8,7 +8,7 @@ export default function OrderTimeline() {
             Lộ trình giao hàng vật tư AgriExpress
           </h2>
         </div>
-        <span className="px-2.5 py-1 rounded-full bg-brand-light text-brand-green text-xs tracking-wide uppercase flex items-center gap-1">
+        <span className="px-2.5 py-1 rounded-full bg-brand-light text-brand-green text-xs tracking-wide  flex items-center gap-1">
           <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse"></span> Đang xử lý tại kho
         </span>
       </div>
@@ -22,11 +22,11 @@ export default function OrderTimeline() {
               <span className="text-sm text-brand-dark">
                 Đơn hàng được khởi tạo &amp; Đã duyệt thanh toán VietQR
               </span>
-              <span className="text-xs font-mono text-brand-dark/40">Hôm nay, 14:32</span>
+              <span className="text-xs font-helvetica-neue text-brand-dark/40">Hôm nay, 14:32</span>
             </div>
             <p className="text-xs text-brand-dark/60 mt-1">
               Hệ thống đã khớp giao dịch 2.600.000 đ từ Vietcombank Napas247, mã GD:{' '}
-              <span className="font-mono text-brand-dark">VCB-998271</span>.
+              <span className="font-helvetica-neue text-brand-dark">VCB-998271</span>.
             </p>
           </div>
         </div>
@@ -39,7 +39,7 @@ export default function OrderTimeline() {
               <span className="text-sm text-brand-green">
                 Kho Hai Thắng (Thới Lai) đang bốc xếp vật tư &amp; niêm phong lô
               </span>
-              <span className="text-xs font-mono text-brand-green">Đang tiến hành</span>
+              <span className="text-xs font-helvetica-neue text-brand-green">Đang tiến hành</span>
             </div>
             <p className="text-xs text-brand-dark/60 mt-1">
               Nhân viên kho đang kiểm tra tem QR chống giả, bao bì lúa giống và hạn dùng thuốc BVTV lúa.

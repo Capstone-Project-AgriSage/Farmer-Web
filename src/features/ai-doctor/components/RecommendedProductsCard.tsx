@@ -38,7 +38,7 @@ export default function RecommendedProductsCard({
     <div className="bg-white border border-brand-dark/10 p-5 space-y-4">
       <div className="border-b border-brand-dark/10 pb-3">
         <div className="flex items-center justify-between">
-          <div className="inline-flex items-center gap-1.5 text-xs tracking-[0.25em] uppercase text-brand-dark/50">
+          <div className="inline-flex items-center gap-1.5 text-xs tracking-[0.25em]  text-brand-dark/50">
             <span className="material-symbols-outlined text-[14px] text-brand-green">verified</span>
             <span>Đã thẩm định chuyên môn</span>
           </div>

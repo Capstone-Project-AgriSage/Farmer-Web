@@ -56,13 +56,13 @@ export default function HeroSection() {
         <div className="flex flex-wrap items-center gap-3 mt-6 md:mt-8 animate-fade-up stagger-5">
           <Link
             to="/products"
-            className="inline-flex items-center px-6 py-3 bg-brand-dark text-white text-sm tracking-wide uppercase rounded-full hover:bg-brand-green transition-colors"
+            className="inline-flex items-center px-6 py-3 bg-brand-dark text-white text-sm tracking-wide  rounded-full hover:bg-brand-green transition-colors"
           >
             Khám phá vật tư
           </Link>
           <Link
             to="/ai-doctor"
-            className="inline-flex items-center gap-2 px-6 py-3 border border-brand-dark/25 text-brand-dark text-sm tracking-wide uppercase rounded-full hover:bg-white/70 transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 border border-brand-dark/25 text-brand-dark text-sm tracking-wide  rounded-full hover:bg-white/70 transition-colors"
           >
             Chẩn đoán AI
             <ArrowRight className="w-3.5 h-3.5" />

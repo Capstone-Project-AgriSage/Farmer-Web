@@ -14,33 +14,35 @@ export default function ProductImagePanel({ product }: { product: Product }) {
 
   return (
     <div className="lg:col-span-5 flex flex-col gap-5">
-      <div className="bg-white border border-brand-dark/10 p-6 relative overflow-hidden flex items-center justify-center min-h-[420px]">
-        <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-          <span className="px-2.5 py-1 bg-brand-dark text-white text-[11px] tracking-wide rounded-full flex items-center gap-1">
-            <span className="material-symbols-outlined text-[14px]">verified</span> Chính hãng{' '}
-            {product.brand} 100%
+      <div className="bg-white border border-brand-dark/10 relative overflow-hidden aspect-[4/3] sm:aspect-[3/2] w-full group">
+        <div className="absolute top-4 left-4 flex flex-col gap-2 z-10 max-w-[65%] pointer-events-none">
+          <span className="px-3 py-1.5 bg-brand-dark/90 backdrop-blur-sm text-white text-[11px] font-medium tracking-wide rounded-full flex items-center gap-1.5 w-fit shadow-sm">
+            <span className="material-symbols-outlined text-[15px] shrink-0">verified</span> 
+            <span className="line-clamp-1">Chính hãng {product.brand} 100%</span>
           </span>
-          <span className="px-2.5 py-0.5 bg-brand-light text-brand-dark/70 border border-brand-dark/10 text-[10px] tracking-wide rounded-full">
+          <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-brand-dark/80 border border-brand-dark/10 text-[10px] font-medium tracking-wide rounded-full w-fit shadow-sm">
             Tem chống giả QR
           </span>
         </div>
+        
         <span
-          className={`absolute top-16 left-3 sm:top-3 sm:left-auto sm:right-3 px-2.5 py-1 ${tone.badgeBg} ${tone.text} text-xs tracking-wide rounded-full flex items-center gap-1 border border-current/20`}
+          className={`absolute bottom-4 right-4 px-3 py-1.5 ${tone.badgeBg} ${tone.text} text-[11px] font-medium tracking-wide rounded-full flex items-center gap-1.5 border border-white/50 z-10 shadow-sm max-w-[40%]`}
         >
-          <span className={`w-2 h-2 rounded-full ${tone.dot} animate-pulse`}></span>{' '}
-          {product.stockLabel}
+          <span className={`w-2 h-2 rounded-full ${tone.dot} animate-pulse shrink-0`}></span>
+          <span className="truncate">{product.stockLabel}</span>
         </span>
-        <div className="w-full h-80 flex items-center justify-center p-2">
+        
+        <div className="w-full h-full absolute inset-0">
           <img
             alt={product.name}
-            className="max-h-full max-w-full object-contain hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-out"
             src={product.image}
             onError={handleImageError}
           />
         </div>
       </div>
       <div className="bg-brand-light border border-brand-dark/10 p-4 space-y-3">
-        <h4 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 flex items-center gap-1.5">
+        <h4 className="text-xs tracking-[0.25em]  text-brand-dark/50 flex items-center gap-1.5">
           <span className="material-symbols-outlined text-brand-dark/60 text-[18px]">shield</span>
           <span>Cam kết phân phối từ AgriSage</span>
         </h4>

@@ -19,14 +19,14 @@ export default function NotFoundPage() {
         <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
           <Link
             to="/"
-            className="px-6 py-2.5 bg-brand-dark hover:bg-brand-green text-white text-sm tracking-wide uppercase rounded-full transition-colors inline-flex items-center gap-2"
+            className="px-6 py-2.5 bg-brand-dark hover:bg-brand-green text-white text-sm tracking-wide  rounded-full transition-colors inline-flex items-center gap-2"
           >
             <span className="material-symbols-outlined text-[18px]">home</span>
             <span>Về trang chủ</span>
           </Link>
           <Link
             to="/products"
-            className="px-6 py-2.5 border border-brand-dark/20 text-brand-dark hover:border-brand-dark/40 text-sm tracking-wide uppercase rounded-full transition-colors inline-flex items-center gap-2"
+            className="px-6 py-2.5 border border-brand-dark/20 text-brand-dark hover:border-brand-dark/40 text-sm tracking-wide  rounded-full transition-colors inline-flex items-center gap-2"
           >
             <span className="material-symbols-outlined text-[18px]">storefront</span>
             <span>Xem vật tư nông nghiệp</span>

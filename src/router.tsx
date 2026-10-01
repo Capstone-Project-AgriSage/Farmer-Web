@@ -19,6 +19,7 @@ const ArticleDetailPage = lazy(() => import('./features/knowledge/ArticleDetailP
 const ContactPage = lazy(() => import('./features/contact/ContactPage'))
 const MyRequestsPage = lazy(() => import('./features/contact/MyRequestsPage'))
 const AccountPage = lazy(() => import('./features/account/AccountPage'))
+const DebtPage = lazy(() => import('./features/debt/DebtPage'))
 const AiDoctorPage = lazy(() => import('./features/ai-doctor/AiDoctorPage'))
 const OrdersPage = lazy(() => import('./features/order/OrdersPage'))
 const OrderDetailPage = lazy(() => import('./features/order/OrderDetailPage'))
@@ -47,6 +48,7 @@ const protectedRoutes = [
   { path: 'checkout', element: <CheckoutPage /> },
   { path: 'contact/requests', element: <MyRequestsPage /> },
   { path: 'account', element: <AccountPage /> },
+  { path: 'debt', element: <DebtPage /> },
   { path: 'orders', element: <OrdersPage /> },
   { path: 'orders/:code', element: <OrderDetailPage /> },
   { path: 'notifications', element: <NotificationsPage /> },

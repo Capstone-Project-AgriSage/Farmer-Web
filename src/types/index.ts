@@ -56,6 +56,13 @@ export interface DeliveryPhase {
   failReason?: string
 }
 
+export interface OrderHallmark {
+  certification: string
+  traceCode: string
+  qrUrl?: string
+  description?: string
+}
+
 export interface Order {
   code: string
   items: CartItem[]
@@ -79,6 +86,7 @@ export interface Order {
   estimatedDelivery?: string
   notes?: string
   deliveries?: DeliveryPhase[]
+  hallmark?: OrderHallmark
 }
 
 export interface FarmerUser {

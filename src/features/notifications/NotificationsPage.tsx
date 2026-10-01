@@ -68,7 +68,7 @@ export default function NotificationsPage() {
               </div>
               <div className="flex-1 space-y-1">
                 <div className="flex justify-between items-start gap-2">
-                  <h3 className={`text-sm ${notif.read ? 'font-normal text-brand-dark/80' : 'font-bold text-brand-dark'}`}>
+                  <h3 className={`text-sm ${notif.read ? 'font-normal text-brand-dark/80' : 'font-medium text-brand-dark'}`}>
                     {notif.title}
                   </h3>
                   <span className="text-[10px] text-brand-dark/40 whitespace-nowrap">{notif.time}</span>

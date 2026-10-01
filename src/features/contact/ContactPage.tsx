@@ -35,7 +35,7 @@ export default function ContactPage() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10 md:py-14">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div className="max-w-2xl">
-            <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2 font-helvetica-neue">
+            <p className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2 font-helvetica-neue">
               Hỗ trợ nông dân &amp; đại lý
             </p>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-helvetica-neue tracking-tight text-brand-dark leading-[1.15]">
@@ -48,7 +48,7 @@ export default function ContactPage() {
           </div>
           <Link
             to="/contact/requests"
-            className="inline-flex items-center justify-center gap-1.5 self-end px-5 py-2.5 bg-brand-dark hover:bg-brand-green text-white text-xs tracking-wide uppercase rounded-full transition-colors shrink-0"
+            className="inline-flex items-center justify-center gap-1.5 self-end px-5 py-2.5 bg-brand-dark hover:bg-brand-green text-white text-xs tracking-wide  rounded-full transition-colors shrink-0"
           >
             <span className="material-symbols-outlined text-[18px]">history</span>
             <span>Xem yêu cầu đã gửi</span>
@@ -108,7 +108,7 @@ export default function ContactPage() {
               ) : (
                 <form className="space-y-4" onSubmit={handleSubmit}>
                   <div>
-                    <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1.5 font-helvetica-neue">
+                    <label className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-1.5 font-helvetica-neue">
                       Họ và tên
                     </label>
                     <input
@@ -121,7 +121,7 @@ export default function ContactPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1.5 font-helvetica-neue">
+                    <label className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-1.5 font-helvetica-neue">
                       Email hoặc số điện thoại
                     </label>
                     <input
@@ -134,7 +134,7 @@ export default function ContactPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1.5 font-helvetica-neue">
+                    <label className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-1.5 font-helvetica-neue">
                       Khu vực / Địa chỉ
                     </label>
                     <input
@@ -147,7 +147,7 @@ export default function ContactPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1.5 font-helvetica-neue">
+                    <label className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-1.5 font-helvetica-neue">
                       Loại yêu cầu
                     </label>
                     <select
@@ -161,7 +161,7 @@ export default function ContactPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1.5 font-helvetica-neue">
+                    <label className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-1.5 font-helvetica-neue">
                       Nội dung cần hỗ trợ
                     </label>
                     <textarea
@@ -176,7 +176,7 @@ export default function ContactPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full h-11 bg-brand-dark hover:bg-brand-green text-white text-sm tracking-wide uppercase rounded-full transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+                    className="w-full h-11 bg-brand-dark hover:bg-brand-green text-white text-sm tracking-wide  rounded-full transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
                   >
                     <span>{isSubmitting ? 'Đang gửi...' : 'Gửi yêu cầu hỗ trợ'}</span>
                     {!isSubmitting && <span className="material-symbols-outlined text-[18px]">send</span>}

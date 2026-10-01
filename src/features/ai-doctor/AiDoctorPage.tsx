@@ -119,7 +119,7 @@ export default function AiDoctorPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 bg-brand-cream">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 font-helvetica-neue">
+            <p className="text-xs tracking-[0.25em]  text-brand-dark/50 font-helvetica-neue">
               Chẩn đoán AI đề xuất · Chuyên biệt 5 bệnh lúa
             </p>
             <h1 className="text-2xl sm:text-3xl font-helvetica-neue tracking-tight text-brand-dark mt-1.5">
@@ -131,7 +131,7 @@ export default function AiDoctorPage() {
           </div>
           <Link
             to="/ai-doctor/history"
-            className="inline-flex items-center gap-1.5 px-5 py-2.5 border border-brand-dark/15 bg-white text-brand-dark/80 hover:border-brand-dark/30 hover:text-brand-dark tracking-wide uppercase text-sm rounded-full transition-colors self-start sm:self-auto shrink-0"
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 border border-brand-dark/15 bg-white text-brand-dark/80 hover:border-brand-dark/30 hover:text-brand-dark tracking-wide  text-sm rounded-full transition-colors self-start sm:self-auto shrink-0"
           >
             <span className="material-symbols-outlined text-[16px]">history</span>
             <span>Lịch sử ({mockDiagnosisCases.length} ca)</span>
@@ -150,7 +150,7 @@ export default function AiDoctorPage() {
                 key={c.id}
                 type="button"
                 onClick={() => handleSelectVerifiedCase(c)}
-                className={`px-3 py-1 rounded-full text-xs tracking-wide uppercase border transition-colors ${selectedCaseId === c.id
+                className={`px-3 py-1 rounded-full text-xs tracking-wide  border transition-colors ${selectedCaseId === c.id
                     ? 'bg-brand-dark text-white border-brand-dark'
                     : 'bg-brand-light text-brand-dark/70 border-brand-dark/10 hover:border-brand-dark/30 hover:text-brand-dark'
                   }`}

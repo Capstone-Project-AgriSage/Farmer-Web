@@ -39,7 +39,7 @@ export default function ShippingMethodSelector({
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-brand-dark">Xe tải giao tận vườn AgriExpress</span>
-                <span className="px-2 py-0.5 rounded-full bg-brand-dark text-white text-[10px] tracking-wide uppercase">
+                <span className="px-2 py-0.5 rounded-full bg-brand-dark text-white text-[10px] tracking-wide ">
                   Miễn phí
                 </span>
               </div>
@@ -52,7 +52,7 @@ export default function ShippingMethodSelector({
               </div>
             </div>
           </div>
-          <span className="text-xs text-brand-green uppercase sm:text-sm tracking-wide">0 đ</span>
+          <span className="text-xs text-brand-green  sm:text-sm tracking-wide">0 đ</span>
         </label>
         <label
           onClick={() => onShippingMethodChange('express')}

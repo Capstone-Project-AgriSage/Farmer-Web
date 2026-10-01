@@ -69,7 +69,7 @@ export default function RegisterPage() {
   return (
     <AuthLayout showTags>
       <div className="mb-5 text-left">
-        <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2">AgriSage</p>
+        <p className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2">AgriSage</p>
         <h1 className="text-2xl sm:text-3xl font-helvetica-neue tracking-tight text-brand-dark">
           Đăng ký tài khoản
         </h1>
@@ -79,7 +79,7 @@ export default function RegisterPage() {
       </div>
       <form className="space-y-3.5" onSubmit={handleSubmit} noValidate>
         <div className="text-left">
-          <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1" htmlFor="fullName">
+          <label className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-1" htmlFor="fullName">
             Họ và tên
           </label>
           <div className="relative">
@@ -100,7 +100,7 @@ export default function RegisterPage() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
           <div>
-            <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1" htmlFor="regContact">
+            <label className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-1" htmlFor="regContact">
               Email / Số điện thoại
             </label>
             <div className="relative">
@@ -120,7 +120,7 @@ export default function RegisterPage() {
             <FieldError message={errors.contact} />
           </div>
           <div>
-            <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1" htmlFor="farmRegion">
+            <label className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-1" htmlFor="farmRegion">
               Khu vực canh tác
             </label>
             <div className="relative">
@@ -144,7 +144,7 @@ export default function RegisterPage() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
           <div>
-            <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1" htmlFor="regPassword">
+            <label className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-1" htmlFor="regPassword">
               Mật khẩu
             </label>
             <div className="relative">
@@ -175,7 +175,7 @@ export default function RegisterPage() {
           </div>
           <div>
             <label
-              className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1"
+              className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-1"
               htmlFor="regConfirmPassword"
             >
               Xác nhận mật khẩu
@@ -233,7 +233,7 @@ export default function RegisterPage() {
         </div>
         <div className="pt-2">
           <button
-            className="w-full h-11 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide uppercase text-sm transition-colors flex items-center justify-center gap-2 focus:outline-none cursor-pointer disabled:opacity-70"
+            className="w-full h-11 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-sm transition-colors flex items-center justify-center gap-2 focus:outline-none cursor-pointer disabled:opacity-70"
             type="submit"
             disabled={isSubmitting}
           >
@@ -246,7 +246,7 @@ export default function RegisterPage() {
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-brand-dark/10"></div>
         </div>
-        <span className="relative bg-white px-3 text-[11px] text-brand-dark/50 uppercase tracking-[0.25em]">
+        <span className="relative bg-white px-3 text-[11px] text-brand-dark/50  tracking-[0.25em]">
           Hoặc tiếp tục với
         </span>
       </div>

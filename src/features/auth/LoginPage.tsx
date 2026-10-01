@@ -41,7 +41,7 @@ export default function LoginPage() {
   return (
     <AuthLayout showTags>
       <div className="mb-6 text-left">
-        <p className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-2">AgriSage</p>
+        <p className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2">AgriSage</p>
         <h1 className="text-2xl sm:text-3xl font-helvetica-neue tracking-tight text-brand-dark">Đăng nhập</h1>
         <p className="text-sm text-brand-dark/60 mt-1">
           Chào mừng trở lại với hệ sinh thái AgriSage
@@ -50,7 +50,7 @@ export default function LoginPage() {
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div>
           <label
-            className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-1.5"
+            className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-1.5"
             htmlFor="emailInput"
           >
             Email hoặc Số điện thoại
@@ -68,7 +68,7 @@ export default function LoginPage() {
         </div>
         <div>
           <div className="flex justify-between items-center mb-1.5">
-            <label className="block text-xs tracking-[0.25em] uppercase text-brand-dark/50" htmlFor="passwordInput">
+            <label className="block text-xs tracking-[0.25em]  text-brand-dark/50" htmlFor="passwordInput">
               Mật khẩu
             </label>
             <Link
@@ -141,7 +141,7 @@ export default function LoginPage() {
         </div>
         <div className="pt-2">
           <button
-            className="w-full h-11 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide uppercase text-sm transition-colors flex items-center justify-center gap-2 focus:outline-none disabled:opacity-70"
+            className="w-full h-11 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-sm transition-colors flex items-center justify-center gap-2 focus:outline-none disabled:opacity-70"
             type="submit"
             disabled={isSubmitting}
           >
@@ -163,7 +163,7 @@ export default function LoginPage() {
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-brand-dark/10"></div>
         </div>
-        <span className="relative bg-white px-3 text-[11px] text-brand-dark/50 uppercase tracking-[0.25em]">
+        <span className="relative bg-white px-3 text-[11px] text-brand-dark/50  tracking-[0.25em]">
           Hoặc tiếp tục với
         </span>
       </div>

@@ -69,7 +69,7 @@ export default function ProductTabs({ product, activeTab, onActiveTabChange }: P
       <div className="p-6 sm:p-8 space-y-8">
         {activeTab === 'specs' && (
           <div>
-            <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-4 flex items-center gap-2">
+            <h3 className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-4 flex items-center gap-2">
               <span className="material-symbols-outlined text-brand-dark/60 text-[18px]">biotech</span>
               <span>Bảng thành phần hóa học &amp; Đặc tính sinh học</span>
             </h3>
@@ -129,7 +129,7 @@ export default function ProductTabs({ product, activeTab, onActiveTabChange }: P
         )}
         {activeTab === 'dosage' && (
           <div>
-            <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-4 flex items-center gap-2">
+            <h3 className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-4 flex items-center gap-2">
               <span className="material-symbols-outlined text-brand-dark/60 text-[18px]">water_drop</span>
               <span>Phác đồ điều trị thực tế theo nhóm cây trồng Tây Nguyên &amp; ĐBSCL</span>
             </h3>
@@ -175,7 +175,7 @@ export default function ProductTabs({ product, activeTab, onActiveTabChange }: P
             </div>
             <Link
               to="/ai-doctor"
-              className="px-5 py-2.5 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide uppercase text-xs transition-colors flex items-center gap-2 whitespace-nowrap"
+              className="px-5 py-2.5 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-xs transition-colors flex items-center gap-2 whitespace-nowrap"
             >
               <span className="material-symbols-outlined text-[18px]">photo_camera</span>
               <span>Quét lá chẩn đoán ngay</span>
@@ -184,7 +184,7 @@ export default function ProductTabs({ product, activeTab, onActiveTabChange }: P
         )}
         {activeTab === 'reviews' && (
           <div className="space-y-6">
-            <h3 className="text-xs tracking-[0.25em] uppercase text-brand-dark/50 mb-4 flex items-center gap-2 border-b border-brand-dark/10 pb-3">
+            <h3 className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-4 flex items-center gap-2 border-b border-brand-dark/10 pb-3">
               <span className="material-symbols-outlined text-brand-dark/60 text-[18px]">star</span>
               <span>Đánh giá từ nhà nông</span>
             </h3>
@@ -198,9 +198,9 @@ export default function ProductTabs({ product, activeTab, onActiveTabChange }: P
                 <div key={idx} className="p-4 border border-brand-dark/10 bg-white">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2 text-xs">
-                      <span className="font-bold text-brand-dark">{review.name}</span>
+                      <span className="font-medium text-brand-dark">{review.name}</span>
                       <span className="text-brand-dark/40">•</span>
-                      <span className="text-brand-dark/50 font-mono">{review.date}</span>
+                      <span className="text-brand-dark/50 font-helvetica-neue">{review.date}</span>
                     </div>
                     <div className="flex text-amber-500">
                       {Array.from({ length: 5 }).map((_, i) => (
@@ -217,10 +217,10 @@ export default function ProductTabs({ product, activeTab, onActiveTabChange }: P
 
             {/* Write review form */}
             <div className="mt-8 pt-6 border-t border-brand-dark/10">
-              <h4 className="text-sm font-bold text-brand-dark mb-4">Viết đánh giá của bác</h4>
+              <h4 className="text-sm font-medium text-brand-dark mb-4">Viết đánh giá của bác</h4>
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-brand-dark/70 uppercase tracking-wide">Chất lượng:</span>
+                  <span className="text-xs text-brand-dark/70  tracking-wide">Chất lượng:</span>
                   <div className="flex text-brand-dark/20 cursor-pointer">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <span key={i} className="material-symbols-outlined text-[24px] hover:text-amber-500 transition-colors">
@@ -235,7 +235,7 @@ export default function ProductTabs({ product, activeTab, onActiveTabChange }: P
                 />
                 <button
                   type="button"
-                  className="px-6 py-2.5 bg-brand-dark text-white hover:bg-brand-green text-xs uppercase tracking-wide rounded-full transition-colors"
+                  className="px-6 py-2.5 bg-brand-dark text-white hover:bg-brand-green text-xs  tracking-wide rounded-full transition-colors"
                 >
                   Gửi đánh giá
                 </button>

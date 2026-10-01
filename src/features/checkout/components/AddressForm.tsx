@@ -135,7 +135,7 @@ export default function AddressForm({
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs tracking-[0.15em] uppercase text-brand-dark/50 mb-1.5">
+            <label className="block text-xs tracking-[0.15em]  text-brand-dark/50 mb-1.5">
               Họ và tên người nhận <span className="text-status-error">*</span>
             </label>
             <input
@@ -147,7 +147,7 @@ export default function AddressForm({
             <FieldError message={errors.recipientName} />
           </div>
           <div>
-            <label className="block text-xs tracking-[0.15em] uppercase text-brand-dark/50 mb-1.5">
+            <label className="block text-xs tracking-[0.15em]  text-brand-dark/50 mb-1.5">
               Số điện thoại liên hệ <span className="text-status-error">*</span>
             </label>
             <input
@@ -161,7 +161,7 @@ export default function AddressForm({
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <label className="block text-xs tracking-[0.15em] uppercase text-brand-dark/50 mb-1.5">
+            <label className="block text-xs tracking-[0.15em]  text-brand-dark/50 mb-1.5">
               Tỉnh / Thành phố <span className="text-status-error">*</span>
             </label>
             <select
@@ -176,7 +176,7 @@ export default function AddressForm({
             </select>
           </div>
           <div>
-            <label className="block text-xs tracking-[0.15em] uppercase text-brand-dark/50 mb-1.5">
+            <label className="block text-xs tracking-[0.15em]  text-brand-dark/50 mb-1.5">
               Huyện / Thị xã <span className="text-status-error">*</span>
             </label>
             <select
@@ -191,7 +191,7 @@ export default function AddressForm({
             </select>
           </div>
           <div>
-            <label className="block text-xs tracking-[0.15em] uppercase text-brand-dark/50 mb-1.5">
+            <label className="block text-xs tracking-[0.15em]  text-brand-dark/50 mb-1.5">
               Xã / Thị trấn <span className="text-status-error">*</span>
             </label>
             <select
@@ -207,7 +207,7 @@ export default function AddressForm({
           </div>
         </div>
         <div>
-          <label className="block text-xs tracking-[0.15em] uppercase text-brand-dark/50 mb-1.5">
+          <label className="block text-xs tracking-[0.15em]  text-brand-dark/50 mb-1.5">
             Địa chỉ cụ thể / Vị trí ruộng lúa <span className="text-status-error">*</span>
           </label>
           <input
@@ -219,7 +219,7 @@ export default function AddressForm({
           <FieldError message={errors.addressDetail} />
         </div>
         <div>
-          <label className="block text-xs tracking-[0.15em] uppercase text-brand-dark/50 mb-1.5 flex items-center gap-1">
+          <label className="block text-xs tracking-[0.15em]  text-brand-dark/50 mb-1.5 flex items-center gap-1">
             <span className="material-symbols-outlined text-[16px] text-brand-dark/40">local_shipping</span>
             Ghi chú dặn dò lái xe tải giao hàng
           </label>

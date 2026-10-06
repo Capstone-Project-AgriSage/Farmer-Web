@@ -7,7 +7,7 @@ import { mockDebtEntries as initialDebtEntries, mockDebtPayments as initialDebtP
 import type { DebtEntry, DebtPayment } from '../../types'
 
 export default function DebtPage() {
-  useDocumentTitle('Sổ nợ mùa vụ - AgriSage')
+  useDocumentTitle('Sổ nợ - AgriSage')
   const { farmer } = useAuth()
 
   // Debt & Repayment State
@@ -124,7 +124,7 @@ export default function DebtPage() {
 
   return (
     <div className="bg-brand-cream text-brand-dark min-h-screen pb-20">
-      <Breadcrumb items={[{ label: 'Trang chủ', to: '/' }, { label: 'Sổ nợ mùa vụ' }]} />
+      <Breadcrumb items={[{ label: 'Trang chủ', to: '/' }, { label: 'Sổ nợ' }]} />
 
       {/* Global Notification Toast */}
       {notification && (
@@ -140,7 +140,7 @@ export default function DebtPage() {
         <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
             <h1 className="text-3xl md:text-4xl font-medium font-helvetica-neue tracking-tight text-brand-dark">
-              Sổ nợ mùa vụ
+              Sổ nợ
             </h1>
             <p className="text-brand-dark/60 mt-2 text-sm md:text-base max-w-2xl">
               Quản lý công nợ vật tư nông nghiệp, theo dõi hạn mức tín dụng và lịch sử thanh toán với đại lý.

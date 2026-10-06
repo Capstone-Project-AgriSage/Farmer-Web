@@ -6,7 +6,7 @@ const commitments = [
   },
   {
     icon: 'credit_score',
-    title: 'Bảo Lãnh Nợ Mùa Vụ',
+    title: 'Bảo Lãnh Nợ',
     desc: 'Hỗ trợ hạn mức 0% lãi suất, thu hoạch lúa mới hoàn trả công nợ.',
   },
   {

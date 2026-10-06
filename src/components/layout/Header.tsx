@@ -11,7 +11,7 @@ const navLinks = [
   { to: '/products', label: 'Vật tư lúa' },
   { to: '/ai-doctor', label: 'Chẩn đoán AI' },
   { to: '/orders', label: 'Đơn hàng' },
-  { to: '/debt', label: 'Sổ nợ mùa vụ' },
+  { to: '/debt', label: 'Sổ nợ' },
   { to: '/about', label: 'Giới thiệu' },
 ]
 

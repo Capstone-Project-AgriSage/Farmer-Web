@@ -50,7 +50,7 @@ export default function HeroSection() {
         </h1>
 
         <p className="mt-6 md:mt-8 max-w-xl text-left text-base md:text-lg text-brand-dark/75 leading-relaxed font-sans animate-fade-up stagger-4">
-          Vật tư chính hãng, bác sĩ cây trồng AI và sổ nợ mùa vụ — mọi thứ nhà nông cần trên một nền tảng.
+          Vật tư chính hãng, bác sĩ cây trồng AI và sổ nợ — mọi thứ nhà nông cần trên một nền tảng.
         </p>
 
         <div className="flex flex-wrap items-center gap-3 mt-6 md:mt-8 animate-fade-up stagger-5">

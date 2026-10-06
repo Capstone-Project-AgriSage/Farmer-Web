@@ -52,7 +52,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link className="hover:text-white transition-colors" to="/debt">
-                  Sổ nợ mùa vụ
+                  Sổ nợ
                 </Link>
               </li>
             </ul>

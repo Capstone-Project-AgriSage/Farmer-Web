@@ -45,7 +45,7 @@ export default function OrderPaymentPanel({ order, summary, onStale }: OrderPaym
     <div className="space-y-4">
       {isCredit ? (
         <p className="text-sm text-brand-dark/70">
-          Đơn mua chịu: số tiền được ghi vào công nợ mùa vụ sau khi cửa hàng xác nhận đơn.
+          Đơn mua chịu: số tiền được ghi vào công nợ sau khi cửa hàng xác nhận đơn.
         </p>
       ) : summary === null ? (
         <p className="text-sm text-brand-dark/50">Không tải được thông tin thanh toán.</p>

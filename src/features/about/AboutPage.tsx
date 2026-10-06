@@ -24,8 +24,8 @@ const values = [
   },
   {
     icon: 'credit_score',
-    title: 'Đồng hành tài chính mùa vụ',
-    desc: 'Sổ nợ mùa vụ AgriCredit 0% lãi suất, thanh toán linh hoạt sau thu hoạch, giảm áp lực vốn đầu năm.',
+    title: 'Đồng hành tài chính',
+    desc: 'Sổ nợ AgriCredit 0% lãi suất, thanh toán linh hoạt sau thu hoạch, giảm áp lực vốn đầu năm.',
   },
   {
     icon: 'local_shipping',
@@ -38,7 +38,7 @@ const timeline = [
   {
     year: '2019',
     title: 'Khởi nguồn từ một đại lý vật tư ở Di Linh',
-    desc: 'AgriSage bắt đầu là đại lý phân bón - thuốc BVTV nhỏ tại Lâm Đồng, ghi sổ nợ mùa vụ bằng tay cho hơn 200 nhà vườn cà phê, sầu riêng quen thuộc.',
+    desc: 'AgriSage bắt đầu là đại lý phân bón - thuốc BVTV nhỏ tại Lâm Đồng, ghi sổ nợ bằng tay cho hơn 200 nhà vườn cà phê, sầu riêng quen thuộc.',
   },
   {
     year: '2021',
@@ -104,7 +104,7 @@ export default function AboutPage() {
             </h1>
             <p className="text-base text-brand-dark/60 mt-4 leading-relaxed max-w-xl">
               AgriSage là nền tảng quản trị vật tư nông nghiệp toàn diện, kết hợp trợ lý AI nhận diện
-              bệnh hại cây trồng qua ảnh chụp. Chúng tôi giúp đại lý quản lý tồn kho, sổ nợ mùa vụ
+              bệnh hại cây trồng qua ảnh chụp. Chúng tôi giúp đại lý quản lý tồn kho, sổ nợ
               minh bạch, đồng thời hỗ trợ nông dân tiếp cận vật tư chính hãng và kỹ thuật canh tác
               hiệu quả — không phải là tốt, mà là tốt nhất.
             </p>

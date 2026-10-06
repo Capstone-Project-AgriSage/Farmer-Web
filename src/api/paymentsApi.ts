@@ -14,6 +14,14 @@ export const paymentsApi = {
     method: 'POST'
   }),
 
+  /**
+   * Test environment only: the API must run with PayOS:Mode=Simulated (it answers 404 otherwise). Pays the simulated link and
+   * the server applies it exactly like a payOS status query, so the response is the real, settled payment.
+   */
+  simulatePaid: (paymentId: string) => api<PaymentResponse>(`/api/payments/${paymentId}/simulate-paid`, {
+    method: 'POST'
+  }),
+
   cancelPayment: (paymentId: string) => api<PaymentResponse>(`/api/me/payments/${paymentId}/cancel`, {
     method: 'POST'
   }),

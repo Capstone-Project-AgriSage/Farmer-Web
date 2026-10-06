@@ -1,71 +1,35 @@
-import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import type { CartItem, Product } from '../types'
-import { initialCart } from '../data/mockCart'
-import { getProductBySlug } from '../data/mockProducts'
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
+import { cartApi, type AddToCartRequest } from '../api/cartApi'
+import { ApiError, describeApiError } from '../api/client'
+import type { Cart, CartItem } from '../api/types'
+import { useAuth } from './AuthContext'
 
 interface CartContextValue {
   items: CartItem[]
   itemCount: number
   subtotal: number
   toastMessage: string | null
-  addToCart: (product: Product, quantity?: number) => void
-  updateQuantity: (slug: string, quantity: number) => void
-  removeFromCart: (slug: string) => void
-  clearCart: () => void
+  isLoading: boolean
+  /** Resolves to true when the server accepted the line. */
+  addToCart: (request: AddToCartRequest, productName: string) => Promise<boolean>
+  updateQuantity: (itemId: string, quantity: number) => Promise<void>
+  removeFromCart: (itemId: string) => Promise<void>
+  clearCart: () => Promise<void>
+  refreshCart: () => Promise<void>
+  showToast: (message: string) => void
 }
 
 const CartContext = createContext<CartContextValue | undefined>(undefined)
 
-const TOAST_DURATION_MS = 2200
-const STORAGE_KEY = 'agrisage.cart.v1'
-
-interface StoredCartEntry {
-  slug: string
-  quantity: number
-}
-
-function loadStoredCart(): CartItem[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return initialCart
-
-    const parsed = JSON.parse(raw) as StoredCartEntry[]
-    if (!Array.isArray(parsed)) return initialCart
-
-    const items = parsed
-      .map((entry) => {
-        const product = getProductBySlug(entry.slug)
-        if (!product || !Number.isFinite(entry.quantity) || entry.quantity < 1) return null
-        return { product, quantity: entry.quantity }
-      })
-      .filter((item): item is CartItem => item !== null)
-
-    return items
-  } catch {
-    return initialCart
-  }
-}
-
-function persistCart(items: CartItem[]) {
-  try {
-    const toStore: StoredCartEntry[] = items.map((item) => ({
-      slug: item.product.slug,
-      quantity: item.quantity,
-    }))
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore))
-  } catch {
-    // localStorage unavailable (private browsing, quota exceeded, etc.) — cart just won't persist.
-  }
-}
+const TOAST_DURATION_MS = 3200
+const EMPTY_CART: Cart = { id: null, items: [], subtotalAmount: 0, priceListId: null }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(loadStoredCart)
+  const { isAuthenticated } = useAuth()
+  const [cart, setCart] = useState<Cart | null>(null)
   const [toastMessage, setToastMessage] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  useEffect(() => {
-    persistCart(items)
-  }, [items])
 
   const showToast = (message: string) => {
     if (toastTimer.current) clearTimeout(toastTimer.current)
@@ -73,40 +37,95 @@ export function CartProvider({ children }: { children: ReactNode }) {
     toastTimer.current = setTimeout(() => setToastMessage(null), TOAST_DURATION_MS)
   }
 
-  const addToCart = (product: Product, quantity = 1) => {
-    setItems((prev) => {
-      const existing = prev.find((item) => item.product.slug === product.slug)
-      if (existing) {
-        return prev.map((item) =>
-          item.product.slug === product.slug
-            ? { ...item, quantity: item.quantity + quantity }
-            : item,
-        )
+  const refreshCart = async () => {
+    if (!localStorage.getItem('agrisage.farmer_token')) {
+      setCart(EMPTY_CART)
+      return
+    }
+    setIsLoading(true)
+    try {
+      const data = await cartApi.getCart()
+      setCart(data)
+    } catch (err: any) {
+      if (err?.status !== 401) {
+        console.error('Failed to load cart', err)
       }
-      return [...prev, { product, quantity }]
-    })
-    showToast(`Đã thêm "${product.name}" vào giỏ hàng`)
+      setCart(EMPTY_CART)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  const updateQuantity = (slug: string, quantity: number) => {
-    setItems((prev) =>
-      prev.map((item) =>
-        item.product.slug === slug ? { ...item, quantity: Math.max(1, quantity) } : item,
-      ),
-    )
+  // The cart lives on the server per farmer: reload it whenever the session changes.
+  useEffect(() => {
+    refreshCart()
+  }, [isAuthenticated])
+
+  const cartErrorMessage = (err: unknown, fallback: string) =>
+    err instanceof ApiError && err.status === 401
+      ? 'Bác vui lòng đăng nhập để mua hàng.'
+      : describeApiError(err, fallback)
+
+  const addToCart = async (request: AddToCartRequest, productName: string) => {
+    if (!isAuthenticated) {
+      showToast('Bác vui lòng đăng nhập để mua hàng.')
+      return false
+    }
+    setIsLoading(true)
+    try {
+      const data = await cartApi.addItem(request)
+      setCart(data)
+      showToast(`Đã thêm "${productName}" vào giỏ hàng`)
+      return true
+    } catch (err) {
+      showToast(cartErrorMessage(err, 'Không thêm được vào giỏ hàng'))
+      return false
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  const removeFromCart = (slug: string) => {
-    setItems((prev) => prev.filter((item) => item.product.slug !== slug))
+  const updateQuantity = async (itemId: string, quantity: number) => {
+    setIsLoading(true)
+    try {
+      const data = await cartApi.updateItemQuantity(itemId, quantity)
+      setCart(data)
+    } catch (err) {
+      showToast(cartErrorMessage(err, 'Không cập nhật được số lượng'))
+      await refreshCart()
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  const clearCart = () => setItems([])
+  const removeFromCart = async (itemId: string) => {
+    setIsLoading(true)
+    try {
+      const data = await cartApi.removeItem(itemId)
+      setCart(data)
+    } catch (err) {
+      showToast(cartErrorMessage(err, 'Không xoá được sản phẩm'))
+      await refreshCart()
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
-  const itemCount = useMemo(() => items.reduce((sum, item) => sum + item.quantity, 0), [items])
-  const subtotal = useMemo(
-    () => items.reduce((sum, item) => sum + item.product.price * item.quantity, 0),
-    [items],
-  )
+  const clearCart = async () => {
+    setIsLoading(true)
+    try {
+      await cartApi.clearCart()
+      setCart(EMPTY_CART)
+    } catch (err) {
+      showToast(cartErrorMessage(err, 'Không làm trống được giỏ hàng'))
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const items = cart?.items || []
+  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
+  const subtotal = cart?.subtotalAmount || 0
 
   return (
     <CartContext.Provider
@@ -115,10 +134,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
         itemCount,
         subtotal,
         toastMessage,
+        isLoading,
         addToCart,
         updateQuantity,
         removeFromCart,
         clearCart,
+        refreshCart,
+        showToast
       }}
     >
       {children}

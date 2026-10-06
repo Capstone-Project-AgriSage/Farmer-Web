@@ -1,15 +1,11 @@
-import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import { useCart } from '../../context/CartContext'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
-import { validateVoucherCode, type VoucherValidationResult } from '../../data/vouchers'
 import CartItemRow from './components/CartItemRow'
-import VoucherBar from './components/VoucherBar'
 import CartPerksGrid from './components/CartPerksGrid'
 import CartSummarySidebar from './components/CartSummarySidebar'
 
-const DEFAULT_VOUCHER_INPUT = 'VUMUA2024'
 const FREE_SHIPPING_THRESHOLD = 2000000
 
 export default function CartPage() {
@@ -17,21 +13,9 @@ export default function CartPage() {
   const navigate = useNavigate()
   useDocumentTitle('Giỏ hàng của tôi')
 
-  const [voucherInput, setVoucherInput] = useState(DEFAULT_VOUCHER_INPUT)
-  const [voucherResult, setVoucherResult] = useState<VoucherValidationResult | null>(() =>
-    validateVoucherCode(DEFAULT_VOUCHER_INPUT),
-  )
-  const [voucherError, setVoucherError] = useState('')
-
-  const handleApplyVoucher = () => {
-    const result = validateVoucherCode(voucherInput)
-    setVoucherResult(result)
-    setVoucherError(result ? '' : 'Mã ưu đãi không hợp lệ hoặc đã hết hạn')
-  }
-
-  const discount = items.length > 0 && voucherResult ? voucherResult.discount : 0
   const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : 30000
-  const total = subtotal - discount + shippingFee
+  const total = subtotal + shippingFee
+  const hasUnavailableItem = items.some(item => !item.isAvailable)
 
   if (items.length === 0) {
     return (
@@ -95,6 +79,16 @@ export default function CartPage() {
           </button>
         </div>
 
+        {hasUnavailableItem && (
+          <div className="mb-6 bg-rose-50 border border-rose-200 text-rose-700 p-4 rounded-xl flex items-start gap-3">
+            <span className="material-symbols-outlined shrink-0">error</span>
+            <div className="text-sm">
+              <p className="font-medium">Một số sản phẩm trong giỏ hàng hiện không có sẵn hoặc ngưng bán.</p>
+              <p className="opacity-80">Vui lòng xóa các sản phẩm này khỏi giỏ hàng để tiếp tục thanh toán.</p>
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-8 space-y-6">
             <div className="bg-white border border-brand-dark/10 overflow-hidden">
@@ -107,24 +101,15 @@ export default function CartPage() {
               <div className="divide-y divide-brand-dark/10">
                 {items.map((item, idx) => (
                   <CartItemRow
-                    key={item.product.slug}
+                    key={item.id || item.storeProductId}
                     item={item}
                     alternate={idx % 2 === 1}
-                    onQuantityChange={(quantity) => updateQuantity(item.product.slug, quantity)}
-                    onRemove={() => removeFromCart(item.product.slug)}
+                    onQuantityChange={(quantity) => updateQuantity(item.id, quantity)}
+                    onRemove={() => removeFromCart(item.id)}
                   />
                 ))}
               </div>
             </div>
-
-            <VoucherBar
-              voucherInput={voucherInput}
-              onVoucherInputChange={setVoucherInput}
-              onApply={handleApplyVoucher}
-              appliedVoucher={voucherResult?.code ?? null}
-              voucherError={voucherError}
-              discount={voucherResult?.discount ?? 0}
-            />
 
             <CartPerksGrid />
           </div>
@@ -132,10 +117,11 @@ export default function CartPage() {
           <CartSummarySidebar
             itemCount={items.length}
             subtotal={subtotal}
-            discount={discount}
-            appliedVoucher={voucherResult?.code ?? null}
+            discount={0}
+            appliedVoucher={null}
             shippingFee={shippingFee}
             total={total}
+            hasUnavailableItem={hasUnavailableItem}
             onCheckout={() => navigate('/checkout')}
           />
         </div>

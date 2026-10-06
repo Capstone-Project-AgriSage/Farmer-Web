@@ -33,6 +33,8 @@ export default function LoginPage() {
     try {
       await login(email, password)
       navigate('/')
+    } catch (err: any) {
+      setError(err?.message || 'Đăng nhập không thành công. Vui lòng kiểm tra lại thông tin.')
     } finally {
       setIsSubmitting(false)
     }

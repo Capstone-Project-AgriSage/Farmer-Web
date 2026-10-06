@@ -5,5 +5,14 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  server: { port: 5174 },
+  server: {
+    port: 5174,
+    proxy: {
+      '/api': {
+        target: 'https://localhost:7068',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 })

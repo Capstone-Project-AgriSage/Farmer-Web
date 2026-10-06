@@ -1,14 +1,43 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { Product } from '../../types'
+import { catalogApi } from '../../api/catalogApi'
+import { packagingLabel, sellablePackagings } from '../../features/products/catalogMapping'
 import { formatVnd } from '../../data/format'
 import { useCart } from '../../context/CartContext'
 import { handleImageError } from '../../utils/image'
 import { stockStatusTone } from '../../utils/stockStatus'
 
 export default function ProductCard({ product }: { product: Product }) {
-  const { addToCart } = useCart()
+  const { addToCart, showToast } = useCart()
+  const [isAdding, setIsAdding] = useState(false)
   const tone = stockStatusTone(product.stockStatus)
   const outOfStock = product.stockStatus === 'Hết hàng'
+
+  // Catalog rows don't say which packaging to sell, so add the same default the detail page
+  // preselects (largest priced pack) and name it in the toast; other packs are picked on the detail page.
+  const handleQuickAdd = async () => {
+    if (!product.storeProductId) return
+    if (product.productPackagingId) {
+      await addToCart({ storeProductId: product.storeProductId, productPackagingId: product.productPackagingId, quantity: 1 }, product.name)
+      return
+    }
+    setIsAdding(true)
+    try {
+      const detail = await catalogApi.getProduct(product.storeProductId)
+      const pack = sellablePackagings(detail)[0]
+      if (!pack) {
+        showToast('Sản phẩm chưa có giá bán, Bác vui lòng liên hệ cửa hàng.')
+        return
+      }
+      const name = sellablePackagings(detail).length > 1 ? `${detail.name} (${packagingLabel(pack)})` : detail.name
+      await addToCart({ storeProductId: detail.id, productPackagingId: pack.id, quantity: 1 }, name)
+    } catch {
+      showToast('Không tải được sản phẩm, vui lòng thử lại.')
+    } finally {
+      setIsAdding(false)
+    }
+  }
 
   return (
     <div className="bg-white border border-brand-dark/10 rounded-[20px] shadow-[0_2px_12px_rgb(0,0,0,0.06)] hover:shadow-[0_12px_24px_rgb(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col justify-between group">
@@ -44,12 +73,16 @@ export default function ProductCard({ product }: { product: Product }) {
             </h3>
           </Link>
           <div className="flex flex-col gap-0.5 mt-1.5 mb-2.5">
-            <p className="text-[13px] text-brand-dark/80">
-              <span className="text-brand-dark/50">Hoạt chất:</span> {product.activeIngredient}
-            </p>
-            <p className="text-[13px] text-brand-dark/80">
-              <span className="text-brand-dark/50">Quy cách:</span> {product.packaging}
-            </p>
+            {product.activeIngredient && (
+              <p className="text-[13px] text-brand-dark/80">
+                <span className="text-brand-dark/50">Hoạt chất:</span> {product.activeIngredient}
+              </p>
+            )}
+            {product.packaging && (
+              <p className="text-[13px] text-brand-dark/80">
+                <span className="text-brand-dark/50">Quy cách:</span> {product.packaging}
+              </p>
+            )}
           </div>
           {product.tag && (
             <div className="mb-1">
@@ -80,15 +113,18 @@ export default function ProductCard({ product }: { product: Product }) {
                   {formatVnd(product.price)}
                 </div>
               </>
+            ) : outOfStock ? (
+              <div className="text-sm text-brand-dark/50">Liên hệ cửa hàng</div>
             ) : (
               <div className="text-base font-medium text-brand-dark">
+                {product.priceFrom && <span className="text-[11px] text-brand-dark/50 font-normal mr-1">Từ</span>}
                 {formatVnd(product.price)}
               </div>
             )}
           </div>
           <button
-            onClick={() => addToCart(product)}
-            disabled={outOfStock}
+            onClick={handleQuickAdd}
+            disabled={outOfStock || isAdding || !product.storeProductId}
             className="w-10 h-10 rounded-full bg-brand-cream/80 hover:bg-brand-green hover:text-white text-brand-dark transition-all duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
             title={outOfStock ? 'Tạm hết hàng' : 'Thêm vào giỏ'}
             aria-label={`Thêm ${product.name} vào giỏ hàng`}

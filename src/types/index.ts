@@ -15,15 +15,21 @@ export type StockStatus = 'Còn hàng' | 'Sắp hết' | 'Hết hàng'
 
 export interface Product {
   slug: string
+  storeProductId?: string
+  productPackagingId?: string
   name: string
   brand: string
   category: string
-  group: ProductGroup
+  isAvailable?: boolean
+  /** Display group; catalog products carry their category name here. */
+  group: ProductGroup | string
   activeIngredient: string
   packaging: string
   image: string
   price: number
   originalPrice?: number
+  /** The price is the cheapest packaging ("từ …"), not a single fixed price. */
+  priceFrom?: boolean
   wholesalePrice?: number
   wholesaleUnit?: string
   stockLabel: string
@@ -89,11 +95,19 @@ export interface Order {
   hallmark?: OrderHallmark
 }
 
+export interface Address {
+  id: string
+  text: string
+  isDefault: boolean
+}
+
 export interface FarmerUser {
   id: string
   name: string
   phone: string
   address: string
+  addresses?: Address[]
+  customerGroup?: string
   commune: string
   district: string
   province: string

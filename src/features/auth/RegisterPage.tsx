@@ -13,6 +13,7 @@ interface FormErrors {
   password?: string
   confirmPassword?: string
   terms?: string
+  general?: string
 }
 
 export default function RegisterPage() {
@@ -55,6 +56,11 @@ export default function RegisterPage() {
       try {
         await register(fullName, contact, password)
         navigate('/')
+      } catch (err: any) {
+        setErrors((prev) => ({
+          ...prev,
+          general: err?.message || 'Đăng ký không thành công. Vui lòng thử lại.',
+        }))
       } finally {
         setIsSubmitting(false)
       }

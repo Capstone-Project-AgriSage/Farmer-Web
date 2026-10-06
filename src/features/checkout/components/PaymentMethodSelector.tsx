@@ -1,7 +1,9 @@
-import { useAuth } from '../../../context/AuthContext'
+import { useEffect, useState } from 'react'
+import { creditApi } from '../../../api/creditApi'
+import type { MyCreditSummary } from '../../../api/types'
 import { formatVnd } from '../../../data/format'
 
-export type PaymentMethod = 'payos' | 'cash' | 'credit'
+export type PaymentMethod = 'payos' | 'credit'
 export type CopyField = 'account' | 'memo'
 
 interface PaymentMethodSelectorProps {
@@ -19,9 +21,36 @@ export default function PaymentMethodSelector({
   copiedField: _copiedField,
   onCopy: _onCopy,
 }: PaymentMethodSelectorProps) {
-  const { farmer } = useAuth()
-  const availableCredit = farmer.creditLimit - farmer.creditUsed
-  const isCreditDisabled = total > availableCredit
+  // The credit line comes from the server (GET /api/me/credit); 404 means the farmer has no credit profile. The server checks
+  // it again when the order is created, so this only decides what the page offers.
+  const [credit, setCredit] = useState<MyCreditSummary | null>(null)
+  const [creditState, setCreditState] = useState<'loading' | 'ready' | 'none'>('loading')
+
+  useEffect(() => {
+    let cancelled = false
+    creditApi.getMyCredit()
+      .then((summary) => {
+        if (cancelled) return
+        setCredit(summary)
+        setCreditState('ready')
+      })
+      .catch(() => {
+        if (!cancelled) setCreditState('none')
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const creditActive = creditState === 'ready' && credit?.status?.toUpperCase() === 'ACTIVE'
+  const availableCredit = creditActive && credit ? credit.availableCredit : 0
+  const notEnough = creditActive && total > availableCredit
+  const isCreditDisabled = !creditActive || notEnough
+
+  // A credit choice that stopped being possible (smaller limit, bigger cart) goes back to payOS.
+  useEffect(() => {
+    if (creditState !== 'loading' && paymentMethod === 'credit' && isCreditDisabled) onPaymentMethodChange('payos')
+  }, [creditState, paymentMethod, isCreditDisabled, onPaymentMethodChange])
 
   return (
     <div className="bg-white border border-brand-dark/10 p-5 sm:p-6">
@@ -72,35 +101,6 @@ export default function PaymentMethodSelector({
           )}
         </div>
         <div
-          onClick={() => onPaymentMethodChange('cash')}
-          className={`p-4 cursor-pointer transition-colors ${
-            paymentMethod === 'cash'
-              ? 'border border-brand-dark'
-              : 'border border-brand-dark/10 hover:bg-brand-cream'
-          }`}
-        >
-          <label className="flex items-start justify-between cursor-pointer">
-            <div className="flex items-start gap-3">
-              <input
-                readOnly
-                checked={paymentMethod === 'cash'}
-                className="text-brand-dark focus:ring-0 mt-0.5 w-4 h-4 accent-brand-dark"
-                name="payment_method"
-                type="radio"
-              />
-              <div>
-                <span className="text-xs text-brand-dark">
-                  Thanh toán tiền mặt (Nhận hàng tại cửa hàng)
-                </span>
-                <p className="text-xs text-brand-dark/60 mt-1">
-                  Đến trực tiếp quầy thu ngân của đại lý Hai Thắng để thanh toán tiền mặt và nhận vật tư.
-                </p>
-              </div>
-            </div>
-            <span className="material-symbols-outlined text-brand-dark/40 text-[22px]">store</span>
-          </label>
-        </div>
-        <div
           onClick={() => !isCreditDisabled && onPaymentMethodChange('credit')}
           className={`p-4 transition-colors ${isCreditDisabled ? 'opacity-60 cursor-not-allowed bg-brand-light/30' : 'cursor-pointer bg-brand-light/60 hover:bg-brand-cream'} ${
             paymentMethod === 'credit'
@@ -120,28 +120,41 @@ export default function PaymentMethodSelector({
               />
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-brand-dark">Gối nợ mùa vụ (Sổ nợ Hai Thắng)</span>
+                  <span className="text-xs text-brand-dark">Ghi vào Sổ nợ (đại lý Hai Thắng)</span>
                   <span className="px-2 py-0.5 rounded-full bg-brand-dark text-white text-[10px] tracking-wide ">
                     0% Lãi suất
                   </span>
                 </div>
                 <p className="text-xs text-brand-dark/60 mt-1">
-                  Được đại lý cấp hạn mức mua trước vật tư trả sau vụ gặt lúa. Hai bên ký nhận và theo dõi minh bạch trên hệ thống.
+                  Mua trước vật tư trong hạn mức đại lý cấp, trả sau. Hai bên theo dõi minh bạch trên hệ thống.
                 </p>
-                <div className="mt-2 text-[11px] text-brand-dark/60 flex items-center gap-2">
-                  <span>
-                    Hạn mức khả dụng: <strong className="text-brand-dark font-helvetica-neue">{formatVnd(availableCredit)}</strong>
-                  </span>
-                  {isCreditDisabled ? (
-                    <span className="text-rose-600 font-medium bg-rose-50 px-1.5 py-0.5 border border-rose-200">Không đủ hạn mức</span>
-                  ) : (
-                    <span className="text-brand-green">• Đủ điều kiện thanh toán</span>
-                  )}
-                </div>
-                {isCreditDisabled && (
-                  <p className="text-[11px] text-rose-600 mt-1.5">
-                    * Đơn hàng ({formatVnd(total)}) vượt quá hạn mức công nợ còn lại của bác. Vui lòng thanh toán một phần nợ cũ hoặc chọn hình thức thanh toán khác.
+                {creditState === 'loading' && (
+                  <p className="mt-2 text-[11px] text-brand-dark/60">Đang tải hạn mức...</p>
+                )}
+                {creditState !== 'loading' && !creditActive && (
+                  <p className="mt-2 text-[11px] text-rose-600">
+                    * Bác chưa được cấp hạn mức mua chịu. Liên hệ đại lý Hai Thắng để được cấp.
                   </p>
+                )}
+                {creditActive && credit && (
+                  <>
+                    <div className="mt-2 text-[11px] text-brand-dark/60 flex flex-wrap items-center gap-x-3 gap-y-1">
+                      <span>
+                        Hạn mức khả dụng: <strong className="text-brand-dark font-helvetica-neue">{formatVnd(availableCredit)}</strong>
+                      </span>
+                      {credit.paymentTermDays ? <span>Hạn thanh toán: {credit.paymentTermDays} ngày</span> : null}
+                      {notEnough ? (
+                        <span className="text-rose-600 font-medium bg-rose-50 px-1.5 py-0.5 border border-rose-200">Không đủ hạn mức</span>
+                      ) : (
+                        <span className="text-brand-green">• Đủ điều kiện thanh toán</span>
+                      )}
+                    </div>
+                    {notEnough && (
+                      <p className="text-[11px] text-rose-600 mt-1.5">
+                        * Đơn hàng ({formatVnd(total)}) vượt quá hạn mức công nợ còn lại của bác. Vui lòng thanh toán một phần nợ cũ hoặc chọn hình thức thanh toán khác.
+                      </p>
+                    )}
+                  </>
                 )}
               </div>
             </div>

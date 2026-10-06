@@ -12,6 +12,8 @@ const ProductsPage = lazy(() => import('./features/products/ProductsPage'))
 const ProductDetailPage = lazy(() => import('./features/products/ProductDetailPage'))
 const CartPage = lazy(() => import('./features/cart/CartPage'))
 const CheckoutPage = lazy(() => import('./features/checkout/CheckoutPage'))
+const PayosReturnPage = lazy(() => import('./features/checkout/PayosReturnPage'))
+const PayosCancelPage = lazy(() => import('./features/checkout/PayosCancelPage'))
 const OrderSuccessPage = lazy(() => import('./features/order/OrderSuccessPage'))
 const AboutPage = lazy(() => import('./features/about/AboutPage'))
 const KnowledgePage = lazy(() => import('./features/knowledge/KnowledgePage'))
@@ -46,6 +48,8 @@ const publicRoutes = [
 // Requires an authenticated farmer session — see src/context/AuthContext.tsx.
 const protectedRoutes = [
   { path: 'checkout', element: <CheckoutPage /> },
+  { path: 'payments/payos/return', element: <PayosReturnPage /> },
+  { path: 'payments/payos/cancel', element: <PayosCancelPage /> },
   { path: 'contact/requests', element: <MyRequestsPage /> },
   { path: 'account', element: <AccountPage /> },
   { path: 'debt', element: <DebtPage /> },

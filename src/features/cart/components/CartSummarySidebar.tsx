@@ -8,6 +8,7 @@ interface CartSummarySidebarProps {
   appliedVoucher: string | null
   shippingFee: number
   total: number
+  hasUnavailableItem?: boolean
   onCheckout: () => void
 }
 
@@ -15,34 +16,24 @@ export default function CartSummarySidebar({
   itemCount,
   subtotal,
   discount,
-  appliedVoucher,
+  appliedVoucher: _appliedVoucher,
   shippingFee,
   total,
+  hasUnavailableItem,
   onCheckout,
 }: CartSummarySidebarProps) {
   return (
     <div className="lg:col-span-4 space-y-5">
       <div className="bg-white border border-brand-dark/10 p-6 space-y-5">
-        <h2 className="text-base font-helvetica-neue tracking-tight text-brand-dark pb-3 border-b border-brand-dark/10 flex items-center justify-between">
+        <h2 className="text-base font-helvetica-neue tracking-tight text-brand-dark pb-3 border-b border-brand-dark/10">
           <span>Tóm tắt đơn hàng</span>
-          <span className="text-xs text-brand-dark/45 tracking-wide">Mã đơn tạm: #DH-2024-8842</span>
         </h2>
         <div className="space-y-3 text-xs">
           <div className="flex items-center justify-between text-brand-dark/60">
             <span>Tạm tính ({itemCount} sản phẩm):</span>
             <span className="text-brand-dark text-sm tracking-tight">{formatVnd(subtotal)}</span>
           </div>
-          <div className="flex items-center justify-between text-brand-dark/60">
-            <span className="flex items-center gap-1">
-              <span>Giảm giá Voucher mùa vụ:</span>
-              {appliedVoucher && (
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-brand-dark text-white tracking-wide">
-                  {appliedVoucher}
-                </span>
-              )}
-            </span>
-            <span className="text-brand-green">-{formatVnd(discount)}</span>
-          </div>
+
           <div className="flex items-center justify-between text-brand-dark/60">
             <span>Phí vận chuyển xe tải tận vườn:</span>
             <span className="text-brand-green  tracking-wide">
@@ -57,7 +48,12 @@ export default function CartSummarySidebar({
         <OrderTotalSummary total={total} discount={discount} />
         <button
           onClick={onCheckout}
-          className="w-full py-3.5 px-4 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-sm transition-colors flex items-center justify-center gap-2 group"
+          disabled={hasUnavailableItem}
+          className={`w-full py-3.5 px-4 rounded-full tracking-wide text-sm transition-colors flex items-center justify-center gap-2 group ${
+            hasUnavailableItem
+              ? 'bg-brand-dark/20 text-white cursor-not-allowed'
+              : 'bg-brand-dark text-white hover:bg-brand-green'
+          }`}
         >
           <span>Tiến hành đặt hàng &amp; thanh toán</span>
           <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">

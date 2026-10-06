@@ -1,59 +1,44 @@
 import { Link } from 'react-router-dom'
-import type { Product } from '../../../types'
+import { formatVnd } from '../../../data/format'
+import type { CatalogProduct } from '../../../api/types'
+import { packagingLabel } from '../catalogMapping'
 
 const tabs = [
-  { id: 'specs', label: 'Thông số kỹ thuật & Hoạt chất', icon: 'science' },
-  { id: 'dosage', label: 'Phác đồ điều trị & Liều lượng phun xịt', icon: 'spa' },
-  { id: 'reviews', label: 'Đánh giá sản phẩm', icon: 'star' },
-  { id: 'ai', label: 'Bác sĩ cây trồng AI - Chẩn đoán tích hợp', icon: 'psychology' },
+  { id: 'specs', label: 'Thông tin sản phẩm', icon: 'science' },
+  { id: 'usage', label: 'Hướng dẫn sử dụng', icon: 'spa' },
+  { id: 'ai', label: 'Bác sĩ cây trồng AI', icon: 'psychology' },
 ] as const
 
 export type ProductTabId = (typeof tabs)[number]['id']
 
-const dosageGuides = [
-  {
-    crop: 'Lúa Đẻ Nhánh (20 - 35 NSS)',
-    tag: 'Đặc trị Đạo ôn & Sâu cuốn lá',
-    disease: 'Đạo ôn lá (cháy lá), sâu cuốn lá nhỏ, sâu đục thân giai đoạn đẻ nhánh rộ.',
-    guide: [
-      'Phun lá: Pha 25 - 30g thuốc trừ bệnh cho bình 25 lít nước, phun ướt đều tán lúa.',
-      'Thời điểm: Phun khi vết bệnh chớm xuất hiện chấm kim hoặc mật độ bướm rộ 2-3 ngày.',
-    ],
-  },
-  {
-    crop: 'Lúa Làm Đòng - Trổ Lẹt Xẹt (45 - 60 NSS)',
-    tag: 'Bảo vệ Đòng & Cổ bông',
-    disease: 'Đạo ôn cổ bông, cháy bìa lá vi khuẩn, khô vằn ăn lên bẹ lá đòng.',
-    guide: [
-      'Phun đón đòng: Phun kết hợp phòng trừ đạo ôn cổ bông và đốm sọc vi khuẩn.',
-      'Phun lại lần 2: Khi lúa trổ đều (sau trổ lẹt xẹt 5 - 7 ngày) để bảo vệ hạt sáng mẩy.',
-    ],
-  },
-  {
-    crop: 'Lúa Cong Trái Me - Chín Sáp (70 - 85 NSS)',
-    tag: 'Chống Lem Lép Hạt & Đốm Nâu',
-    disease: 'Đốm nâu, lem lép hạt do nấm và vi khuẩn, vàng lá chín sớm.',
-    guide: [
-      'Liều dùng: Pha 40ml - 50ml chế phẩm đặc trị cho bình 25 lít nước sạch.',
-      'Cách ly: Đảm bảo thời gian cách ly (PHI) tối thiểu 14 ngày trước ngày gặt thu hoạch.',
-    ],
-  },
-]
-
-
 interface ProductTabsProps {
-  product: Product
+  product: CatalogProduct
   activeTab: ProductTabId
   onActiveTabChange: (tab: ProductTabId) => void
 }
 
+function InfoRow({ label, value, striped }: { label: string; value: string; striped?: boolean }) {
+  return (
+    <tr className={striped ? 'bg-brand-cream' : undefined}>
+      <td className="py-2.5 px-4 text-brand-dark w-1/3">{label}</td>
+      <td className="py-2.5 px-4">{value}</td>
+    </tr>
+  )
+}
+
 export default function ProductTabs({ product, activeTab, onActiveTabChange }: ProductTabsProps) {
+  const ingredients = product.ingredients.filter((i) => i.name)
+  const packagings = [...product.packagings].sort((a, b) => a.conversionToBase - b.conversionToBase)
+  const baseUnit = product.packagings.find((p) => p.isBaseUnit)
+
   return (
     <div className="mt-12 bg-white border border-brand-dark/10 overflow-hidden">
-      <div className="flex border-b border-brand-dark/10 bg-brand-light overflow-x-auto text-xs sm:text-sm">
+      <div role="tablist" className="flex border-b border-brand-dark/10 bg-brand-light overflow-x-auto text-xs sm:text-sm">
         {tabs.map((tab) => (
           <button
             key={tab.id}
+            role="tab"
+            aria-selected={activeTab === tab.id}
             onClick={() => onActiveTabChange(tab.id)}
             className={`py-3.5 px-6 border-b-2 flex items-center gap-2 whitespace-nowrap transition-colors tracking-wide ${
               activeTab === tab.id
@@ -68,93 +53,65 @@ export default function ProductTabs({ product, activeTab, onActiveTabChange }: P
       </div>
       <div className="p-6 sm:p-8 space-y-8">
         {activeTab === 'specs' && (
-          <div>
-            <h3 className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-4 flex items-center gap-2">
-              <span className="material-symbols-outlined text-brand-dark/60 text-[18px]">biotech</span>
-              <span>Bảng thành phần hóa học &amp; Đặc tính sinh học</span>
-            </h3>
+          <div className="space-y-6">
+            {product.description && (
+              <p className="text-sm text-brand-dark/75 leading-relaxed max-w-3xl">{product.description}</p>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
               <div className="border border-brand-dark/10 overflow-hidden">
                 <table className="w-full">
                   <tbody className="divide-y divide-brand-dark/10 text-brand-dark/60">
-                    <tr className="bg-brand-cream">
-                      <td className="py-2.5 px-4 text-brand-dark w-1/3">Hoạt chất chính</td>
-                      <td className="py-2.5 px-4 text-brand-dark">{product.activeIngredient}</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2.5 px-4 text-brand-dark">Cơ chế tác động</td>
-                      <td className="py-2.5 px-4">Nội hấp, lưu dẫn 2 chiều (từ rễ lên ngọn và từ lá xuống cành)</td>
-                    </tr>
-                    <tr className="bg-brand-cream">
-                      <td className="py-2.5 px-4 text-brand-dark">Dạng thuốc phẩm</td>
-                      <td className="py-2.5 px-4">WG (Cốm phân tán trong nước - ít sinh bụi khi pha)</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2.5 px-4 text-brand-dark">Độ độc GHS</td>
-                      <td className="py-2.5 px-4">
-                        <span className="px-2.5 py-0.5 rounded-full bg-brand-light text-brand-dark/70 border border-brand-dark/10 tracking-wide">
-                          Nhóm 5 - Rất ít độc với ong và gia súc
-                        </span>
-                      </td>
-                    </tr>
+                    <InfoRow striped label="Danh mục" value={product.categoryName || '—'} />
+                    <InfoRow label="Thương hiệu" value={product.brandName || '—'} />
+                    <InfoRow striped label="Mã SKU" value={product.sku || '—'} />
+                    <InfoRow
+                      label="Thành phần"
+                      value={
+                        ingredients.length > 0
+                          ? ingredients.map((i) => [i.name, i.concentration].filter(Boolean).join(' ')).join(', ')
+                          : '—'
+                      }
+                    />
                   </tbody>
                 </table>
               </div>
               <div className="border border-brand-dark/10 overflow-hidden">
                 <table className="w-full">
+                  <thead className="bg-brand-cream text-brand-dark">
+                    <tr>
+                      <th className="py-2.5 px-4 text-left font-normal">Quy cách</th>
+                      <th className="py-2.5 px-4 text-left font-normal">Quy đổi</th>
+                      <th className="py-2.5 px-4 text-right font-normal">Giá</th>
+                    </tr>
+                  </thead>
                   <tbody className="divide-y divide-brand-dark/10 text-brand-dark/60">
-                    <tr className="bg-brand-cream">
-                      <td className="py-2.5 px-4 text-brand-dark w-1/3">Thời gian cách ly (PHI)</td>
-                      <td className="py-2.5 px-4 text-brand-dark">7 ngày trước khi thu hoạch</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2.5 px-4 text-brand-dark">Nhà sản xuất</td>
-                      <td className="py-2.5 px-4">{product.brand}</td>
-                    </tr>
-                    <tr className="bg-brand-cream">
-                      <td className="py-2.5 px-4 text-brand-dark">Đóng gói &amp; Phân phối</td>
-                      <td className="py-2.5 px-4">Kho Đại lý Hai Thắng (Thị trấn Thới Lai, TP. Cần Thơ)</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2.5 px-4 text-brand-dark">Hạn sử dụng</td>
-                      <td className="py-2.5 px-4 text-brand-green">
-                        24 tháng kể từ ngày sản xuất (Lô mới T05/2024)
-                      </td>
-                    </tr>
+                    {packagings.map((p) => (
+                      <tr key={p.id}>
+                        <td className="py-2.5 px-4 text-brand-dark">{packagingLabel(p)}</td>
+                        <td className="py-2.5 px-4">
+                          {p.isBaseUnit || !baseUnit ? 'Đơn vị cơ sở' : `${p.conversionToBase} ${baseUnit.symbol || packagingLabel(baseUnit)}`}
+                        </td>
+                        <td className="py-2.5 px-4 text-right text-brand-dark">
+                          {p.price != null ? formatVnd(p.price) : 'Chưa có giá'}
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
         )}
-        {activeTab === 'dosage' && (
-          <div>
-            <h3 className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-4 flex items-center gap-2">
-              <span className="material-symbols-outlined text-brand-dark/60 text-[18px]">water_drop</span>
-              <span>Phác đồ điều trị thực tế theo nhóm cây trồng Tây Nguyên &amp; ĐBSCL</span>
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-              {dosageGuides.map((item) => (
-                <div key={item.crop} className="p-4 border border-brand-dark/10 bg-brand-light space-y-2">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-helvetica-neue tracking-tight text-brand-dark text-sm">
-                      {item.crop}
-                    </span>
-                    <span className="px-2 py-0.5 rounded-full bg-brand-dark text-white text-[10px] tracking-wide shrink-0">
-                      {item.tag}
-                    </span>
-                  </div>
-                  <p className="text-brand-dark/60 leading-relaxed">
-                    <span className="text-brand-dark">Bệnh hại:</span> {item.disease}
-                  </p>
-                  <div className="p-2.5 bg-white border border-brand-dark/10 space-y-1 text-brand-dark/70">
-                    {item.guide.map((line) => (
-                      <p key={line}>• {line}</p>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
+        {activeTab === 'usage' && (
+          <div className="max-w-3xl">
+            {product.usageInstructions ? (
+              <p className="text-sm text-brand-dark/75 leading-relaxed whitespace-pre-line">{product.usageInstructions}</p>
+            ) : (
+              <p className="text-sm text-brand-dark/55">
+                Cửa hàng chưa cập nhật hướng dẫn sử dụng. Bác vui lòng đọc kỹ nhãn trên bao bì hoặc hỏi kỹ sư nông học
+                trước khi dùng.
+              </p>
+            )}
           </div>
         )}
         {activeTab === 'ai' && (
@@ -165,82 +122,20 @@ export default function ProductTabs({ product, activeTab, onActiveTabChange }: P
               </div>
               <div>
                 <h4 className="text-sm sm:text-base font-helvetica-neue tracking-tight text-brand-dark">
-                  Vườn của bạn đang có biểu hiện lạ nhưng chưa dám chắc chắn?
+                  Ruộng của bác đang có biểu hiện lạ nhưng chưa dám chắc chắn?
                 </h4>
                 <p className="text-xs text-brand-dark/60 mt-0.5">
-                  Chụp ảnh lá hoặc vỏ thân rỉ mủ gửi cho Bác sĩ AI chẩn đoán ngay sau 3 giây,
-                  nhận hướng dẫn pha kèm bám dính hoặc phân vi lượng thích hợp.
+                  Chụp ảnh lá gửi Bác sĩ AI để được chẩn đoán và gợi ý vật tư phù hợp.
                 </p>
               </div>
             </div>
             <Link
               to="/ai-doctor"
-              className="px-5 py-2.5 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-xs transition-colors flex items-center gap-2 whitespace-nowrap"
+              className="px-5 py-2.5 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide text-xs transition-colors flex items-center gap-2 whitespace-nowrap"
             >
               <span className="material-symbols-outlined text-[18px]">photo_camera</span>
               <span>Quét lá chẩn đoán ngay</span>
             </Link>
-          </div>
-        )}
-        {activeTab === 'reviews' && (
-          <div className="space-y-6">
-            <h3 className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-4 flex items-center gap-2 border-b border-brand-dark/10 pb-3">
-              <span className="material-symbols-outlined text-brand-dark/60 text-[18px]">star</span>
-              <span>Đánh giá từ nhà nông</span>
-            </h3>
-            
-            {/* Reviews list mock */}
-            <div className="space-y-4">
-              {[
-                { name: 'Nguyễn Văn Minh', date: '12/09/2024', rating: 5, content: 'Thuốc xịt rất êm, lúa sau 3 ngày thấy vết bệnh khô lại. Nhân viên giao hàng tận ruộng nhanh nhẹn.' },
-                { name: 'Trần Hữu Khang', date: '05/10/2024', rating: 4, content: 'Giá cả hợp lý, chất lượng ổn định. Mong đại lý nhập thêm nhiều dòng vi lượng.' }
-              ].map((review, idx) => (
-                <div key={idx} className="p-4 border border-brand-dark/10 bg-white">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2 text-xs">
-                      <span className="font-medium text-brand-dark">{review.name}</span>
-                      <span className="text-brand-dark/40">•</span>
-                      <span className="text-brand-dark/50 font-helvetica-neue">{review.date}</span>
-                    </div>
-                    <div className="flex text-amber-500">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <span key={i} className="material-symbols-outlined text-[14px]">
-                          {i < review.rating ? 'star' : 'star_border'}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <p className="text-sm text-brand-dark/70 leading-relaxed">{review.content}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Write review form */}
-            <div className="mt-8 pt-6 border-t border-brand-dark/10">
-              <h4 className="text-sm font-medium text-brand-dark mb-4">Viết đánh giá của bác</h4>
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-brand-dark/70  tracking-wide">Chất lượng:</span>
-                  <div className="flex text-brand-dark/20 cursor-pointer">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <span key={i} className="material-symbols-outlined text-[24px] hover:text-amber-500 transition-colors">
-                        star
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <textarea
-                  className="w-full h-24 p-3 text-sm bg-brand-light border border-brand-dark/10 focus:border-brand-dark focus:outline-none resize-none"
-                  placeholder="Chia sẻ kinh nghiệm sử dụng sản phẩm này của bác..."
-                />
-                <button
-                  type="button"
-                  className="px-6 py-2.5 bg-brand-dark text-white hover:bg-brand-green text-xs  tracking-wide rounded-full transition-colors"
-                >
-                  Gửi đánh giá
-                </button>
-              </div>
-            </div>
           </div>
         )}
       </div>

@@ -13,7 +13,7 @@ const myRequests = [
   {
     id: 'YC-2988',
     date: '02/10/2024 · 14:30',
-    requestType: 'Sổ nợ mùa vụ',
+    requestType: 'Sổ nợ',
     status: 'Đã xử lý',
     statusClass: 'bg-brand-light border border-brand-dark/10 text-brand-dark',
     message: 'Nhờ kiểm tra lại số nợ hiện tại của đơn hàng Virtako 40WG tuần trước.',

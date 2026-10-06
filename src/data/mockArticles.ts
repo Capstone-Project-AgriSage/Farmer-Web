@@ -45,7 +45,7 @@ export const articles: Article[] = [
     badge: { label: 'Dành cho đại lý', icon: 'store', className: 'bg-blue-50 text-status-info' },
     title: 'Giải pháp quản lý sổ nợ gối vụ & đối soát VietQR minh bạch hai chiều',
     summary:
-      'Quy trình quản lý tín dụng mùa vụ AgriSage giúp đại lý Hai Thắng theo dõi hạn mức từng nông hộ, xác thực hai chiều biên bản giao nhận và gạch nợ minh bạch.',
+      'Quy trình quản lý tín dụng AgriSage giúp đại lý Hai Thắng theo dõi hạn mức từng nông hộ, xác thực hai chiều biên bản giao nhận và gạch nợ minh bạch.',
     date: '08/10/2024 · 4 phút đọc',
     content: [
       'Tập quán mua bán vật tư nông nghiệp gối vụ tại ĐBSCL là cầu nối tín dụng sống còn giữa đại lý và bà con nông dân. Tuy nhiên, việc ghi chép sổ tay thủ công thường tiềm ẩn nguy cơ sai lệch số dư, nhầm lẫn đơn giá và tranh chấp khi đối soát cuối vụ lúa.',

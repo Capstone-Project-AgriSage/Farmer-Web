@@ -2,28 +2,16 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 import type { FarmerUser, StoreInfo } from '../types'
 import { authApi } from '../api/authApi'
 import { profileApi } from '../api/profileApi'
+import { ApiError } from '../api/client'
 
 const STORAGE_KEY = 'agrisage.farmer_auth.v1'
 const TOKEN_KEY = 'agrisage.farmer_token'
 
-const DEFAULT_FARMER: FarmerUser = {
-  id: 'FARMER-8802',
-  name: 'Nguyễn Văn Hùng',
-  phone: '0918 234 567',
-  address: 'Ấp Thới Phước 1, Xã Tân Thạnh, Huyện Thới Lai, TP. Cần Thơ',
-  addresses: [
-    { id: 'addr-1', text: 'Ấp Thới Phước 1, Xã Tân Thạnh, Huyện Thới Lai, TP. Cần Thơ', isDefault: true },
-    { id: 'addr-2', text: 'Ấp Thới Phước 2, Xã Tân Thạnh, Huyện Thới Lai, TP. Cần Thơ', isDefault: false },
-  ],
-  customerGroup: 'Khách hàng thân thiết (Hạng Vàng)',
-  commune: 'Xã Tân Thạnh',
-  district: 'Huyện Thới Lai',
-  province: 'TP. Cần Thơ',
-  landArea: '3.5 ha canh tác lúa giống ST25',
-  creditLimit: 50000000,
-  creditUsed: 13545000,
-  initials: 'NH',
-}
+// Filled from the login response and GET /api/me/profile; credit and addresses have their own APIs.
+const EMPTY_FARMER: FarmerUser = { id: '', name: '', phone: '', initials: '' }
+
+const initialsOf = (fullName: string | null | undefined) =>
+  fullName ? fullName.trim().split(/\s+/).map((n) => n[0]).slice(-2).join('').toUpperCase() : ''
 
 export const ACTIVE_STORE: StoreInfo = {
   id: 'STORE-HT-01',
@@ -53,25 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const token = localStorage.getItem(TOKEN_KEY)
     return Boolean(token && token.includes('.'))
   })
-  const [farmer, setFarmer] = useState<FarmerUser>(DEFAULT_FARMER)
-
-  useEffect(() => {
-    // If user previously had mock auth flag '1' but no JWT token, attempt auto-login with default farmer
-    const existingToken = localStorage.getItem(TOKEN_KEY)
-    const hasMockFlag = localStorage.getItem(STORAGE_KEY) === '1'
-
-    if ((!existingToken || !existingToken.includes('.')) && hasMockFlag) {
-      authApi.login({ identifier: '0918234567', password: 'Password@123' })
-        .then((res) => {
-          localStorage.setItem(TOKEN_KEY, res.accessToken)
-          setIsAuthenticated(true)
-        })
-        .catch(() => {
-          localStorage.setItem(STORAGE_KEY, '0')
-          setIsAuthenticated(false)
-        })
-    }
-  }, [])
+  const [farmer, setFarmer] = useState<FarmerUser>(EMPTY_FARMER)
 
   useEffect(() => {
     const handleUnauthorized = () => {
@@ -92,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             id: prof.userId,
             name: prof.fullName,
             phone: prof.phoneNumber || prev.phone,
-            initials: prof.fullName ? prof.fullName.split(' ').map((n) => n[0]).slice(-2).join('') : prev.initials,
+            initials: initialsOf(prof.fullName) || prev.initials,
           }))
         })
         .catch(() => {
@@ -101,11 +71,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } else {
       localStorage.setItem(STORAGE_KEY, '0')
       localStorage.removeItem(TOKEN_KEY)
+      setFarmer(EMPTY_FARMER)
     }
   }, [isAuthenticated])
 
   const login = async (contact: string, password: string) => {
     const res = await authApi.login({ identifier: contact, password })
+    // Store staff sign in to the management web; this app only serves farmers.
+    if (res.user && res.user.role !== 'FARMER') {
+      throw new ApiError(403, 'Forbidden', 'Tài khoản nhân viên không dùng được trang nông dân. Vui lòng đăng nhập trang quản lý.')
+    }
     localStorage.setItem(TOKEN_KEY, res.accessToken)
     localStorage.setItem(STORAGE_KEY, '1')
     setIsAuthenticated(true)
@@ -115,7 +90,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         id: res.user.id,
         name: res.user.fullName || prev.name,
         phone: res.user.phoneNumber || prev.phone,
-        initials: res.user.fullName ? res.user.fullName.split(' ').map((n) => n[0]).slice(-2).join('') : prev.initials,
+        initials: initialsOf(res.user.fullName) || prev.initials,
       }))
     }
   }
@@ -137,7 +112,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         id: res.user.id,
         name: res.user.fullName || fullName,
         phone: res.user.phoneNumber || (!isEmail ? contact : prev.phone),
-        initials: fullName ? fullName.split(' ').map((n) => n[0]).slice(-2).join('') : prev.initials,
+        initials: initialsOf(fullName) || prev.initials,
       }))
     }
   }

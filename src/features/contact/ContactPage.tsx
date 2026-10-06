@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
-const REQUEST_TYPES = ['Kỹ thuật canh tác', 'Đặt vật tư', 'Sổ nợ mùa vụ', 'Khác']
+const REQUEST_TYPES = ['Kỹ thuật canh tác', 'Đặt vật tư', 'Sổ nợ', 'Khác']
 
 export default function ContactPage() {
   useDocumentTitle('Liên hệ')
@@ -43,7 +43,7 @@ export default function ContactPage() {
             </h1>
             <p className="text-base text-brand-dark/60 mt-3 leading-relaxed">
               Kỹ sư nông học của chúng tôi luôn sẵn sàng hỗ trợ bà con về kỹ thuật canh tác, đặt vật
-              tư và sổ nợ mùa vụ.
+              tư và sổ nợ.
             </p>
           </div>
           <Link

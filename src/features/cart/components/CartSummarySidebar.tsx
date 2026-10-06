@@ -63,7 +63,7 @@ export default function CartSummarySidebar({
         <div className="p-3.5 bg-brand-light border border-brand-dark/10 space-y-2 text-xs">
           <div className="flex items-center gap-2 text-brand-dark">
             <span className="material-symbols-outlined text-brand-dark/60 text-[18px]">credit_score</span>
-            <span>Hỗ trợ Sổ nợ mùa vụ AgriCredit</span>
+            <span>Hỗ trợ Sổ nợ AgriCredit</span>
           </div>
           <p className="text-[11px] text-brand-dark/55 leading-relaxed pl-6.5">
             Hạn mức thanh toán sau vụ thu hoạch 0% lãi suất dành cho đại lý và nông hộ liên kết.

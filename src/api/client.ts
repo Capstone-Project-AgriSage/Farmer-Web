@@ -35,6 +35,11 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
     },
   })
   
+  // On the sign-in call a 401 means a wrong phone/email or password, not an expired session.
+  if (res.status === 401 && path.startsWith('/api/auth/login')) {
+    throw new ApiError(401, 'Unauthorized', 'Sai số điện thoại/email hoặc mật khẩu, hoặc tài khoản đã bị khoá.')
+  }
+
   if (res.status === 401) {
     localStorage.removeItem('agrisage.farmer_token')
     localStorage.removeItem('agrisage_token')

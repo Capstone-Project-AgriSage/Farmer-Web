@@ -12,9 +12,8 @@ import AddressForm, {
   validateAddressForm,
   type AddressFormErrors,
   type AddressFormValues,
-  type DeliveryMode,
 } from './components/AddressForm'
-import ShippingMethodSelector, { type ShippingMethod } from './components/ShippingMethodSelector'
+import ShippingMethodSelector from './components/ShippingMethodSelector'
 import PaymentMethodSelector, { type CopyField, type PaymentMethod } from './components/PaymentMethodSelector'
 import OrderSummarySidebar from './components/OrderSummarySidebar'
 
@@ -24,17 +23,16 @@ export default function CheckoutPage() {
   const navigate = useNavigate()
   useDocumentTitle('Thanh toán đơn hàng')
 
-  const [deliveryMode, setDeliveryMode] = useState<DeliveryMode>('garden')
   const [address, setAddress] = useState<AddressFormValues>(addressFormDefaults)
   const [addressErrors, setAddressErrors] = useState<AddressFormErrors>({})
-  const [shippingMethod, setShippingMethod] = useState<ShippingMethod>('truck')
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('payos')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { copiedField, copy } = useClipboard<CopyField>()
   const addressFormRef = useRef<HTMLDivElement>(null)
 
   const discount = 0
-  const shippingFee = shippingMethod === 'express' ? 45000 : 0
+  // The API has no shipping fee: the order total is the sum of its lines, and the store delivers online orders for free.
+  const shippingFee = 0
   const total = subtotal + shippingFee
 
   const handleAddressChange = (field: keyof AddressFormValues, value: string) => {
@@ -53,23 +51,22 @@ export default function CheckoutPage() {
     try {
       const payload: any = {
         source: 'FARMER_WEB',
-        // "Gối nợ mùa vụ" is a credit order; payOS and cash both settle the full amount before the store confirms.
+        // Paying into the debt book is a credit order; payOS settles the full amount before the store confirms.
         settlementType: paymentMethod === 'credit' ? 'CREDIT' : 'FULL_PAYMENT',
-        fulfillmentType: deliveryMode === 'garden' ? 'DELIVERY' : 'PICKUP',
+        // Online orders are always delivered; someone who wants to collect goes to the counter and is served there.
+        fulfillmentType: 'DELIVERY',
       }
-      
-      if (deliveryMode === 'garden') {
-        if (address.useAddressBook && address.selectedAddressId) {
-          payload.addressId = address.selectedAddressId
-        } else {
-          payload.deliveryAddress = {
-            recipientName: address.recipientName,
-            recipientPhone: address.phone,
-            addressLine: address.addressDetail,
-            province: address.province,
-            ward: address.ward,
-            district: address.district,
-          }
+
+      if (address.useAddressBook && address.selectedAddressId) {
+        payload.addressId = address.selectedAddressId
+      } else {
+        payload.deliveryAddress = {
+          recipientName: address.recipientName,
+          recipientPhone: address.phone,
+          addressLine: address.addressDetail,
+          province: address.province,
+          ward: address.ward,
+          district: address.district,
         }
       }
       
@@ -90,7 +87,7 @@ export default function CheckoutPage() {
     } catch (err) {
       console.error(err)
       if (err instanceof ApiError && /credit refused/i.test(err.detail ?? '')) {
-        alert('Bác chưa đủ điều kiện mua chịu (hết hạn mức hoặc chưa có hồ sơ tín dụng). Vui lòng chọn thanh toán payOS hoặc tiền mặt.')
+        alert('Bác chưa đủ điều kiện mua chịu (hết hạn mức hoặc chưa có hồ sơ tín dụng). Vui lòng chọn thanh toán payOS.')
       } else if (err instanceof ApiError && /empty/i.test(err.detail ?? '')) {
         alert('Giỏ hàng trống. Vui lòng thêm sản phẩm vào giỏ trước khi thanh toán.')
       } else {
@@ -110,14 +107,12 @@ export default function CheckoutPage() {
           <div className="lg:col-span-7 space-y-6">
             <div ref={addressFormRef}>
               <AddressForm
-                deliveryMode={deliveryMode}
-                onDeliveryModeChange={setDeliveryMode}
                 values={address}
                 onChange={handleAddressChange}
                 errors={addressErrors}
               />
             </div>
-            <ShippingMethodSelector shippingMethod={shippingMethod} onShippingMethodChange={setShippingMethod} />
+            <ShippingMethodSelector />
             <PaymentMethodSelector
               paymentMethod={paymentMethod}
               onPaymentMethodChange={setPaymentMethod}

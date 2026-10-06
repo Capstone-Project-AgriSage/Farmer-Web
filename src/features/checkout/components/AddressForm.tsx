@@ -3,7 +3,6 @@ import FieldError from '../../../components/ui/FieldError'
 import { isValidPhone } from '../../../utils/validation'
 import { profileApi } from '../../../api/profileApi'
 import type { AddressResponse } from '../../../api/types'
-export type DeliveryMode = 'garden' | 'pickup'
 
 export interface AddressFormValues {
   recipientName: string
@@ -53,8 +52,6 @@ export function validateAddressForm(values: AddressFormValues): AddressFormError
 }
 
 interface AddressFormProps {
-  deliveryMode: DeliveryMode
-  onDeliveryModeChange: (mode: DeliveryMode) => void
   values: AddressFormValues
   onChange: (field: keyof AddressFormValues, value: string) => void
   errors: AddressFormErrors
@@ -68,8 +65,6 @@ const inputBase =
   'w-full px-3.5 py-2 text-xs bg-brand-cream border rounded-lg focus:outline-none text-brand-dark'
 
 export default function AddressForm({
-  deliveryMode,
-  onDeliveryModeChange,
   values,
   onChange,
   errors,
@@ -124,83 +119,33 @@ export default function AddressForm({
           </h2>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
-        <label
-          onClick={() => onDeliveryModeChange('garden')}
-          className={`relative flex items-center gap-3 p-3 cursor-pointer transition-colors ${
-            deliveryMode === 'garden'
-              ? 'border border-brand-dark bg-brand-light'
-              : 'border border-brand-dark/10 bg-white hover:bg-brand-cream'
-          }`}
-        >
+      <p className="mb-5 flex items-start gap-2 text-[11px] text-brand-dark/60">
+        <span className="material-symbols-outlined text-[16px] text-brand-green">local_shipping</span>
+        Đơn đặt online được đại lý giao tận nơi. Muốn lấy hàng tại cửa hàng, bác đến quầy để nhân viên bán trực tiếp.
+      </p>
+
+      <div className="mb-6 flex items-center gap-4 border-b border-brand-dark/10 pb-4">
+        <label className="flex items-center gap-2 cursor-pointer">
           <input
-            readOnly
-            checked={deliveryMode === 'garden'}
-            className="text-brand-dark focus:ring-0 w-4 h-4 accent-brand-dark"
-            name="delivery_mode"
             type="radio"
+            checked={useAddressBook}
+            onChange={() => setUseAddressBook(true)}
+            className="text-brand-dark focus:ring-0 w-4 h-4 accent-brand-dark"
           />
-          <div>
-            <div
-              className={`text-xs flex items-center gap-1 ${
-                deliveryMode === 'garden' ? 'text-brand-dark' : 'text-brand-dark/80'
-              }`}
-            >
-              <span className="material-symbols-outlined text-[16px]">agriculture</span>
-              Giao tận vườn / Trang trại
-            </div>
-            <p className="text-[11px] text-brand-dark/50">Xe tải hoặc bán tải đưa vào tận nơi</p>
-          </div>
+          <span className="text-xs text-brand-dark">Chọn từ sổ địa chỉ</span>
         </label>
-        <label
-          onClick={() => onDeliveryModeChange('pickup')}
-          className={`relative flex items-center gap-3 p-3 cursor-pointer transition-colors ${
-            deliveryMode === 'pickup'
-              ? 'border border-brand-dark bg-brand-light'
-              : 'border border-brand-dark/10 bg-white hover:bg-brand-cream'
-          }`}
-        >
+        <label className="flex items-center gap-2 cursor-pointer">
           <input
-            readOnly
-            checked={deliveryMode === 'pickup'}
-            className="text-brand-dark focus:ring-0 w-4 h-4 accent-brand-dark"
-            name="delivery_mode"
             type="radio"
+            checked={!useAddressBook}
+            onChange={() => setUseAddressBook(false)}
+            className="text-brand-dark focus:ring-0 w-4 h-4 accent-brand-dark"
           />
-          <div>
-            <div className="text-xs text-brand-dark flex items-center gap-1">
-              <span className="material-symbols-outlined text-[16px]">store</span>
-              Nhận tại đại lý Hai Thắng
-            </div>
-            <p className="text-[11px] text-brand-dark/50">Thị trấn Thới Lai, TP. Cần Thơ</p>
-          </div>
+          <span className="text-xs text-brand-dark">Nhập địa chỉ mới</span>
         </label>
       </div>
 
-      {deliveryMode === 'garden' && (
-        <div className="mb-6 flex items-center gap-4 border-b border-brand-dark/10 pb-4">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              checked={useAddressBook}
-              onChange={() => setUseAddressBook(true)}
-              className="text-brand-dark focus:ring-0 w-4 h-4 accent-brand-dark"
-            />
-            <span className="text-xs text-brand-dark">Chọn từ sổ địa chỉ</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              checked={!useAddressBook}
-              onChange={() => setUseAddressBook(false)}
-              className="text-brand-dark focus:ring-0 w-4 h-4 accent-brand-dark"
-            />
-            <span className="text-xs text-brand-dark">Nhập địa chỉ mới</span>
-          </label>
-        </div>
-      )}
-
-      {deliveryMode === 'garden' && useAddressBook && addresses.length > 0 ? (
+      {useAddressBook && addresses.length > 0 ? (
         <div className="space-y-3 mb-4">
           {addresses.map((addr) => (
             <div

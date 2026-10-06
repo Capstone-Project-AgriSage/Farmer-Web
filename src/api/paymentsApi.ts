@@ -1,11 +1,21 @@
 import { api } from './client'
-import type { OrderPaymentSummary, PaymentResponse, PayOsPaymentRequest, PayOsPaymentResponse } from './types'
+import type { OrderPaymentSummary, PagedResult, PaymentListItem, PaymentResponse, PayOsPaymentRequest, PayOsPaymentResponse } from './types'
 
 export const paymentsApi = {
   createPayosPayment: (data: PayOsPaymentRequest) => api<PayOsPaymentResponse>('/api/me/payments/payos', {
     method: 'POST',
     body: JSON.stringify(data)
   }),
+
+  /** The farmer's own payments, newest first (orders and debt repayments); the server filters only by status. */
+  getMyPayments: (params: { page?: number; pageSize?: number } = {}) => {
+    const search = new URLSearchParams()
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined) search.append(key, String(value))
+    })
+    const qs = search.toString()
+    return api<PagedResult<PaymentListItem>>(`/api/me/payments${qs ? `?${qs}` : ''}`)
+  },
 
   getPaymentById: (paymentId: string) => api<PaymentResponse>(`/api/me/payments/${paymentId}`),
 

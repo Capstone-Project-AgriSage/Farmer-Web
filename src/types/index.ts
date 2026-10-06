@@ -112,8 +112,6 @@ export interface FarmerUser {
   district: string
   province: string
   landArea: string
-  creditLimit: number
-  creditUsed: number
   initials: string
 }
 
@@ -157,29 +155,3 @@ export interface DiagnosisCase {
   rejectionReason?: string
 }
 
-export interface DebtEntry {
-  id: string
-  orderCode: string
-  orderId: string
-  totalDebt: number
-  confirmedByFarmer: boolean
-  farmerConfirmationStatus: 'AWAITING_CONFIRMATION' | 'CONFIRMED' | 'DISPUTED'
-  disputeReason?: string
-  createdAt: string
-  dueDate: string
-  paidAmount: number
-  remainingDebt: number
-  status: 'ACTIVE' | 'PAID' | 'OVERDUE'
-}
-
-export interface DebtPayment {
-  id: string
-  debtEntryId: string
-  orderCode: string
-  amount: number
-  paymentMethod: 'VIETQR' | 'CASH'
-  status: 'PENDING_AGENT_CONFIRMATION' | 'CONFIRMED' | 'REJECTED'
-  createdAt: string
-  confirmedAt?: string
-  note?: string
-}

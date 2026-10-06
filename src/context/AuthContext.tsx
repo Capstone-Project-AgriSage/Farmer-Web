@@ -20,8 +20,6 @@ const DEFAULT_FARMER: FarmerUser = {
   district: 'Huyện Thới Lai',
   province: 'TP. Cần Thơ',
   landArea: '3.5 ha canh tác lúa giống ST25',
-  creditLimit: 50000000,
-  creditUsed: 13545000,
   initials: 'NH',
 }
 

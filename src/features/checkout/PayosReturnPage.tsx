@@ -23,6 +23,7 @@ export default function PayosReturnPage() {
   const [pending] = useState(readPendingPayment)
   const paymentId = pending?.paymentId ?? null
   const orderId = pending?.orderId ?? null
+  const isDebtRepayment = pending?.context === 'DEBT_REPAYMENT'
   const isCancel = searchParams.get('cancel') === 'true' || searchParams.get('status') === 'CANCELLED'
   // The API runs with the simulated gateway: its link comes straight back here with simulated=1 (FLOW_2 §6.4).
   const isSimulated = searchParams.get('simulated') === '1'
@@ -41,7 +42,7 @@ export default function PayosReturnPage() {
     }
 
     if (!paymentId) {
-      setStatusText('Không tìm thấy phiên giao dịch. Bác vui lòng kiểm tra lại trong Đơn hàng của tôi.')
+      setStatusText(`Không tìm thấy phiên giao dịch. Bác vui lòng kiểm tra lại trong ${isDebtRepayment ? 'Sổ nợ' : 'Đơn hàng của tôi'}.`)
       setIsError(true)
       setIsChecking(false)
       return
@@ -66,7 +67,7 @@ export default function PayosReturnPage() {
         } else if (data.status === 'PENDING' && attempt < MAX_ATTEMPTS) {
           timer = setTimeout(() => checkPayment(attempt + 1), 2000)
         } else if (data.status === 'PENDING') {
-          setStatusText('Đang chờ hệ thống xác nhận. Bác vui lòng kiểm tra trạng thái trong Đơn hàng của tôi sau vài phút.')
+          setStatusText(`Đang chờ hệ thống xác nhận. Bác vui lòng kiểm tra trạng thái trong ${isDebtRepayment ? 'Sổ nợ' : 'Đơn hàng của tôi'} sau vài phút.`)
           setIsChecking(false)
         } else {
           setStatusText('Thanh toán không thành công hoặc đã hết hạn.')
@@ -76,7 +77,7 @@ export default function PayosReturnPage() {
         }
       } catch {
         if (cancelled) return
-        setStatusText('Lỗi khi kiểm tra thanh toán. Bác vui lòng kiểm tra trong Đơn hàng của tôi.')
+        setStatusText(`Lỗi khi kiểm tra thanh toán. Bác vui lòng kiểm tra trong ${isDebtRepayment ? 'Sổ nợ' : 'Đơn hàng của tôi'}.`)
         setIsError(true)
         setIsChecking(false)
       }
@@ -87,7 +88,7 @@ export default function PayosReturnPage() {
       cancelled = true
       if (timer) clearTimeout(timer)
     }
-  }, [paymentId, isCancel, isSimulated])
+  }, [paymentId, isCancel, isSimulated, isDebtRepayment])
 
   // Test button (only for a simulated link): the server pays the link and settles it like a real status query.
   const payNow = async () => {
@@ -153,10 +154,10 @@ export default function PayosReturnPage() {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
           <Link
-            to={orderId ? `/orders/${orderId}` : '/orders'}
+            to={isDebtRepayment ? '/debt' : orderId ? `/orders/${orderId}` : '/orders'}
             className="px-6 py-3 rounded-full bg-brand-dark text-white hover:bg-brand-green font-medium transition-colors text-sm w-full sm:w-auto"
           >
-            {orderId ? 'Xem chi tiết đơn hàng' : 'Xem đơn hàng của tôi'}
+            {isDebtRepayment ? 'Quay lại Sổ nợ' : orderId ? 'Xem chi tiết đơn hàng' : 'Xem đơn hàng của tôi'}
           </Link>
           <Link
             to="/"

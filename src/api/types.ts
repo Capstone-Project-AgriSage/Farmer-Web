@@ -228,7 +228,70 @@ export interface MyCreditSummary {
   creditLimit: number;
   availableCredit: number;
   outstandingReceivable: number;
+  /** Credit held for orders that are placed on credit but not delivered yet. */
+  reservedCredit: number;
   paymentTermDays: number | null;
+}
+
+export type DebtEntryStatus = 'OPEN' | 'PARTIALLY_PAID' | 'PAID' | 'DISPUTED' | 'ADJUSTED' | 'CANCELLED'
+
+export interface DebtAccount {
+  id: string;
+  status: string;
+  currentBalance: number;
+  overdueAmount: number;
+  openEntryCount: number;
+  oldestDueDate: string | null;
+  lastTransactionAt: string | null;
+}
+
+export interface DebtEntryListItem {
+  id: string;
+  entryNumber: string;
+  sourceType: string;
+  orderNumber: string | null;
+  originalAmount: number;
+  totalPaid: number;
+  outstandingAmount: number;
+  dueDate: string;
+  isOverdue: boolean;
+  overdueDays: number;
+  status: DebtEntryStatus;
+  createdAt: string;
+}
+
+export interface DebtTransaction {
+  id: string;
+  transactionType: string;
+  amountDelta: number;
+  balanceAfter: number;
+  occurredAt: string;
+  status: string;
+  note: string | null;
+}
+
+export interface DebtEntryAction {
+  id: string;
+  actionType: string;
+  reason: string;
+  adjustmentAmount: number | null;
+  oldDueDate: string | null;
+  newDueDate: string | null;
+  createdAt: string;
+}
+
+export interface DebtEntryDetail extends DebtEntryListItem {
+  orderId: string | null;
+  fulfillmentValue: number;
+  prepaymentAppliedAmount: number;
+  actions: DebtEntryAction[];
+  transactions: DebtTransaction[];
+}
+
+export interface AllocationPreview {
+  amount: number;
+  allocations: { debtEntryId: string; entryNumber: string; dueDate: string; outstandingAmount: number; allocatedAmount: number }[];
+  unallocatedAmount: number;
 }
 
 export interface CatalogProductListItem {

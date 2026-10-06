@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { formatVnd } from '../../../data/format'
 import { handleImageError } from '../../../utils/image'
-import type { CartItem } from '../../../types'
+import type { CartItem } from '../../../api/types'
 
 interface OrderSummarySidebarProps {
   items: CartItem[]
@@ -10,15 +10,17 @@ interface OrderSummarySidebarProps {
   shippingFee: number
   total: number
   onConfirm: () => void
+  isSubmitting?: boolean
 }
 
 export default function OrderSummarySidebar({
   items,
   subtotal,
-  discount,
+  discount: _discount,
   shippingFee,
   total,
   onConfirm,
+  isSubmitting,
 }: OrderSummarySidebarProps) {
   return (
     <div className="lg:col-span-5 space-y-5 sticky top-20">
@@ -39,44 +41,33 @@ export default function OrderSummarySidebar({
         </div>
         <div className="divide-y divide-brand-dark/10 max-h-72 overflow-y-auto pr-1 space-y-1">
           {items.map((item) => (
-            <div key={item.product.slug} className="py-2.5 flex items-center justify-between gap-3">
+            <div key={item.storeProductId} className="py-2.5 flex items-center justify-between gap-3">
               <div className="flex items-center gap-2.5">
                 <div className="w-12 h-12 border border-brand-dark/10 bg-brand-cream p-1 flex-shrink-0 flex items-center justify-center">
                   <img
-                    alt={item.product.name}
+                    alt={item.productName}
                     className="w-full h-full object-contain"
-                    src={item.product.image}
+                    src={item.imageUrl || ''}
                     onError={handleImageError}
                   />
                 </div>
                 <div>
-                  <h4 className="text-xs text-brand-dark line-clamp-1">{item.product.name}</h4>
+                  <h4 className="text-xs text-brand-dark line-clamp-1">{item.productName}</h4>
                   <span className="text-[11px] text-brand-dark/50">
                     Số lượng: <strong className="text-brand-dark/70">x{item.quantity}</strong>
                   </span>
                 </div>
               </div>
               <span className="text-xs text-brand-dark flex-shrink-0">
-                {formatVnd(item.product.price * item.quantity)}
+                {item.lineTotalAmount != null ? formatVnd(item.lineTotalAmount) : '---'}
               </span>
             </div>
           ))}
-        </div>
-        <div className="p-2.5 bg-brand-light border border-brand-dark/10 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-1.5 text-brand-green">
-            <span className="material-symbols-outlined text-[16px]">loyalty</span>
-            <span>Voucher &quot;VUMUA2024&quot;</span>
-          </div>
-          <span className="text-brand-green">-{formatVnd(discount)}</span>
         </div>
         <div className="space-y-2.5 text-xs text-brand-dark/60 pt-2 border-t border-brand-dark/10">
           <div className="flex items-center justify-between">
             <span>Tạm tính ({items.length} sản phẩm):</span>
             <span className="text-brand-dark">{formatVnd(subtotal)}</span>
-          </div>
-          <div className="flex items-center justify-between text-brand-green">
-            <span>Giảm giá Voucher mùa vụ:</span>
-            <span>-{formatVnd(discount)}</span>
           </div>
           <div className="flex items-center justify-between">
             <span>Phí vận chuyển:</span>
@@ -98,21 +89,22 @@ export default function OrderSummarySidebar({
               {formatVnd(total)}
             </span>
           </div>
-          <div className="text-right text-[11px] text-brand-green flex items-center justify-end gap-1">
-            <span className="material-symbols-outlined text-[13px]">trending_down</span>
-            Tiết kiệm {formatVnd(discount)} cho mùa vụ này
-          </div>
         </div>
         <button
           onClick={onConfirm}
+          disabled={isSubmitting}
           type="button"
-          className="w-full py-3.5 px-4 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-sm transition-colors flex items-center justify-center gap-2 group cursor-pointer"
+          className="w-full py-3.5 px-4 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-sm transition-colors flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <span className="material-symbols-outlined text-[20px]">verified_user</span>
-          <span>Xác nhận đặt hàng ngay</span>
-          <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">
-            arrow_forward
+          <span className="material-symbols-outlined text-[20px]">
+            {isSubmitting ? 'hourglass_empty' : 'verified_user'}
           </span>
+          <span>{isSubmitting ? 'Đang xử lý...' : 'Xác nhận đặt hàng ngay'}</span>
+          {!isSubmitting && (
+            <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">
+              arrow_forward
+            </span>
+          )}
         </button>
         <div className="space-y-2 pt-2 border-t border-brand-dark/10 text-[11px] text-brand-dark/60">
           <div className="flex items-start gap-2">

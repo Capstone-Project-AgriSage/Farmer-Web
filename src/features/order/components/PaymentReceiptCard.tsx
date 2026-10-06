@@ -1,4 +1,7 @@
-export default function PaymentReceiptCard() {
+import { formatVnd } from '../../../data/format'
+import type { OrderResponse } from '../../../api/types'
+
+export default function PaymentReceiptCard({ order }: { order: OrderResponse }) {
   return (
     <div className="bg-white border border-brand-dark/10 p-6">
       <div className="flex items-center justify-between pb-3 border-b border-brand-dark/10 mb-4 gap-3 flex-wrap">
@@ -31,7 +34,7 @@ export default function PaymentReceiptCard() {
             Số tiền thanh toán:
           </span>
           <span className="font-helvetica-neue text-xl font-helvetica-neue tracking-tight text-brand-dark">
-            2.600.000 đ
+            {formatVnd(order.totalAmount)}
           </span>
           <span className="text-[11px] text-brand-dark/50 flex items-center justify-end gap-1 mt-0.5">
             <span className="material-symbols-outlined text-xs">schedule</span> Đại lý sẽ xác nhận sau khi nhận tiền

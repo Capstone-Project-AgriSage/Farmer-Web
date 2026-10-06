@@ -1,4 +1,6 @@
-export default function DeliveryInfoCard() {
+import type { OrderResponse } from '../../../api/types'
+
+export default function DeliveryInfoCard({ order }: { order: OrderResponse }) {
   return (
     <div className="bg-white border border-brand-dark/10 p-6">
       <div className="flex items-center justify-between pb-3 border-b border-brand-dark/10 mb-4">
@@ -16,11 +18,11 @@ export default function DeliveryInfoCard() {
         <div className="flex flex-col">
           <span className="text-xs tracking-[0.15em]  text-brand-dark/50">Người nhận hàng:</span>
           <span className="text-brand-dark text-base mt-0.5 font-helvetica-neue tracking-tight">
-            Nguyễn Văn Hùng
+            {order.deliveryAddress?.recipientName || 'Người mua'}
           </span>
           <span className="text-xs text-brand-dark/60 mt-0.5 flex items-center gap-1">
             <span className="material-symbols-outlined text-sm text-brand-green">phone</span>
-            <strong className="text-brand-dark">0918 234 567</strong> (Đã đăng ký nhận SMS lái xe)
+            <strong className="text-brand-dark">{order.deliveryAddress?.recipientPhone || 'Chưa cập nhật'}</strong>
           </span>
         </div>
         <div className="flex flex-col">
@@ -34,7 +36,7 @@ export default function DeliveryInfoCard() {
           Địa chỉ nhận hàng &amp; Vị trí ruộng lúa:
         </span>
         <p className="text-brand-dark text-sm mt-1">
-          Ấp Thới Phước 1, Xã Tân Thạnh, Huyện Thới Lai, TP. Cần Thơ (Khu vực Kênh Xáng).
+          {order.deliveryAddress ? `${order.deliveryAddress.addressLine}, ${order.deliveryAddress.ward}, ${order.deliveryAddress.district}, ${order.deliveryAddress.province}` : 'Nhận tại cửa hàng'}
         </p>
       </div>
       <div className="mt-3 p-3 bg-brand-light border border-brand-dark/10 text-xs text-brand-dark/70 flex items-start gap-2">

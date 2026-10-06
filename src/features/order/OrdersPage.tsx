@@ -8,21 +8,33 @@ import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import type { OrderListItem } from '../../api/types'
 import { ORDER_STATUS, TONE_CLASSES, labelOf } from './orderLabels'
 
+const PAGE_SIZE = 10
+
 export default function OrdersPage() {
   useDocumentTitle('Lịch sử đơn hàng')
   const [notification, setNotification] = useState<string | null>(null)
   const [orders, setOrders] = useState<OrderListItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [totalCount, setTotalCount] = useState(0)
 
   useEffect(() => {
-    fetchOrders()
-  }, [])
+    fetchOrders(page)
+  }, [page])
 
-  const fetchOrders = async () => {
+  const fetchOrders = async (target: number) => {
     try {
       setIsLoading(true)
-      const res = await ordersApi.getOrders()
+      const res = await ordersApi.getOrders({ page: target, pageSize: PAGE_SIZE })
+      // The last order of the last page was cancelled or moved: go back to the new last page.
+      if (res.items.length === 0 && target > 1 && res.totalPages > 0) {
+        setPage(Math.min(target - 1, res.totalPages))
+        return
+      }
       setOrders(res.items || [])
+      setTotalPages(Math.max(1, res.totalPages))
+      setTotalCount(res.totalCount)
     } catch (err) {
       showNotification(describeApiError(err, 'Lỗi tải danh sách đơn hàng'))
     } finally {
@@ -40,7 +52,7 @@ export default function OrdersPage() {
       try {
         await ordersApi.cancelOrder(order.id, 'Người dùng hủy')
         showNotification(`Đã hủy đơn hàng ${order.orderNumber} thành công.`)
-        fetchOrders()
+        fetchOrders(page)
       } catch (err) {
         showNotification(describeApiError(err, 'Lỗi hủy đơn hàng'))
       }
@@ -129,6 +141,32 @@ export default function OrdersPage() {
             })
           )}
         </div>
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-4 pt-2">
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1 || isLoading}
+              className="w-10 h-10 flex items-center justify-center rounded-full border border-brand-dark/15 text-brand-dark disabled:opacity-30 disabled:cursor-not-allowed hover:bg-brand-cream transition-colors"
+              aria-label="Trang trước"
+            >
+              <span className="material-symbols-outlined text-[20px]">chevron_left</span>
+            </button>
+            <span className="text-sm text-brand-dark/70">
+              Trang <strong className="text-brand-dark">{page}</strong> / {totalPages} · {totalCount} đơn hàng
+            </span>
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages || isLoading}
+              className="w-10 h-10 flex items-center justify-center rounded-full border border-brand-dark/15 text-brand-dark disabled:opacity-30 disabled:cursor-not-allowed hover:bg-brand-cream transition-colors"
+              aria-label="Trang sau"
+            >
+              <span className="material-symbols-outlined text-[20px]">chevron_right</span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

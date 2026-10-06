@@ -95,23 +95,10 @@ export interface Order {
   hallmark?: OrderHallmark
 }
 
-export interface Address {
-  id: string
-  text: string
-  isDefault: boolean
-}
-
 export interface FarmerUser {
   id: string
   name: string
   phone: string
-  address: string
-  addresses?: Address[]
-  customerGroup?: string
-  commune: string
-  district: string
-  province: string
-  landArea: string
   initials: string
 }
 

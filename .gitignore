@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local project checkpoint for AI sessions
+PROJECT_CONTEXT.md

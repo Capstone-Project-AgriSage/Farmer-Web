@@ -11,14 +11,6 @@ interface DebtEntryCardProps {
   onDispute: (entry: DebtEntryListItem) => void
 }
 
-const STRIPE: Record<string, string> = {
-  PENDING: 'bg-brand-green',
-  PROGRESS: 'bg-blue-400',
-  SUCCESS: 'bg-brand-dark/20',
-  DANGER: 'bg-rose-400',
-  NEUTRAL: 'bg-brand-dark/20',
-}
-
 export default function DebtEntryCard({ entry, onDispute }: DebtEntryCardProps) {
   const [open, setOpen] = useState(false)
   const [detail, setDetail] = useState<DebtEntryDetail | null>(null)
@@ -44,71 +36,65 @@ export default function DebtEntryCard({ entry, onDispute }: DebtEntryCardProps) 
     }
   }
 
+  const detailFigures: [string, number][] = detail
+    ? [
+        ['Giá trị hàng đã giao', detail.fulfillmentValue],
+        ['Trừ vào tiền đã trả trước', detail.prepaymentAppliedAmount],
+        ['Số nợ ban đầu', detail.originalAmount],
+      ]
+    : []
+
   return (
-    <div
-      className={`p-5 md:p-6 rounded-[24px] border transition-all duration-300 relative overflow-hidden ${
-        isDisputed
-          ? 'border-rose-200 bg-rose-50/50'
-          : isClosed
-            ? 'border-brand-dark/5 bg-brand-cream/50'
-            : 'border-brand-dark/10 bg-white shadow-sm hover:shadow-md'
+    <article
+      className={`border rounded-[var(--radius-surface)] ${
+        isDisputed ? 'border-status-error/50 bg-status-error-surface' : isClosed ? 'border-brand-dark/10 bg-brand-light' : 'border-brand-dark/15 bg-white'
       }`}
     >
-      <div className={`absolute top-0 left-0 w-1.5 h-full ${STRIPE[status.tone.toUpperCase()] ?? 'bg-brand-dark/20'}`} />
-
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pl-2">
-        <div className="space-y-3 flex-1">
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="text-lg font-medium font-helvetica-neue text-brand-dark tracking-tight">{entry.orderNumber ?? entry.entryNumber}</span>
-            {entry.orderNumber && <span className="text-sm text-brand-dark/50">({entry.entryNumber})</span>}
-            <span className={`px-3 py-1 rounded-full border text-xs font-medium ${TONE_CLASSES[status.tone]}`}>{status.label}</span>
+      <div className="p-5 md:p-6 flex flex-col md:flex-row md:items-start justify-between gap-5">
+        <div className="space-y-3 min-w-0">
+          <div className="flex items-center gap-x-3 gap-y-2 flex-wrap">
+            <h3 className="text-xl font-medium tracking-tight text-text-primary">{entry.orderNumber ?? entry.entryNumber}</h3>
+            {entry.orderNumber && <span className="text-[15px] text-text-secondary">({entry.entryNumber})</span>}
+            <span className={`px-3 py-0.5 rounded-full border text-[13px] font-medium ${TONE_CLASSES[status.tone]}`}>{status.label}</span>
             {entry.isOverdue && !isClosed && (
-              <span className="px-3 py-1 rounded-full border border-rose-200 bg-rose-100/50 text-rose-800 text-xs font-medium">
+              <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full border border-status-error/50 bg-status-error-surface text-status-error text-[13px] font-medium">
+                <span className="material-symbols-outlined" style={{ fontSize: 16 }} aria-hidden="true">
+                  schedule
+                </span>
                 Quá hạn {entry.overdueDays} ngày
               </span>
             )}
           </div>
-          <div className="text-sm text-brand-dark/60 flex items-center gap-2 flex-wrap">
-            <span>
-              Hạn trả: <strong className="text-brand-dark font-medium">{formatDate(entry.dueDate)}</strong>
-            </span>
-            <span className="text-brand-dark/30">|</span>
-            <span>Ngày ghi nợ: {formatDate(entry.createdAt)}</span>
-            <span className="text-brand-dark/30">|</span>
-            <span>{SOURCE_LABEL[entry.sourceType] ?? entry.sourceType}</span>
-          </div>
+          <p className="text-[15px] text-text-secondary leading-relaxed">
+            Hạn trả: <strong className="text-text-primary font-medium">{formatDate(entry.dueDate)}</strong> · Ngày ghi nợ: {formatDate(entry.createdAt)} · {SOURCE_LABEL[entry.sourceType] ?? entry.sourceType}
+          </p>
         </div>
 
-        <div className="flex md:flex-col items-baseline md:items-end justify-between gap-1 shrink-0 pt-4 md:pt-0 border-t md:border-0 border-brand-dark/5">
-          <div className="flex flex-col items-start md:items-end">
-            <span className="text-xs text-brand-dark/50 mb-1 hidden md:block">Còn nợ</span>
-            <span className="text-xl md:text-2xl font-medium font-helvetica-neue tracking-tight text-brand-dark">
-              {formatVnd(entry.outstandingAmount)}
-            </span>
-          </div>
-          {entry.totalPaid > 0 && (
-            <span className="text-sm font-medium text-brand-green bg-brand-green/10 px-2 py-0.5 rounded-md mt-1">
-              Đã trả: {formatVnd(entry.totalPaid)}
-            </span>
-          )}
+        <div className="shrink-0 md:text-right">
+          <p className="text-[13px] uppercase tracking-[0.16em] text-text-secondary">Còn nợ</p>
+          <p className="mt-1 text-2xl font-light tracking-tight text-text-primary">{formatVnd(entry.outstandingAmount)}</p>
+          {entry.totalPaid > 0 && <p className="mt-1 text-[15px] text-primary-dark">Đã trả: {formatVnd(entry.totalPaid)}</p>}
         </div>
       </div>
 
-      <div className="mt-5 pt-5 border-t border-brand-dark/10 flex flex-wrap items-center sm:justify-end gap-3 pl-2">
+      <div className="px-5 md:px-6 py-3 border-t border-brand-dark/10 flex flex-wrap items-center justify-between gap-3">
         <button
           type="button"
           onClick={toggle}
-          className="flex-1 sm:flex-none px-5 py-2.5 rounded-full border border-brand-dark/20 text-brand-dark hover:bg-brand-light text-sm font-medium transition-colors flex items-center justify-center gap-1.5"
           aria-expanded={open}
+          aria-controls={`entry-${entry.id}`}
+          className="focus-ring inline-flex items-center gap-1.5 min-h-[44px] text-[15px] text-text-primary hover:underline underline-offset-4"
         >
-          <span className="material-symbols-outlined text-[18px]">{open ? 'expand_less' : 'expand_more'}</span>
-          <span>{open ? 'Ẩn chi tiết' : 'Xem chi tiết'}</span>
+          <span className="material-symbols-outlined" style={{ fontSize: 22 }} aria-hidden="true">
+            {open ? 'expand_less' : 'expand_more'}
+          </span>
+          {open ? 'Ẩn chi tiết' : 'Xem chi tiết'}
         </button>
         {canDispute(entry.status) && (
           <button
             type="button"
             onClick={() => onDispute(entry)}
-            className="flex-1 sm:flex-none px-5 py-2.5 rounded-full border border-rose-200 text-rose-600 hover:bg-rose-50 text-sm font-medium transition-colors"
+            className="focus-ring min-h-[44px] px-5 rounded-full border border-status-error/50 text-[15px] text-status-error hover:bg-status-error-surface transition-colors"
           >
             Khiếu nại
           </button>
@@ -116,49 +102,51 @@ export default function DebtEntryCard({ entry, onDispute }: DebtEntryCardProps) 
       </div>
 
       {open && (
-        <div className="mt-5 pl-2 space-y-4 text-sm">
-          {loading && <p className="text-brand-dark/50">Đang tải chi tiết...</p>}
-          {error && <p className="text-rose-600">{error}</p>}
+        <div id={`entry-${entry.id}`} className="px-5 md:px-6 pb-6 pt-5 border-t border-brand-dark/10 space-y-6 text-[15px]">
+          {loading && (
+            <p className="text-text-secondary" role="status">
+              Đang tải chi tiết…
+            </p>
+          )}
+          {error && (
+            <p role="alert" className="text-status-error">
+              {error}
+            </p>
+          )}
           {detail && (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-3 rounded-xl bg-brand-light border border-brand-dark/5">
-                  <div className="text-xs text-brand-dark/50">Giá trị hàng đã giao</div>
-                  <div className="font-medium text-brand-dark">{formatVnd(detail.fulfillmentValue)}</div>
-                </div>
-                <div className="p-3 rounded-xl bg-brand-light border border-brand-dark/5">
-                  <div className="text-xs text-brand-dark/50">Trừ vào tiền đã trả trước</div>
-                  <div className="font-medium text-brand-dark">{formatVnd(detail.prepaymentAppliedAmount)}</div>
-                </div>
-                <div className="p-3 rounded-xl bg-brand-light border border-brand-dark/5">
-                  <div className="text-xs text-brand-dark/50">Số nợ ban đầu</div>
-                  <div className="font-medium text-brand-dark">{formatVnd(detail.originalAmount)}</div>
-                </div>
-              </div>
+              <dl className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {detailFigures.map(([label, value]) => (
+                  <div key={label} className="p-4 bg-brand-light border border-brand-dark/10 rounded-[var(--radius-surface)]">
+                    <dt className="text-text-secondary">{label}</dt>
+                    <dd className="mt-1 text-lg font-medium text-text-primary">{formatVnd(value)}</dd>
+                  </div>
+                ))}
+              </dl>
 
               {detail.orderId && (
-                <Link to={`/orders/${detail.orderId}`} className="inline-flex items-center gap-1 text-brand-green font-medium hover:underline">
+                <Link to={`/orders/${detail.orderId}`} className="focus-ring inline-flex items-center gap-1.5 min-h-[44px] text-text-primary hover:underline underline-offset-4">
                   Xem đơn hàng {detail.orderNumber}
-                  <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                  <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden="true">
+                    arrow_forward
+                  </span>
                 </Link>
               )}
 
               {detail.actions.length > 0 && (
                 <div>
-                  <h4 className="font-medium text-brand-dark mb-2">Phản hồi và xử lý</h4>
-                  <ul className="space-y-2">
+                  <h4 className="text-[13px] uppercase tracking-[0.16em] text-text-secondary mb-3">Phản hồi và xử lý</h4>
+                  <ul className="space-y-3">
                     {detail.actions.map((action) => (
-                      <li key={action.id} className="p-3 rounded-xl border border-brand-dark/10 bg-white">
+                      <li key={action.id} className="p-4 border border-brand-dark/15 bg-white rounded-[var(--radius-surface)]">
                         <div className="flex justify-between gap-3 flex-wrap">
-                          <strong className="text-brand-dark font-medium">{ACTION_LABEL[action.actionType] ?? action.actionType}</strong>
-                          <span className="text-xs text-brand-dark/50">{formatDate(action.createdAt)}</span>
+                          <strong className="font-medium text-text-primary">{ACTION_LABEL[action.actionType] ?? action.actionType}</strong>
+                          <span className="text-text-secondary">{formatDate(action.createdAt)}</span>
                         </div>
-                        {action.reason && <p className="text-brand-dark/70 mt-1">{action.reason}</p>}
-                        {action.adjustmentAmount != null && (
-                          <p className="text-brand-dark/70 mt-1">Giảm: {formatVnd(action.adjustmentAmount)}</p>
-                        )}
+                        {action.reason && <p className="mt-1 text-text-secondary">{action.reason}</p>}
+                        {action.adjustmentAmount != null && <p className="mt-1 text-text-secondary">Giảm: {formatVnd(action.adjustmentAmount)}</p>}
                         {action.newDueDate && (
-                          <p className="text-brand-dark/70 mt-1">
+                          <p className="mt-1 text-text-secondary">
                             Hạn trả mới: {formatDate(action.newDueDate)}
                             {action.oldDueDate ? ` (trước đó ${formatDate(action.oldDueDate)})` : ''}
                           </p>
@@ -170,21 +158,21 @@ export default function DebtEntryCard({ entry, onDispute }: DebtEntryCardProps) 
               )}
 
               <div>
-                <h4 className="font-medium text-brand-dark mb-2">Biến động của khoản nợ</h4>
+                <h4 className="text-[13px] uppercase tracking-[0.16em] text-text-secondary mb-3">Biến động của khoản nợ</h4>
                 {detail.transactions.length === 0 ? (
-                  <p className="text-brand-dark/50">Chưa có biến động.</p>
+                  <p className="text-text-secondary">Chưa có biến động.</p>
                 ) : (
-                  <ul className="divide-y divide-brand-dark/5 rounded-xl border border-brand-dark/10 bg-white">
+                  <ul className="divide-y divide-brand-dark/10 border border-brand-dark/15 bg-white rounded-[var(--radius-surface)]">
                     {detail.transactions.map((tx) => (
-                      <li key={tx.id} className="p-3 flex justify-between items-center gap-3">
+                      <li key={tx.id} className="p-4 flex justify-between items-center gap-4">
                         <div>
-                          <div className="text-brand-dark">{TRANSACTION_LABEL[tx.transactionType] ?? tx.transactionType}</div>
-                          <div className="text-xs text-brand-dark/50">
+                          <p className="text-text-primary">{TRANSACTION_LABEL[tx.transactionType] ?? tx.transactionType}</p>
+                          <p className="text-text-secondary">
                             {formatDate(tx.occurredAt)}
                             {tx.note ? ` · ${tx.note}` : ''}
-                          </div>
+                          </p>
                         </div>
-                        <strong className={`font-helvetica-neue ${tx.amountDelta < 0 ? 'text-brand-green' : 'text-brand-dark'}`}>
+                        <strong className={`text-lg font-medium whitespace-nowrap ${tx.amountDelta < 0 ? 'text-primary-dark' : 'text-text-primary'}`}>
                           {tx.amountDelta > 0 ? '+' : ''}
                           {formatVnd(tx.amountDelta)}
                         </strong>
@@ -197,6 +185,6 @@ export default function DebtEntryCard({ entry, onDispute }: DebtEntryCardProps) 
           )}
         </div>
       )}
-    </div>
+    </article>
   )
 }

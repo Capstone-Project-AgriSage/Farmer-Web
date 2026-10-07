@@ -1,5 +1,4 @@
 import { formatVnd } from '../../../data/format'
-import OrderTotalSummary from '../../../components/ui/OrderTotalSummary'
 
 interface CartSummarySidebarProps {
   itemCount: number
@@ -37,7 +36,14 @@ export default function CartSummarySidebar({
             <span className="text-brand-dark/45">Đã bao gồm</span>
           </div>
         </div>
-        <OrderTotalSummary total={total} discount={0} />
+        <div className="pt-4 border-t border-brand-dark/10 flex items-end justify-between">
+          <div className="text-brand-dark text-sm">Tổng tiền:</div>
+          <div className="text-right">
+            <div className="text-xl font-helvetica-neue tracking-tight text-brand-dark leading-none">
+              {formatVnd(total)}
+            </div>
+          </div>
+        </div>
         <button
           onClick={onCheckout}
           disabled={hasUnavailableItem}

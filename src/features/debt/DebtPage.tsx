@@ -111,50 +111,70 @@ export default function DebtPage() {
     setPage(1)
   }
 
+  const pageButton =
+    'focus-ring w-11 h-11 flex items-center justify-center rounded-full border border-brand-dark/25 text-text-primary hover:border-brand-dark/60 disabled:opacity-35 disabled:cursor-not-allowed transition-colors'
+
   return (
     <div className="bg-brand-cream text-brand-dark min-h-screen pb-20">
       <Breadcrumb items={[{ label: 'Trang chủ', to: '/' }, { label: 'Sổ nợ' }]} />
 
       {notification && (
-        <div className="fixed top-20 right-6 z-50 bg-brand-dark text-white px-5 py-3 rounded-full flex items-center gap-3 animate-fade-in shadow-xl">
-          <span className="material-symbols-outlined text-brand-green text-[20px]">task_alt</span>
-          <span className="text-sm tracking-wide">{notification}</span>
+        <div role="status" className="fixed top-24 right-6 z-50 bg-brand-dark text-white px-5 py-3 rounded-full flex items-center gap-3">
+          <span className="material-symbols-outlined text-brand-light" style={{ fontSize: 20 }} aria-hidden="true">
+            task_alt
+          </span>
+          <span className="text-[15px]">{notification}</span>
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-8">
-        <div className="mb-6">
-          <h1 className="text-3xl md:text-4xl font-medium font-helvetica-neue tracking-tight text-brand-dark">Sổ nợ</h1>
-          <p className="text-brand-dark/60 mt-2 text-sm md:text-base max-w-2xl">
-            Theo dõi công nợ vật tư, hạn mức mua chịu và lịch sử trả nợ với đại lý.
-          </p>
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10 md:py-14">
+        <div className="mb-10">
+          <p className="text-[13px] uppercase tracking-[0.16em] text-text-secondary mb-3">Tài khoản</p>
+          <h1 className="text-[length:var(--type-h1)] leading-[var(--type-h1-lh)] font-light tracking-tight text-text-primary">Sổ nợ</h1>
+          <p className="mt-3 text-base text-text-secondary max-w-2xl leading-relaxed">Theo dõi công nợ vật tư, hạn mức mua chịu và lịch sử trả nợ với đại lý.</p>
         </div>
 
-        {summaryLoading && <div className="text-center py-16 text-brand-dark/50">Đang tải Sổ nợ...</div>}
+        {summaryLoading && (
+          <div className="grid lg:grid-cols-12 gap-8" aria-busy="true" aria-label="Đang tải Sổ nợ">
+            <div className="lg:col-span-8 space-y-6">
+              <div className="h-64 bg-brand-dark/10 rounded-[var(--radius-surface)] animate-pulse" />
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="h-24 bg-brand-dark/10 rounded-[var(--radius-surface)] animate-pulse" />
+                ))}
+              </div>
+              <div className="h-36 bg-brand-dark/10 rounded-[var(--radius-surface)] animate-pulse" />
+            </div>
+            <div className="lg:col-span-4 h-72 bg-brand-dark/10 rounded-[var(--radius-surface)] animate-pulse" />
+          </div>
+        )}
 
         {summaryError && (
-          <div className="bg-white rounded-2xl border border-rose-200 p-8 text-center">
-            <p className="text-rose-600 mb-4">{summaryError}</p>
-            <button
-              type="button"
-              onClick={() => setRefreshKey((k) => k + 1)}
-              className="px-5 py-2 bg-brand-dark text-white text-[13px] font-medium rounded-full hover:bg-brand-green transition-colors"
-            >
+          <div role="alert" className="border border-status-error/40 bg-status-error-surface p-8 text-center rounded-[var(--radius-surface)]">
+            <p className="text-lg text-text-primary mb-5">{summaryError}</p>
+            <button type="button" onClick={() => setRefreshKey((k) => k + 1)} className="focus-ring min-h-[44px] px-7 rounded-full bg-brand-dark text-white hover:bg-brand-green text-[15px] transition-colors">
               Tải lại
             </button>
           </div>
         )}
 
         {noDebtBook && (
-          <div className="bg-white rounded-2xl border border-brand-dark/10 p-10 text-center flex flex-col items-center shadow-sm">
-            <span className="material-symbols-outlined text-[40px] text-brand-dark/20 mb-3">account_balance_wallet</span>
-            <h2 className="text-lg font-helvetica-neue tracking-tight text-brand-dark">Bác chưa có Sổ nợ</h2>
-            <p className="text-brand-dark/60 text-sm mt-2 max-w-md">
-              Đại lý {activeStore.name} chưa cấp hạn mức mua chịu cho bác. Bác liên hệ đại lý để được mở Sổ nợ; trong lúc đó bác vẫn mua và trả tiền ngay như bình thường.
+          <div className="border border-brand-dark/15 bg-white p-10 md:p-14 text-center flex flex-col items-center rounded-[var(--radius-surface)]">
+            <span className="material-symbols-outlined text-text-muted" style={{ fontSize: 48 }} aria-hidden="true">
+              account_balance_wallet
+            </span>
+            <h2 className="mt-4 text-2xl font-light tracking-tight text-text-primary">Bác chưa có Sổ nợ</h2>
+            <p className="mt-3 text-base text-text-secondary max-w-md leading-relaxed">
+              Đại lý {activeStore.name} chưa cấp hạn mức mua chịu cho bác. Bác liên hệ đại lý để được mở Sổ nợ; trong lúc đó bác vẫn mua vật tư và thanh toán ngay như bình thường.
             </p>
-            <Link to="/products" className="mt-5 px-5 py-2 bg-brand-dark text-white text-[13px] font-medium rounded-full hover:bg-brand-green transition-colors">
-              Mua sắm ngay
-            </Link>
+            <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+              <Link to="/products" className="focus-ring inline-flex items-center min-h-[48px] px-7 rounded-full bg-brand-dark text-white hover:bg-brand-green text-[15px] transition-colors">
+                Mua sắm ngay
+              </Link>
+              <Link to="/contact" className="focus-ring inline-flex items-center min-h-[48px] px-7 rounded-full border border-brand-dark/30 text-[15px] text-text-primary hover:bg-brand-dark hover:text-white hover:border-brand-dark transition-colors">
+                Liên hệ đại lý
+              </Link>
+            </div>
           </div>
         )}
 
@@ -162,21 +182,24 @@ export default function DebtPage() {
           <>
             {(overdueAmount > 0 || dueSoon) && (
               <div
-                className={`rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center gap-4 mb-8 shadow-sm border ${
-                  overdueAmount > 0 ? 'bg-rose-50 border-rose-200 text-rose-900' : 'bg-white border-brand-dark/10 text-brand-dark'
+                role={overdueAmount > 0 ? 'alert' : 'status'}
+                className={`mb-8 p-5 flex flex-col sm:flex-row sm:items-center gap-4 rounded-[var(--radius-surface)] border-l-4 ${
+                  overdueAmount > 0 ? 'bg-status-error-surface border-status-error' : 'bg-status-warning-surface border-status-warning'
                 }`}
               >
-                <span className="material-symbols-outlined text-3xl shrink-0 hidden sm:block">notification_important</span>
+                <span className={`material-symbols-outlined shrink-0 ${overdueAmount > 0 ? 'text-status-error' : 'text-status-warning'}`} style={{ fontSize: 28 }} aria-hidden="true">
+                  {overdueAmount > 0 ? 'error' : 'schedule'}
+                </span>
                 <div className="flex-1">
-                  <h4 className="font-medium">{overdueAmount > 0 ? 'Bác có khoản nợ đã quá hạn' : 'Sắp đến hạn trả nợ'}</h4>
-                  <p className="text-sm mt-1 opacity-80">
+                  <h2 className="text-lg font-medium text-text-primary">{overdueAmount > 0 ? 'Bác có khoản nợ đã quá hạn' : 'Sắp đến hạn trả nợ'}</h2>
+                  <p className="mt-1 text-[15px] md:text-base text-text-primary leading-relaxed">
                     {overdueAmount > 0 ? (
                       <>
-                        Số tiền quá hạn <strong>{formatVnd(overdueAmount)}</strong>. Bác nên thanh toán sớm để không bị chặn mua chịu thêm.
+                        Số tiền quá hạn <strong className="font-medium">{formatVnd(overdueAmount)}</strong>. Bác nên thanh toán sớm để không bị chặn mua chịu thêm.
                       </>
                     ) : (
                       <>
-                        Khoản nợ gần nhất đến hạn ngày <strong>{formatDate(account?.oldestDueDate)}</strong>
+                        Khoản nợ gần nhất đến hạn ngày <strong className="font-medium">{formatDate(account?.oldestDueDate)}</strong>
                         {daysToDue !== null && daysToDue >= 0 ? ` (còn ${daysToDue} ngày)` : ''}.
                       </>
                     )}
@@ -185,54 +208,43 @@ export default function DebtPage() {
                 <button
                   type="button"
                   onClick={() => setRepayOpen(true)}
-                  className="px-5 py-2.5 bg-brand-dark text-white text-sm font-medium rounded-xl hover:bg-brand-green transition-colors shrink-0 shadow-sm"
+                  className="focus-ring min-h-[48px] px-7 rounded-full bg-brand-dark text-white hover:bg-brand-green text-[15px] transition-colors shrink-0"
                 >
                   Trả nợ ngay
                 </button>
               </div>
             )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-              <div className="lg:col-span-8 space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+              <div className="lg:col-span-8 space-y-10 min-w-0">
                 <DebtSummaryCard storeName={activeStore.name} credit={credit} account={account} />
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="bg-white p-4 rounded-[20px] border border-brand-dark/5 shadow-sm">
-                    <div className="text-brand-dark/50 text-sm mb-1">Khoản nợ đang mở</div>
-                    <div className="text-2xl font-medium font-helvetica-neue text-brand-dark tracking-tight">{account?.openEntryCount ?? 0}</div>
-                  </div>
-                  <div className="bg-white p-4 rounded-[20px] border border-brand-dark/5 shadow-sm">
-                    <div className="text-brand-dark/50 text-sm mb-1">Quá hạn</div>
-                    <div className={`text-2xl font-medium font-helvetica-neue tracking-tight ${overdueAmount > 0 ? 'text-rose-600' : 'text-brand-dark'}`}>
-                      {formatVnd(overdueAmount)}
+                <dl className="grid grid-cols-2 md:grid-cols-4 border-y border-brand-dark/15 divide-x divide-brand-dark/15">
+                  {[
+                    { label: 'Khoản nợ đang mở', value: String(account?.openEntryCount ?? 0), tone: '' },
+                    { label: 'Quá hạn', value: formatVnd(overdueAmount), tone: overdueAmount > 0 ? 'text-status-error' : '' },
+                    { label: 'Hạn trả gần nhất', value: account?.oldestDueDate && balance > 0 ? formatDate(account.oldestDueDate) : '—', tone: '' },
+                    { label: 'Đã trả gần đây', value: formatVnd(totalRepaid), tone: 'text-primary-dark' },
+                  ].map((item, index) => (
+                    <div key={item.label} className={`px-4 md:px-6 py-6 ${index % 2 === 0 ? 'pl-0 md:pl-6' : ''} ${index === 0 ? 'md:pl-0' : ''} ${index >= 2 ? 'border-t md:border-t-0 border-brand-dark/15' : ''}`}>
+                      <dt className="text-[15px] text-text-secondary">{item.label}</dt>
+                      <dd className={`mt-1 text-xl md:text-2xl font-light tracking-tight ${item.tone || 'text-text-primary'}`}>{item.value}</dd>
                     </div>
-                  </div>
-                  <div className="bg-white p-4 rounded-[20px] border border-brand-dark/5 shadow-sm">
-                    <div className="text-brand-dark/50 text-sm mb-1">Hạn trả gần nhất</div>
-                    <div className="text-2xl font-medium font-helvetica-neue text-brand-dark tracking-tight">
-                      {account?.oldestDueDate && balance > 0 ? formatDate(account.oldestDueDate) : '—'}
-                    </div>
-                  </div>
-                  <div className="bg-white p-4 rounded-[20px] border border-brand-dark/5 shadow-sm">
-                    <div className="text-brand-dark/50 text-sm mb-1">Đã trả gần đây</div>
-                    <div className="text-2xl font-medium font-helvetica-neue text-brand-green tracking-tight">{formatVnd(totalRepaid)}</div>
-                  </div>
-                </div>
+                  ))}
+                </dl>
 
-                <div className="space-y-4">
+                <section className="space-y-5" aria-label="Danh sách khoản nợ">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <h3 className="text-lg font-medium font-helvetica-neue text-brand-dark flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[20px]">list_alt</span>
-                      Danh sách khoản nợ
-                    </h3>
-                    <div className="flex flex-wrap bg-brand-light p-1 rounded-xl border border-brand-dark/5 self-start sm:self-auto gap-1">
+                    <h2 className="text-[13px] uppercase tracking-[0.16em] text-text-secondary">Danh sách khoản nợ</h2>
+                    <div className="flex flex-wrap gap-2" role="group" aria-label="Lọc khoản nợ">
                       {ENTRY_FILTERS.map((item) => (
                         <button
                           key={item.value}
                           type="button"
+                          aria-pressed={filter === item.value}
                           onClick={() => changeFilter(item.value)}
-                          className={`px-3.5 py-1.5 text-sm font-medium rounded-lg transition-colors ${
-                            filter === item.value ? 'bg-white text-brand-dark shadow-sm' : 'text-brand-dark/60 hover:text-brand-dark'
+                          className={`focus-ring min-h-[44px] px-4 rounded-full text-[15px] transition-colors ${
+                            filter === item.value ? 'bg-brand-dark text-white' : 'border border-brand-dark/25 text-text-primary hover:border-brand-dark/60'
                           }`}
                         >
                           {item.label}
@@ -241,58 +253,73 @@ export default function DebtPage() {
                     </div>
                   </div>
 
-                  {entriesError && <p className="text-rose-600 text-sm">{entriesError}</p>}
-                  {entriesLoading && !entries && <div className="text-center py-10 text-brand-dark/50">Đang tải khoản nợ...</div>}
+                  {entriesError && (
+                    <div role="alert" className="p-4 border border-status-error/40 bg-status-error-surface text-[15px] text-text-primary rounded-[var(--radius-surface)] flex items-center justify-between gap-4">
+                      <span>{entriesError}</span>
+                      <button type="button" onClick={() => setRefreshKey((k) => k + 1)} className="focus-ring min-h-[44px] px-5 rounded-full border border-brand-dark/30 hover:bg-white transition-colors shrink-0">
+                        Tải lại
+                      </button>
+                    </div>
+                  )}
+                  {entriesLoading && !entries && (
+                    <div className="space-y-4" aria-busy="true" aria-label="Đang tải khoản nợ">
+                      {Array.from({ length: 3 }).map((_, i) => (
+                        <div key={i} className="h-32 bg-brand-dark/10 rounded-[var(--radius-surface)] animate-pulse" />
+                      ))}
+                    </div>
+                  )}
 
                   <div className="space-y-4">
                     {entries?.items.map((entry) => (
                       <DebtEntryCard key={entry.id} entry={entry} onDispute={setDisputeEntry} />
                     ))}
                     {entries && entries.items.length === 0 && !entriesLoading && (
-                      <div className="text-center py-12 bg-white rounded-[24px] border border-brand-dark/5">
-                        <span className="material-symbols-outlined text-4xl text-brand-dark/20 mb-3">inbox</span>
-                        <p className="text-brand-dark/50">Không có khoản nợ nào trong mục này.</p>
+                      <div className="text-center py-14 border border-brand-dark/15 bg-white rounded-[var(--radius-surface)]">
+                        <span className="material-symbols-outlined text-text-muted" style={{ fontSize: 40 }} aria-hidden="true">
+                          inbox
+                        </span>
+                        <p className="mt-2 text-[15px] text-text-secondary">Không có khoản nợ nào trong mục này.</p>
                       </div>
                     )}
                   </div>
 
                   {entries && entries.totalPages > 1 && (
-                    <div className="flex items-center justify-center gap-4 pt-2">
-                      <button
-                        type="button"
-                        onClick={() => setPage((p) => Math.max(1, p - 1))}
-                        disabled={page === 1 || entriesLoading}
-                        aria-label="Trang trước"
-                        className="w-10 h-10 flex items-center justify-center rounded-full border border-brand-dark/15 text-brand-dark disabled:opacity-30 disabled:cursor-not-allowed hover:bg-brand-cream transition-colors"
-                      >
-                        <span className="material-symbols-outlined text-[20px]">chevron_left</span>
+                    <nav aria-label="Phân trang" className="flex items-center justify-center gap-4 pt-2">
+                      <button type="button" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1 || entriesLoading} aria-label="Trang trước" className={pageButton}>
+                        <span className="material-symbols-outlined" style={{ fontSize: 22 }} aria-hidden="true">
+                          chevron_left
+                        </span>
                       </button>
-                      <span className="text-sm text-brand-dark/70">
-                        Trang <strong className="text-brand-dark">{page}</strong> / {entries.totalPages} · {entries.totalCount} khoản nợ
+                      <span className="text-[15px] text-text-secondary">
+                        Trang <strong className="text-text-primary">{page}</strong> / {entries.totalPages} · {entries.totalCount} khoản nợ
                       </span>
                       <button
                         type="button"
                         onClick={() => setPage((p) => Math.min(entries.totalPages, p + 1))}
                         disabled={page === entries.totalPages || entriesLoading}
                         aria-label="Trang sau"
-                        className="w-10 h-10 flex items-center justify-center rounded-full border border-brand-dark/15 text-brand-dark disabled:opacity-30 disabled:cursor-not-allowed hover:bg-brand-cream transition-colors"
+                        className={pageButton}
                       >
-                        <span className="material-symbols-outlined text-[20px]">chevron_right</span>
+                        <span className="material-symbols-outlined" style={{ fontSize: 22 }} aria-hidden="true">
+                          chevron_right
+                        </span>
                       </button>
-                    </div>
+                    </nav>
                   )}
-                </div>
+                </section>
               </div>
 
-              <div className="lg:col-span-4 space-y-4">
+              <div className="lg:col-span-4 space-y-5">
                 {balance > 0 && (
                   <button
                     type="button"
                     onClick={() => setRepayOpen(true)}
-                    className="w-full px-6 py-3.5 rounded-full bg-brand-dark hover:bg-brand-green text-white font-medium transition-colors flex items-center justify-center gap-2 shadow-md"
+                    className="focus-ring w-full min-h-[56px] rounded-full bg-brand-dark hover:bg-brand-green text-white text-base tracking-wide transition-colors flex items-center justify-center gap-2"
                   >
-                    <span className="material-symbols-outlined text-[20px]">payments</span>
-                    <span>Trả nợ qua payOS</span>
+                    <span className="material-symbols-outlined" style={{ fontSize: 22 }} aria-hidden="true">
+                      payments
+                    </span>
+                    Trả nợ qua payOS
                   </button>
                 )}
                 <RepaymentHistory payments={repayments} />

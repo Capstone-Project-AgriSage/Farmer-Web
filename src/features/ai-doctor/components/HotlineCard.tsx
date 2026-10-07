@@ -1,14 +1,17 @@
 export default function HotlineCard() {
   return (
-    <div className="bg-brand-green border border-brand-green p-5 flex items-center gap-3.5">
-      <div className="w-11 h-11 rounded-full bg-white/15 text-white flex items-center justify-center flex-shrink-0 border border-white/25">
-        <span className="material-symbols-outlined text-[22px]">support_agent</span>
+    <div className="bg-brand-green rounded-[var(--radius-surface)] p-6 flex items-center gap-4">
+      <span className="material-symbols-outlined text-white shrink-0" style={{ fontSize: 32 }} aria-hidden="true">
+        support_agent
+      </span>
+      <div className="flex-1 min-w-0">
+        <p className="text-base font-medium text-white">Cần kỹ sư xác nhận trực tiếp?</p>
+        <p className="text-[15px] text-white/80">Hỗ trợ miễn phí 7:00 - 20:00</p>
       </div>
-      <div className="flex-1">
-        <div className="text-sm font-helvetica-neue tracking-tight text-white">Cần kỹ sư xác nhận trực tiếp?</div>
-        <div className="text-xs text-white/70">Hỗ trợ miễn phí 7:00 - 20:00</div>
-      </div>
-      <a href="tel:19006828" className="px-3.5 py-1.5 rounded-full bg-white text-brand-green hover:bg-brand-light text-sm tracking-wide transition-colors flex-shrink-0">
+      <a
+        href="tel:19006828"
+        className="focus-ring-light shrink-0 inline-flex items-center min-h-[44px] px-5 rounded-full bg-white text-brand-green hover:bg-brand-light text-[15px] tracking-wide transition-colors"
+      >
         1900 6828
       </a>
     </div>

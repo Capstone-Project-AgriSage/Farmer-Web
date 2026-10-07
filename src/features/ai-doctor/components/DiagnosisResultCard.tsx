@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { confidenceTone, type DiagnosisScenario } from '../diagnosisScenarios'
+import { useEffect, useState } from 'react'
+import { confidenceTone, type DiagnosisScenario } from '../model'
 
 interface DiagnosisResultCardProps {
   result: DiagnosisScenario
@@ -11,18 +11,30 @@ interface DiagnosisResultCardProps {
   isInconclusive?: boolean
 }
 
-export default function DiagnosisResultCard({
-  result,
-  previewUrl,
-  showAlternatives,
-  onToggleAlternatives,
-  onReset,
-  onSubmittedToAgent,
-  isInconclusive,
-}: DiagnosisResultCardProps) {
+// Severity is shown as an icon plus words, never colour alone.
+const SEVERITY_STYLE: Record<DiagnosisScenario['severity'], { icon: string; className: string }> = {
+  'Nhẹ': { icon: 'info', className: 'bg-status-info-surface text-status-info' },
+  'Trung bình': { icon: 'warning', className: 'bg-status-warning-surface text-status-warning' },
+  'Nặng': { icon: 'error', className: 'bg-status-error-surface text-status-error' },
+  'Bình thường': { icon: 'check_circle', className: 'bg-status-success-surface text-status-success' },
+}
+
+function SectionLabel({ children }: { children: string }) {
+  return <h3 className="text-[13px] uppercase tracking-[0.16em] text-text-secondary mb-3">{children}</h3>
+}
+
+export default function DiagnosisResultCard({ result, previewUrl, showAlternatives, onToggleAlternatives, onReset, onSubmittedToAgent, isInconclusive }: DiagnosisResultCardProps) {
   const tone = confidenceTone(result.confidence)
+  const severity = SEVERITY_STYLE[result.severity]
   const [sentForReview, setSentForReview] = useState(false)
   const [isSendingReview, setIsSendingReview] = useState(false)
+  // The bar fills from 0 to the confidence once the card is on screen.
+  const [barShown, setBarShown] = useState(false)
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setBarShown(true))
+    return () => cancelAnimationFrame(frame)
+  }, [])
 
   const handleSendForReview = () => {
     setIsSendingReview(true)
@@ -34,163 +46,169 @@ export default function DiagnosisResultCard({
   }
 
   return (
-    <div className="bg-white border border-brand-dark/10 p-5 sm:p-6 space-y-5">
-      <div className="flex items-center justify-between pb-4 border-b border-brand-dark/10">
-        <h2 className="text-base font-helvetica-neue tracking-tight text-brand-dark flex items-center gap-2">
-          <span className="material-symbols-outlined text-brand-green text-[20px]">summarize</span>
-          <span>Chẩn đoán AI đề xuất</span>
-        </h2>
-        <button
-          onClick={onReset}
-          className="text-xs text-brand-green hover:text-brand-dark hover:underline flex items-center gap-1 transition-colors"
-        >
-          <span className="material-symbols-outlined text-[14px]">refresh</span>
-          <span>Chẩn đoán ảnh khác</span>
+    <div className="bg-white border border-brand-dark/15 rounded-[var(--radius-surface)]">
+      <div className="flex items-center justify-between gap-4 px-5 sm:px-8 py-4 border-b border-brand-dark/15">
+        <h2 className="text-[13px] uppercase tracking-[0.16em] text-text-secondary">Kết quả chẩn đoán</h2>
+        <button type="button" onClick={onReset} className="focus-ring inline-flex items-center gap-1.5 min-h-[44px] text-[15px] text-text-primary hover:underline underline-offset-4">
+          <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden="true">
+            refresh
+          </span>
+          Chẩn đoán ảnh khác
         </button>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4">
-        {previewUrl && (
-          <img
-            src={previewUrl}
-            alt="Ảnh đã chẩn đoán"
-            className="w-full sm:w-32 h-32 object-cover border border-brand-dark/10 flex-shrink-0"
-          />
-        )}
-        <div className="flex-1 space-y-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-lg font-helvetica-neue tracking-tight text-brand-dark">{result.diseaseName}</h3>
-            <span className={`px-2 py-0.5 text-[10px] tracking-wide  ${tone.badgeBg} ${tone.text}`}>
-              Mức độ: {result.severity}
+      {/* 1. What is wrong with the plant */}
+      <section className="px-5 sm:px-8 py-7 flex flex-col sm:flex-row gap-5 sm:gap-6">
+        {previewUrl && <img src={previewUrl} alt="Ảnh đã chẩn đoán" className="w-full sm:w-28 h-40 sm:h-28 object-cover rounded-[var(--radius-surface)] border border-brand-dark/15 shrink-0" />}
+        <div className="min-w-0">
+          <p className="text-[length:var(--type-h2)] leading-[var(--type-h2-lh)] font-light tracking-tight text-text-primary">{result.diseaseName}</p>
+          <p className="mt-1 text-[15px] italic text-text-secondary">{result.pathogen}</p>
+          <p className={`mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[15px] font-medium ${severity.className}`}>
+            <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden="true">
+              {severity.icon}
             </span>
-          </div>
-          <p className="text-xs text-brand-dark/50 italic">{result.pathogen}</p>
-          <div>
-            <div className="flex items-center justify-between text-xs mb-1">
-              <span className={`${tone.text}`}>{tone.label}</span>
-              <span className={`${tone.text}`}>{result.confidence}%</span>
-            </div>
-            <div className="h-2.5 rounded-full bg-brand-light overflow-hidden">
-              <div
-                className={`h-full rounded-full ${tone.bar} transition-all`}
-                style={{ width: `${result.confidence}%` }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* AI SAFETY COMPLIANCE BANNER */}
-      <div className="p-4 border border-amber-300/60 bg-amber-50/80 text-amber-900 text-xs leading-relaxed space-y-2">
-        <div className="flex items-center gap-2 text-amber-950 tracking-wide">
-          <span className="material-symbols-outlined text-amber-600 text-[18px]">verified_user</span>
-          <span>Chính sách An toàn Nông nghiệp AgriSage (Human-in-the-Loop)</span>
-        </div>
-        <p>
-          Để đảm bảo an toàn tuyệt đối cho ruộng lúa và tránh nguy cơ kháng thuốc hoặc dùng sai hoạt chất,{' '}
-          <strong>danh mục thuốc BVTV &amp; phân bón thương mại chỉ được hiển thị sau khi Đại lý Hai Thắng thẩm định trực tiếp hình ảnh.</strong>
-        </p>
-      </div>
-
-      {isInconclusive ? (
-        <div className="p-4 border border-rose-300/60 bg-rose-50/80 text-rose-900 text-xs leading-relaxed space-y-2">
-          <div className="flex items-center gap-2 text-rose-950 tracking-wide font-medium">
-            <span className="material-symbols-outlined text-rose-600 text-[18px]">error</span>
-            <span>Chưa đủ cơ sở kết luận</span>
-          </div>
-          <p>
-            Hình ảnh không đủ rõ hoặc triệu chứng chưa điển hình. Hệ thống không thể cấp phác đồ tự động để đảm bảo an toàn. Vui lòng gửi ảnh để kỹ sư đại lý Hai Thắng kiểm tra lại và đưa ra khuyến nghị điều trị phù hợp.
+            Mức độ: {result.severity}
           </p>
         </div>
+      </section>
+
+      {isInconclusive ? (
+        <section className="px-5 sm:px-8 pb-7">
+          <div role="alert" className="p-5 border border-status-error/40 bg-status-error-surface rounded-[var(--radius-surface)]">
+            <p className="flex items-center gap-2 text-lg font-medium text-text-primary">
+              <span className="material-symbols-outlined text-status-error" style={{ fontSize: 24 }} aria-hidden="true">
+                error
+              </span>
+              Chưa đủ cơ sở kết luận
+            </p>
+            <p className="mt-2 text-[15px] md:text-base text-text-primary leading-relaxed">
+              Hình ảnh không đủ rõ hoặc triệu chứng chưa điển hình, nên hệ thống không đưa ra phác đồ tự động để đảm bảo an toàn. Bác chụp lại ảnh rõ hơn hoặc gửi ảnh để kỹ sư đại lý xem trực tiếp.
+            </p>
+          </div>
+        </section>
       ) : (
         <>
-          <div>
-            <h4 className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2">
-              Triệu chứng bệnh lá lúa được AI nhận diện
-            </h4>
-            <ul className="space-y-1.5 text-xs text-brand-dark/60">
-              {result.symptomsDetected.map((s) => (
-                <li key={s} className="flex items-start gap-2">
-                  <span className="material-symbols-outlined text-brand-green text-[15px] flex-shrink-0 mt-0.5">
-                    check_circle
+          {/* 2. What to do right now */}
+          <section className="px-5 sm:px-8 pb-7 border-t border-brand-dark/15 pt-7">
+            <SectionLabel>Việc cần làm ngay tại ruộng</SectionLabel>
+            <ol className="space-y-4">
+              {result.treatmentSteps.map((step, index) => (
+                <li key={step} className="flex gap-4">
+                  <span className="shrink-0 w-8 h-8 rounded-full bg-brand-dark text-white text-[15px] flex items-center justify-center" aria-hidden="true">
+                    {index + 1}
                   </span>
-                  <span>{s}</span>
+                  <span className="text-base md:text-[17px] text-text-primary leading-relaxed pt-0.5">{step}</span>
                 </li>
               ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2">
-              Biện pháp canh tác &amp; xử lý an toàn ngay tại ruộng
-            </h4>
-            <ol className="space-y-1.5 text-xs text-brand-dark/60 list-decimal list-inside">
-              {result.treatmentSteps.map((s) => (
-                <li key={s}>{s}</li>
-              ))}
             </ol>
-          </div>
+
+            <div className="mt-6 p-4 border-l-4 border-status-warning bg-status-warning-surface text-[15px] text-text-primary leading-relaxed">
+              <p className="flex items-center gap-2 font-medium">
+                <span className="material-symbols-outlined text-status-warning" style={{ fontSize: 20 }} aria-hidden="true">
+                  verified_user
+                </span>
+                Chính sách An toàn Nông nghiệp AgriSage
+              </p>
+              <p className="mt-1">
+                Danh mục thuốc BVTV và phân bón thương mại <strong>chỉ hiển thị sau khi Đại lý Hai Thắng thẩm định trực tiếp hình ảnh</strong>, để tránh kháng thuốc hoặc dùng sai hoạt chất.
+              </p>
+            </div>
+          </section>
         </>
       )}
 
-      <div className="border-t border-brand-dark/10 pt-3">
-        <button
-          onClick={onToggleAlternatives}
-          className="w-full flex items-center justify-between text-xs tracking-[0.25em]  text-brand-dark/50"
-        >
-          <span>Khả năng khác ({result.alternatives.length})</span>
-          <span className="material-symbols-outlined text-[18px]">
-            {showAlternatives ? 'expand_less' : 'expand_more'}
-          </span>
-        </button>
-        {showAlternatives && (
-          <div className="mt-2 space-y-1.5">
-            {result.alternatives.map((alt) => (
-              <div
-                key={alt.name}
-                className="flex items-center justify-between text-xs bg-brand-light border border-brand-dark/10 px-3 py-2"
-              >
-                <span className="text-brand-dark/60">{alt.name}</span>
-                <span className="text-brand-dark/50">{alt.confidence}%</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      {/* 3. How sure the AI is */}
+      <section className="px-5 sm:px-8 py-7 border-t border-brand-dark/15">
+        <SectionLabel>Độ tin cậy của AI</SectionLabel>
+        <div className="flex items-baseline justify-between gap-4">
+          <p className={`text-[15px] md:text-base font-medium ${tone.text}`}>{tone.label}</p>
+          <p className={`text-[length:var(--type-h2)] leading-none font-light ${tone.text}`}>{result.confidence}%</p>
+        </div>
+        <div className="mt-3 h-3 rounded-full bg-brand-light overflow-hidden" role="img" aria-label={`Độ tin cậy ${result.confidence}%`}>
+          <div
+            className={`h-full w-full rounded-full origin-left ${tone.bar} transition-transform duration-[var(--dur-large)] ease-[var(--motion-ease-out)]`}
+            style={{ transform: `scaleX(${barShown ? result.confidence / 100 : 0})` }}
+          />
+        </div>
+      </section>
 
-      {/* HUMAN IN THE LOOP TRIGGER BUTTON */}
-      <div className="border-t border-brand-dark/10 pt-4">
+      {/* 4. What the dealer is doing about it */}
+      <section className="px-5 sm:px-8 py-7 border-t border-brand-dark/15">
+        <SectionLabel>Chuyên gia đang xử lý</SectionLabel>
         {sentForReview ? (
-          <div className="p-4 bg-brand-light border border-brand-dark/10 flex items-start gap-2.5 text-sm text-brand-dark leading-relaxed">
-            <span className="material-symbols-outlined text-brand-green text-[22px] flex-shrink-0 mt-0.5">task_alt</span>
+          <div role="status" className="flex items-start gap-3 p-4 bg-brand-light border border-brand-dark/15 rounded-[var(--radius-surface)]">
+            <span className="material-symbols-outlined text-status-warning shrink-0" style={{ fontSize: 26 }} aria-hidden="true">
+              hourglass_top
+            </span>
             <div>
-              <div className="font-helvetica-neue tracking-tight">Đã chuyển ca chẩn đoán tới Đại lý Hai Thắng (#AI-2401)</div>
-              <div className="text-xs mt-1 text-brand-dark/60">
-                Trạng thái: <strong className="text-amber-700">Chờ đại lý duyệt phác đồ thương mại</strong>.
-                Sau khi thẩm định viên xác nhận, thuốc đặc trị sẽ được hiển thị ngay tại đây và gửi thông báo về tài khoản của bà con.
-              </div>
+              <p className="text-base font-medium text-text-primary">Đã chuyển ca tới Đại lý Hai Thắng (#AI-2401)</p>
+              <p className="mt-1 text-[15px] text-text-secondary leading-relaxed">
+                Trạng thái: <strong className="text-text-primary">Chờ đại lý duyệt phác đồ thương mại</strong>. Khi thẩm định viên xác nhận, thuốc đặc trị sẽ hiện ngay tại đây và có thông báo gửi về tài khoản của bác.
+              </p>
             </div>
           </div>
         ) : (
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs tracking-[0.25em]  text-brand-dark/50">
-                Yêu cầu phác đồ thương mại
-              </span>
-              <span className="text-[11px] text-brand-dark/50">Đại lý: Hai Thắng (Thới Lai)</span>
-            </div>
+          <div className="space-y-4">
+            <p className="text-[15px] md:text-base text-text-secondary leading-relaxed">
+              Gửi ca này cho đại lý để được thẩm định và mở phác đồ thương mại. <span className="text-text-muted">Đại lý: Hai Thắng (Thới Lai)</span>
+            </p>
             <button
               type="button"
               onClick={handleSendForReview}
               disabled={isSendingReview}
-              className="w-full h-11 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+              className="focus-ring w-full min-h-[52px] rounded-full bg-brand-dark text-white hover:bg-brand-green text-[15px] md:text-base tracking-wide transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
             >
-              <span className="material-symbols-outlined text-[18px]">send</span>
-              <span>{isSendingReview ? 'Đang chuyển hình ảnh...' : 'Gửi đại lý Hai Thắng duyệt nhanh thuốc điều trị'}</span>
+              <span className={`material-symbols-outlined ${isSendingReview ? 'animate-spin' : ''}`} style={{ fontSize: 20 }} aria-hidden="true">
+                {isSendingReview ? 'progress_activity' : 'send'}
+              </span>
+              {isSendingReview ? 'Đang chuyển hình ảnh…' : 'Gửi đại lý Hai Thắng duyệt thuốc điều trị'}
             </button>
           </div>
         )}
-      </div>
+      </section>
+
+      {/* Details: kept below the decision */}
+      {!isInconclusive && (
+        <section className="px-5 sm:px-8 py-7 border-t border-brand-dark/15">
+          <SectionLabel>Triệu chứng AI nhận diện được</SectionLabel>
+          <ul className="space-y-2.5">
+            {result.symptomsDetected.map((symptom) => (
+              <li key={symptom} className="flex items-start gap-3 text-[15px] md:text-base text-text-secondary leading-relaxed">
+                <span className="material-symbols-outlined text-primary-dark shrink-0 mt-0.5" style={{ fontSize: 20 }} aria-hidden="true">
+                  check_circle
+                </span>
+                {symptom}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <section className="border-t border-brand-dark/15">
+        <button
+          type="button"
+          onClick={onToggleAlternatives}
+          aria-expanded={showAlternatives}
+          aria-controls="alternatives-list"
+          className="focus-ring w-full flex items-center justify-between px-5 sm:px-8 min-h-[60px] text-left"
+        >
+          <span className="text-[13px] uppercase tracking-[0.16em] text-text-secondary">Khả năng khác ({result.alternatives.length})</span>
+          <span className="material-symbols-outlined text-text-primary" style={{ fontSize: 24 }} aria-hidden="true">
+            {showAlternatives ? 'expand_less' : 'expand_more'}
+          </span>
+        </button>
+        {showAlternatives && (
+          <ul id="alternatives-list" className="px-5 sm:px-8 pb-6 space-y-2">
+            {result.alternatives.length === 0 && <li className="text-[15px] text-text-secondary">Không có khả năng khác.</li>}
+            {result.alternatives.map((alt) => (
+              <li key={alt.name} className="flex items-center justify-between text-[15px] bg-brand-light border border-brand-dark/10 px-4 py-3 rounded-[var(--radius-surface)]">
+                <span className="text-text-primary">{alt.name}</span>
+                <span className="text-text-secondary">{alt.confidence}%</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   )
 }

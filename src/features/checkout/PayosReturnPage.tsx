@@ -111,58 +111,64 @@ export default function PayosReturnPage() {
     }
   }
 
-  return (
-    <div className="bg-brand-cream min-h-screen py-20 px-4">
-      <div className="max-w-xl mx-auto bg-white rounded-3xl p-8 sm:p-12 shadow-sm border border-brand-dark/10 text-center">
-        {isError ? (
-          <span className="material-symbols-outlined text-rose-500 text-6xl mb-4">cancel</span>
-        ) : payment?.status === 'PAID' ? (
-          <span className="material-symbols-outlined text-brand-green text-6xl mb-4">check_circle</span>
-        ) : isChecking ? (
-          <span className="material-symbols-outlined text-amber-500 text-6xl mb-4 animate-spin">sync</span>
-        ) : (
-          <span className="material-symbols-outlined text-amber-500 text-6xl mb-4">schedule</span>
-        )}
+  const tone = isError ? 'error' : payment?.status === 'PAID' ? 'success' : 'pending'
+  const primaryClass =
+    'focus-ring inline-flex items-center justify-center min-h-[48px] px-7 rounded-full bg-brand-dark text-white hover:bg-brand-green text-base transition-colors w-full sm:w-auto'
+  const secondaryClass =
+    'focus-ring inline-flex items-center justify-center min-h-[48px] px-7 rounded-full border border-brand-dark/30 text-text-primary hover:bg-brand-dark hover:text-white hover:border-brand-dark text-base transition-colors w-full sm:w-auto'
 
-        <h1 className={`text-2xl font-helvetica-neue tracking-tight mb-4 ${isError ? 'text-rose-600' : 'text-brand-dark'}`}>
+  return (
+    <div className="bg-brand-cream text-brand-dark min-h-screen py-16 md:py-24 px-6">
+      <div className="max-w-xl mx-auto bg-white border border-brand-dark/15 rounded-[var(--radius-surface)] p-8 sm:p-12 text-center">
+        <span
+          className={`material-symbols-outlined ${tone === 'error' ? 'text-status-error' : tone === 'success' ? 'text-brand-green' : 'text-status-warning'} ${isChecking ? 'animate-spin' : ''}`}
+          style={{ fontSize: 56 }}
+          aria-hidden="true"
+        >
+          {tone === 'error' ? 'cancel' : tone === 'success' ? 'check_circle' : isChecking ? 'sync' : 'schedule'}
+        </span>
+
+        <h1
+          role={isError ? 'alert' : 'status'}
+          className={`mt-5 text-[length:var(--type-h2)] leading-[var(--type-h2-lh)] font-light tracking-tight ${isError ? 'text-status-error' : 'text-text-primary'}`}
+        >
           {statusText}
         </h1>
 
         {isSimulated && payment?.status === 'PENDING' && !isError && (
-          <div className="mt-2 mb-6 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
-            <p className="mb-3">
-              Đây là môi trường thử: thanh toán không đi qua payOS và không có tiền thật.
-              Bấm nút dưới để coi như bác đã chuyển khoản.
+          <div className="mt-6 border border-status-warning/40 bg-status-warning-surface rounded-[var(--radius-surface)] p-4 text-[15px] leading-relaxed text-text-primary text-left">
+            <p>
+              Đây là môi trường thử: thanh toán không đi qua payOS và không có tiền thật. Bấm nút dưới để coi như bác đã chuyển khoản.
             </p>
             <button
               type="button"
               onClick={payNow}
               disabled={isPaying}
-              className="px-6 py-3 rounded-full bg-amber-500 hover:bg-amber-600 disabled:opacity-60 text-white font-medium transition-colors text-sm"
+              className="focus-ring mt-4 min-h-[48px] px-6 rounded-full bg-brand-dark text-white hover:bg-brand-green disabled:opacity-60 text-base transition-colors"
             >
-              {isPaying ? 'Đang xử lý...' : 'Thanh toán nhanh (chỉ môi trường thử)'}
+              {isPaying ? 'Đang xử lý…' : 'Thanh toán nhanh (chỉ môi trường thử)'}
             </button>
           </div>
         )}
 
         {payment && payment.status === 'PAID' && (
-          <div className="text-brand-dark/70 mb-8 space-y-2 text-sm">
-            <p>Mã thanh toán: <strong className="text-brand-dark">{payment.paymentNumber}</strong></p>
-            <p>Số tiền: <strong className="text-brand-dark">{formatVnd(payment.amount)}</strong></p>
-          </div>
+          <dl className="mt-8 border-t border-brand-dark/15 text-[15px] text-left">
+            <div className="flex justify-between gap-4 py-3 border-b border-brand-dark/10">
+              <dt className="text-text-secondary">Mã thanh toán</dt>
+              <dd className="text-text-primary">{payment.paymentNumber}</dd>
+            </div>
+            <div className="flex justify-between gap-4 py-3 border-b border-brand-dark/10">
+              <dt className="text-text-secondary">Số tiền</dt>
+              <dd className="text-text-primary font-medium">{formatVnd(payment.amount)}</dd>
+            </div>
+          </dl>
         )}
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
-          <Link
-            to={isDebtRepayment ? '/debt' : orderId ? `/orders/${orderId}` : '/orders'}
-            className="px-6 py-3 rounded-full bg-brand-dark text-white hover:bg-brand-green font-medium transition-colors text-sm w-full sm:w-auto"
-          >
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
+          <Link to={isDebtRepayment ? '/debt' : orderId ? `/orders/${orderId}` : '/orders'} className={primaryClass}>
             {isDebtRepayment ? 'Quay lại Sổ nợ' : orderId ? 'Xem chi tiết đơn hàng' : 'Xem đơn hàng của tôi'}
           </Link>
-          <Link
-            to="/"
-            className="px-6 py-3 rounded-full bg-brand-cream text-brand-dark hover:bg-brand-light font-medium transition-colors text-sm w-full sm:w-auto"
-          >
+          <Link to="/" className={secondaryClass}>
             Về trang chủ
           </Link>
         </div>

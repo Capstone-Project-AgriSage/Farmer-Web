@@ -6,18 +6,20 @@ const tips = [
 
 export default function PhotoTipsCard() {
   return (
-    <div className="bg-amber-50 border border-amber-200 border-l-4 border-l-amber-500 p-5 space-y-3">
-      <h4 className="text-xs tracking-[0.25em]  text-amber-900 flex items-center gap-1.5">
-        <span className="material-symbols-outlined text-amber-600 text-[18px]">tips_and_updates</span>
-        <span>Mẹo chụp ảnh chuẩn xác</span>
+    <div className="bg-brand-light border border-brand-dark/15 rounded-[var(--radius-surface)] p-6">
+      <h4 className="text-[13px] uppercase tracking-[0.16em] text-text-secondary flex items-center gap-2">
+        <span className="material-symbols-outlined text-primary-dark" style={{ fontSize: 20 }} aria-hidden="true">
+          tips_and_updates
+        </span>
+        Mẹo chụp ảnh chuẩn xác
       </h4>
-      <ul className="space-y-2 text-xs text-amber-950/75">
-        {tips.map((tip) => (
-          <li key={tip} className="flex items-start gap-2">
-            <span className="material-symbols-outlined text-amber-600 text-[16px] flex-shrink-0">
-              check_circle
+      <ul className="mt-4 space-y-3">
+        {tips.map((tip, index) => (
+          <li key={tip} className="flex items-start gap-3 text-[15px] text-text-primary leading-relaxed">
+            <span className="shrink-0 w-6 h-6 rounded-full border border-brand-dark/30 text-[13px] flex items-center justify-center mt-0.5" aria-hidden="true">
+              {index + 1}
             </span>
-            <span>{tip}</span>
+            {tip}
           </li>
         ))}
       </ul>

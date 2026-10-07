@@ -21,11 +21,11 @@ export const ORDER_STATUS: Record<OrderStatus, { label: string; tone: Tone }> = 
   PENDING_CONFIRMATION: { label: 'Chờ xác nhận', tone: 'pending' },
   CONFIRMED: { label: 'Đã xác nhận', tone: 'progress' },
   PREPARING: { label: 'Đang chuẩn bị', tone: 'progress' },
-  READY_FOR_FULFILLMENT: { label: 'Sẵn sàng giao', tone: 'progress' },
+  READY_FOR_FULFILLMENT: { label: 'Sẵn sàng giao hàng', tone: 'progress' },
   PARTIALLY_FULFILLED: { label: 'Đã giao một phần', tone: 'progress' },
-  COMPLETED: { label: 'Hoàn thành', tone: 'success' },
+  COMPLETED: { label: 'Hoàn tất', tone: 'success' },
   CANCELLED: { label: 'Đã huỷ', tone: 'danger' },
-  PARTIALLY_CANCELLED: { label: 'Huỷ phần còn lại', tone: 'danger' },
+  PARTIALLY_CANCELLED: { label: 'Phần còn lại đã huỷ', tone: 'danger' },
 }
 
 export const DELIVERY_STATUS: Record<DeliveryStatus, { label: string; tone: Tone }> = {

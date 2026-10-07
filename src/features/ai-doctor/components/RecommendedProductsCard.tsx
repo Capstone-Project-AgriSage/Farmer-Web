@@ -9,55 +9,47 @@ interface RecommendedProductsCardProps {
   isVerified?: boolean
 }
 
-export default function RecommendedProductsCard({
-  diseaseName,
-  reviewerName,
-  reviewerNote,
-  products,
-  isVerified = false,
-}: RecommendedProductsCardProps) {
+export default function RecommendedProductsCard({ diseaseName, reviewerName, reviewerNote, products, isVerified = false }: RecommendedProductsCardProps) {
   if (!isVerified) {
     return (
-      <div className="bg-white border border-brand-dark/10 p-5 space-y-3">
-        <div className="flex items-center gap-2 text-brand-dark">
-          <span className="material-symbols-outlined text-[20px] text-amber-700">hourglass_top</span>
-          <h4 className="text-sm font-helvetica-neue tracking-tight">Phác đồ thương mại: Chờ thẩm định</h4>
-        </div>
-        <p className="text-xs text-brand-dark/60 leading-relaxed">
-          Đại lý Hai Thắng đang đối chiếu hình ảnh lá lúa với hoạt chất phòng trừ tối ưu. Thuốc BVTV phù hợp sẽ được mở ngay khi thẩm định hoàn tất.
+      <div className="bg-white border border-brand-dark/15 rounded-[var(--radius-surface)] p-6">
+        <h4 className="flex items-center gap-2 text-lg font-medium text-text-primary">
+          <span className="material-symbols-outlined text-status-warning" style={{ fontSize: 24 }} aria-hidden="true">
+            hourglass_top
+          </span>
+          Phác đồ thương mại: chờ thẩm định
+        </h4>
+        <p className="mt-3 text-[15px] text-text-secondary leading-relaxed">
+          Đại lý Hai Thắng đối chiếu hình ảnh lá lúa với hoạt chất phòng trừ phù hợp. Thuốc BVTV sẽ được mở ngay khi thẩm định hoàn tất.
         </p>
-        <div className="p-3 bg-brand-light border border-brand-dark/10 text-[11px] text-brand-dark/50 flex items-center justify-between">
+        <p className="mt-4 pt-4 border-t border-brand-dark/10 flex items-center justify-between text-[13px] text-text-secondary">
           <span>Tiêu chuẩn mô hình: Rice-V2.1</span>
-          <span className="text-brand-green">Tự động đồng bộ</span>
-        </div>
+          <span className="text-primary-dark">Tự động đồng bộ</span>
+        </p>
       </div>
     )
   }
 
   return (
-    <div className="bg-white border border-brand-dark/10 p-5 space-y-4">
-      <div className="border-b border-brand-dark/10 pb-3">
-        <div className="flex items-center justify-between">
-          <div className="inline-flex items-center gap-1.5 text-xs tracking-[0.25em]  text-brand-dark/50">
-            <span className="material-symbols-outlined text-[14px] text-brand-green">verified</span>
-            <span>Đã thẩm định chuyên môn</span>
-          </div>
-          <span className="text-[11px] text-brand-dark/50">Kho Thới Lai</span>
-        </div>
-        <h4 className="text-sm font-helvetica-neue tracking-tight text-brand-dark mt-2">
-          Thuốc đặc trị được duyệt cho "{diseaseName}"
-        </h4>
-        {reviewerName && (
-          <p className="text-xs text-brand-green mt-0.5">
-            Thẩm định bởi: {reviewerName}
-          </p>
-        )}
+    <div className="bg-white border border-brand-dark/15 rounded-[var(--radius-surface)] p-6 space-y-5">
+      <div className="pb-4 border-b border-brand-dark/10">
+        <p className="flex items-center justify-between text-[13px] uppercase tracking-[0.16em] text-text-secondary">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-primary-dark" style={{ fontSize: 18 }} aria-hidden="true">
+              verified
+            </span>
+            Đã thẩm định chuyên môn
+          </span>
+          <span>Kho Thới Lai</span>
+        </p>
+        <h4 className="mt-3 text-lg font-medium text-text-primary leading-snug">Thuốc đặc trị được duyệt cho "{diseaseName}"</h4>
+        {reviewerName && <p className="mt-1 text-[15px] text-primary-dark">Thẩm định bởi: {reviewerName}</p>}
       </div>
 
       {reviewerNote && (
-        <div className="p-3 bg-brand-light border border-brand-dark/10 text-xs text-brand-dark/60 leading-relaxed">
-          <strong className="text-brand-dark">Chỉ dẫn từ đại lý:</strong> {reviewerNote}
-        </div>
+        <p className="p-4 bg-brand-light border-l-4 border-primary-dark text-[15px] text-text-secondary leading-relaxed">
+          <strong className="text-text-primary">Chỉ dẫn từ đại lý:</strong> {reviewerNote}
+        </p>
       )}
 
       {products.length > 0 ? (
@@ -67,9 +59,7 @@ export default function RecommendedProductsCard({
           ))}
         </div>
       ) : (
-        <p className="text-xs text-brand-dark/60">
-          Chưa có sản phẩm phù hợp trong danh mục hiện tại, vui lòng liên hệ đại lý Hai Thắng.
-        </p>
+        <p className="text-[15px] text-text-secondary">Chưa có sản phẩm phù hợp trong danh mục hiện tại, bác vui lòng liên hệ đại lý Hai Thắng.</p>
       )}
     </div>
   )

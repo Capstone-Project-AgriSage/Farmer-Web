@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import ProductCard from '../../components/ui/ProductCard'
+import ProductSkeleton from '../../components/ui/ProductSkeleton'
+import { useMotionPolicy } from '../../motion/useMotionPolicy'
 import AiDiagnosisCallout from '../../components/ui/AiDiagnosisCallout'
 import { catalogApi } from '../../api/catalogApi'
 import { describeApiError } from '../../api/client'
@@ -31,6 +33,20 @@ const CATALOG_FETCH_SIZE = 100
 const PAGE_SIZE = 8
 const SEARCH_DEBOUNCE_MS = 350
 
+/** Page numbers with gaps (null) so long lists stay short: 1 … 4 5 6 … 12. */
+function pageNumbers(current: number, total: number): (number | null)[] {
+  const wanted = new Set([1, total, current - 1, current, current + 1])
+  const pages = [...wanted].filter((p) => p >= 1 && p <= total).sort((a, b) => a - b)
+  const out: (number | null)[] = []
+  pages.forEach((p, i) => {
+    // A single missing page is shown instead of an ellipsis, so the dots never hide just one number.
+    if (i > 0 && p - pages[i - 1] === 2) out.push(p - 1)
+    else if (i > 0 && p - pages[i - 1] > 2) out.push(null)
+    out.push(p)
+  })
+  return out
+}
+
 export default function ProductsPage() {
   useDocumentTitle('Sản phẩm vật tư nông nghiệp')
   const [searchParams] = useSearchParams()
@@ -44,6 +60,8 @@ export default function ProductsPage() {
   const [sort, setSort] = useState<SortOption>('default')
   const [page, setPage] = useState(1)
   const [reloadKey, setReloadKey] = useState(0)
+  const gridRef = useRef<HTMLDivElement>(null)
+  const motionPolicy = useMotionPolicy()
 
   const searchParamsKey = searchParams.toString()
 
@@ -114,6 +132,25 @@ export default function ProductsPage() {
     setPage(1)
   }
 
+  const goToPage = (next: number) => {
+    setPage(next)
+    // Bring the top of the grid back into view after changing page.
+    requestAnimationFrame(() => gridRef.current?.scrollIntoView({ behavior: motionPolicy === 'none' ? 'auto' : 'smooth', block: 'start' }))
+  }
+
+  const isSearching = search.trim() !== debouncedSearch || (isLoading && debouncedSearch !== '')
+  const activeCategory = categoryChips.find((chip) => chip.value === categoryId)
+
+  const chipClass = (active: boolean) =>
+    `focus-ring shrink-0 whitespace-nowrap min-h-[44px] px-4 rounded-full text-[15px] tracking-wide transition-colors duration-[var(--dur-micro)] ${
+      active ? 'bg-brand-dark text-white' : 'border border-brand-dark/25 text-text-primary hover:border-brand-dark/60'
+    }`
+
+  const pageButtonClass = (active: boolean) =>
+    `focus-ring w-11 h-11 flex items-center justify-center rounded-full text-[15px] transition-colors duration-[var(--dur-micro)] ${
+      active ? 'bg-brand-dark text-white' : 'border border-brand-dark/25 text-text-primary hover:border-brand-dark/60'
+    }`
+
   return (
     <>
       <Breadcrumb
@@ -124,72 +161,61 @@ export default function ProductsPage() {
         ]}
       />
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-10 md:py-14 space-y-8">
-        {/* Page Header */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        {/* Page header */}
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
           <div>
-            <p className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2 font-helvetica-neue">
-              Cửa hàng vật tư
-            </p>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-helvetica-neue tracking-tight text-brand-dark leading-[1.15]">
-              Vật Tư Nông Dược Chính Hãng
-            </h1>
-            <p className="text-sm text-brand-dark/60 mt-2 max-w-xl">
+            <p className="text-[13px] uppercase tracking-[0.16em] text-text-secondary mb-3">Cửa hàng vật tư</p>
+            <h1 className="text-[length:var(--type-h1)] leading-[var(--type-h1-lh)] font-light tracking-tight text-text-primary">Vật Tư Nông Dược Chính Hãng</h1>
+            <p className="text-base text-text-secondary mt-3 max-w-xl leading-relaxed">
               Phân bón NPK, lúa giống và thuốc BVTV đạt chuẩn VietGAP từ Đại lý Hai Thắng.
             </p>
           </div>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-brand-light text-brand-dark/70 border border-brand-dark/10 text-xs tracking-wide self-start md:self-auto">
-            <span className="material-symbols-outlined text-[18px]">verified</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 border border-brand-dark/20 rounded-full text-[15px] text-text-primary self-start md:self-auto">
+            <span className="material-symbols-outlined" style={{ fontSize: 20 }} aria-hidden="true">
+              verified
+            </span>
             <span>100% Chính Hãng • Tem VAT</span>
           </div>
         </div>
 
-        {/* Filter Toolbar: Category Chips + Search + Sort */}
-        <div className="border border-brand-dark/10 bg-white p-5 space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            {/* Horizontal Category Chips */}
-            <div className="flex flex-wrap items-center gap-2">
+        {/* Filters: category chips, sort and search */}
+        <div className="border-y border-brand-dark/15 py-5 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-2 overflow-x-auto sm:flex-wrap sm:overflow-visible -mx-6 px-6 sm:mx-0 sm:px-0 pb-1 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="group" aria-label="Lọc theo danh mục">
               {categoryChips.map((chip) => {
                 const isActive = categoryId === chip.value
                 return (
-                  <button
-                    key={chip.value || 'all'}
-                    type="button"
-                    onClick={() => handleSelectCategory(chip.value)}
-                    className={`px-3.5 py-1.5 rounded-full text-xs tracking-wide transition-colors ${
-                      isActive
-                        ? 'bg-brand-dark text-white'
-                        : 'border border-brand-dark/15 text-brand-dark/70 hover:border-brand-dark/30'
-                    }`}
-                  >
+                  <button key={chip.value || 'all'} type="button" aria-pressed={isActive} onClick={() => handleSelectCategory(chip.value)} className={chipClass(isActive)}>
                     {chip.label}
                   </button>
                 )
               })}
             </div>
 
-            {/* Sort & Count */}
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-brand-dark/50 tracking-wide">Sắp xếp:</span>
+            <label className="flex items-center gap-3 text-[15px] text-text-secondary">
+              <span>Sắp xếp</span>
               <select
-                className="text-xs text-brand-dark bg-brand-cream border border-brand-dark/15 rounded-full px-3 py-1.5 focus:outline-none focus:border-brand-dark/40"
+                className="focus-ring min-h-[44px] text-[15px] text-text-primary bg-white border border-brand-dark/25 rounded-[var(--radius-input)] px-3 hover:border-brand-dark/60 transition-colors"
                 value={sort}
-                onChange={(e) => setSort(e.target.value as SortOption)}
+                onChange={(e) => {
+                  setSort(e.target.value as SortOption)
+                  setPage(1)
+                }}
               >
                 <option value="default">Mặc định</option>
                 <option value="price-asc">Giá thấp đến cao</option>
                 <option value="price-desc">Giá cao đến thấp</option>
               </select>
-            </div>
+            </label>
           </div>
 
-          {/* Search bar */}
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-3 top-2.5 text-brand-dark/40 text-[18px]">
+            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none" style={{ fontSize: 22 }} aria-hidden="true">
               search
             </span>
             <input
-              className="w-full pl-9 pr-4 py-2.5 text-xs sm:text-sm text-brand-dark placeholder:text-brand-dark/40 bg-brand-cream border border-brand-dark/15 focus:outline-none focus:border-brand-dark/40"
-              placeholder="Tìm theo tên sản phẩm hoặc mã SKU..."
+              className="focus-ring w-full min-h-[52px] pl-12 pr-12 text-base text-text-primary placeholder:text-text-muted bg-white border border-brand-dark/25 rounded-[var(--radius-input)] hover:border-brand-dark/60 focus:border-brand-dark transition-colors [&::-webkit-search-cancel-button]:hidden"
+              placeholder="Tìm theo tên hoặc mã SKU"
               type="search"
               aria-label="Tìm sản phẩm"
               value={search}
@@ -198,90 +224,108 @@ export default function ProductsPage() {
                 setPage(1)
               }}
             />
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center">
+              {isSearching ? (
+                <span className="material-symbols-outlined animate-spin text-text-secondary" style={{ fontSize: 22 }} aria-hidden="true">
+                  progress_activity
+                </span>
+              ) : (
+                search && (
+                  <button type="button" onClick={() => { setSearch(''); setDebouncedSearch(''); setPage(1) }} aria-label="Xóa nội dung tìm kiếm" className="focus-ring w-11 h-11 flex items-center justify-center text-text-secondary hover:text-text-primary">
+                    <span className="material-symbols-outlined" style={{ fontSize: 22 }} aria-hidden="true">
+                      close
+                    </span>
+                  </button>
+                )
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Product Grid */}
-        {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6" aria-busy="true">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-[380px] rounded-[20px] border border-brand-dark/10 bg-white animate-pulse" />
-            ))}
-          </div>
-        ) : error ? (
-          <div className="border border-brand-dark/10 bg-white p-12 text-center">
-            <span className="material-symbols-outlined text-status-error text-5xl">cloud_off</span>
-            <h3 className="text-base font-helvetica-neue tracking-tight text-brand-dark mt-3">{error}</h3>
-            <button
-              onClick={() => setReloadKey((k) => k + 1)}
-              className="mt-5 px-6 py-2.5 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide text-sm transition-colors"
-            >
-              Thử lại
-            </button>
-          </div>
-        ) : pageItems.length > 0 ? (
-          <div className="space-y-10">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
-              {pageItems.map((product) => (
-                <ProductCard key={product.slug} product={product} />
+        {/* Result count (announced to screen readers when it changes) */}
+        <p className="text-[15px] text-text-secondary min-h-[24px]" role="status" aria-live="polite">
+          {!isLoading && !error && (
+            <>
+              {sorted.length} sản phẩm
+              {activeCategory && activeCategory.value ? ` trong "${activeCategory.label}"` : ''}
+              {debouncedSearch ? ` cho "${debouncedSearch}"` : ''}
+            </>
+          )}
+        </p>
+
+        {/* Product grid */}
+        <div ref={gridRef} className="scroll-mt-28">
+          {isLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6" aria-busy="true" aria-label="Đang tải sản phẩm">
+              {Array.from({ length: PAGE_SIZE }).map((_, i) => (
+                <ProductSkeleton key={i} />
               ))}
             </div>
-            
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div className="flex justify-center items-center gap-2">
-                <button 
-                  onClick={() => setPage(p => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                  className="w-10 h-10 flex items-center justify-center rounded-full border border-brand-dark/15 text-brand-dark disabled:opacity-30 disabled:cursor-not-allowed hover:bg-brand-cream transition-colors"
-                >
-                  <span className="material-symbols-outlined text-[20px]">chevron_left</span>
-                </button>
-                
-                {Array.from({ length: totalPages }).map((_, i) => {
-                  const p = i + 1;
-                  return (
-                    <button
-                      key={p}
-                      onClick={() => setPage(p)}
-                      className={`w-10 h-10 flex items-center justify-center rounded-full text-sm font-medium transition-colors ${
-                        currentPage === p 
-                          ? 'bg-brand-dark text-white border border-brand-dark' 
-                          : 'border border-brand-dark/15 text-brand-dark hover:bg-brand-cream'
-                      }`}
-                    >
-                      {p}
-                    </button>
-                  )
-                })}
-                
-                <button 
-                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                  className="w-10 h-10 flex items-center justify-center rounded-full border border-brand-dark/15 text-brand-dark disabled:opacity-30 disabled:cursor-not-allowed hover:bg-brand-cream transition-colors"
-                >
-                  <span className="material-symbols-outlined text-[20px]">chevron_right</span>
-                </button>
+          ) : error ? (
+            <div role="alert" className="border border-brand-dark/15 bg-white p-12 text-center rounded-[var(--radius-surface)]">
+              <span className="material-symbols-outlined text-status-error" style={{ fontSize: 48 }} aria-hidden="true">
+                cloud_off
+              </span>
+              <h3 className="text-lg tracking-tight text-text-primary mt-3">{error}</h3>
+              <button
+                type="button"
+                onClick={() => setReloadKey((k) => k + 1)}
+                className="focus-ring mt-6 min-h-[44px] px-7 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide text-[15px] transition-colors"
+              >
+                Thử lại
+              </button>
+            </div>
+          ) : pageItems.length > 0 ? (
+            <div className="space-y-12">
+              <div key={`${categoryId}|${debouncedSearch}|${sort}|${currentPage}`} className="fade-swap grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
+                {pageItems.map((product) => (
+                  <ProductCard key={product.slug} product={product} />
+                ))}
               </div>
-            )}
-          </div>
-        ) : (
-          <div className="border border-brand-dark/10 bg-white p-12 text-center">
-            <span className="material-symbols-outlined text-brand-dark/40 text-5xl">search_off</span>
-            <h3 className="text-base font-helvetica-neue tracking-tight text-brand-dark mt-3">
-              Không tìm thấy sản phẩm phù hợp
-            </h3>
-            <p className="text-xs text-brand-dark/55 mt-1">
-              Thử từ khóa tìm kiếm hoặc bấm chọn danh mục khác.
-            </p>
-            <button
-              onClick={resetFilters}
-              className="mt-5 px-6 py-2.5 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-sm transition-colors"
-            >
-              Xem tất cả sản phẩm
-            </button>
-          </div>
-        )}
+
+              {totalPages > 1 && (
+                <nav aria-label="Phân trang" className="flex justify-center items-center gap-2 flex-wrap">
+                  <button type="button" onClick={() => goToPage(Math.max(1, currentPage - 1))} disabled={currentPage === 1} aria-label="Trang trước" className={`${pageButtonClass(false)} disabled:opacity-35 disabled:cursor-not-allowed`}>
+                    <span className="material-symbols-outlined" style={{ fontSize: 22 }} aria-hidden="true">
+                      chevron_left
+                    </span>
+                  </button>
+                  {pageNumbers(currentPage, totalPages).map((item, i) =>
+                    item === null ? (
+                      <span key={`gap-${i}`} className="w-8 text-center text-text-secondary" aria-hidden="true">
+                        …
+                      </span>
+                    ) : (
+                      <button key={item} type="button" onClick={() => goToPage(item)} aria-label={`Trang ${item}`} aria-current={currentPage === item ? 'page' : undefined} className={pageButtonClass(currentPage === item)}>
+                        {item}
+                      </button>
+                    ),
+                  )}
+                  <button type="button" onClick={() => goToPage(Math.min(totalPages, currentPage + 1))} disabled={currentPage === totalPages} aria-label="Trang sau" className={`${pageButtonClass(false)} disabled:opacity-35 disabled:cursor-not-allowed`}>
+                    <span className="material-symbols-outlined" style={{ fontSize: 22 }} aria-hidden="true">
+                      chevron_right
+                    </span>
+                  </button>
+                </nav>
+              )}
+            </div>
+          ) : (
+            <div className="border border-brand-dark/15 bg-white p-12 text-center rounded-[var(--radius-surface)]">
+              <span className="material-symbols-outlined text-text-muted" style={{ fontSize: 48 }} aria-hidden="true">
+                search_off
+              </span>
+              <h3 className="text-lg tracking-tight text-text-primary mt-3">Không tìm thấy sản phẩm phù hợp</h3>
+              <p className="text-[15px] text-text-secondary mt-2">Thử từ khóa tìm kiếm hoặc bấm chọn danh mục khác.</p>
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="focus-ring mt-6 min-h-[44px] px-7 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide text-[15px] transition-colors"
+              >
+                Xem tất cả sản phẩm
+              </button>
+            </div>
+          )}
+        </div>
 
         <AiDiagnosisCallout
           title="Chưa rõ ruộng lúa bị bệnh gì để chọn thuốc?"

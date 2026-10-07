@@ -9,52 +9,36 @@ interface RepaymentHistoryProps {
 
 export default function RepaymentHistory({ payments }: RepaymentHistoryProps) {
   return (
-    <div className="bg-white rounded-[24px] border border-brand-dark/10 p-6 md:p-8 shadow-sm sticky top-28">
-      <div className="flex items-center justify-between mb-6 pb-4 border-b border-brand-dark/10">
-        <h3 className="text-lg font-medium font-helvetica-neue text-brand-dark flex items-center gap-2">
-          <span className="material-symbols-outlined text-[20px] text-brand-green">history</span>
-          Lịch sử trả nợ
-        </h3>
-        <span className="text-sm font-medium text-brand-dark/60 bg-brand-light px-3 py-1 rounded-full">{payments.length} gd</span>
+    <section className="bg-white border border-brand-dark/15 rounded-[var(--radius-surface)] p-6 lg:sticky lg:top-28" aria-label="Lịch sử trả nợ">
+      <div className="flex items-center justify-between gap-3 pb-4 border-b border-brand-dark/15">
+        <h2 className="text-[13px] uppercase tracking-[0.16em] text-text-secondary">Lịch sử trả nợ</h2>
+        <span className="text-[15px] text-text-secondary">{payments.length} giao dịch</span>
       </div>
 
       {payments.length === 0 ? (
-        <p className="text-sm text-brand-dark/50">Bác chưa có lần trả nợ nào.</p>
+        <p className="pt-5 text-[15px] text-text-secondary">Bác chưa có lần trả nợ nào.</p>
       ) : (
-        <div className="space-y-4">
+        <ul className="divide-y divide-brand-dark/10">
           {payments.map((p) => {
             const status = REPAYMENT_STATUS[p.status] ?? { label: p.status, tone: 'neutral' as const }
             const paid = p.status === 'PAID'
-
             return (
-              <div key={p.id} className="group flex gap-4 relative">
-                <div className="absolute left-6 top-10 bottom-[-16px] w-[1px] bg-brand-dark/10 group-last:hidden" />
-                <div className="w-12 h-12 rounded-full bg-brand-light border border-brand-dark/10 flex items-center justify-center shrink-0 z-10">
-                  <span className={`material-symbols-outlined text-[22px] ${paid ? 'text-brand-green' : 'text-brand-dark/40'}`}>
-                    {p.paymentMethod === 'CASH' ? 'local_atm' : 'qr_code_2'}
-                  </span>
+              <li key={p.id} className="py-4 flex justify-between items-start gap-3">
+                <div className="min-w-0">
+                  <p className={`text-lg font-medium ${paid ? 'text-primary-dark' : 'text-text-secondary'}`}>
+                    {paid ? '+' : ''}
+                    {formatVnd(p.amount)}
+                  </p>
+                  <p className="mt-0.5 text-[15px] text-text-secondary">
+                    {p.paymentNumber} · {METHOD_LABEL[p.paymentMethod] ?? p.paymentMethod} · {formatDate(p.confirmedAt ?? p.initiatedAt)}
+                  </p>
                 </div>
-                <div className="flex-1 pb-4">
-                  <div className="flex justify-between items-start mb-1 gap-2">
-                    <div className={`font-helvetica-neue text-lg font-medium tracking-tight ${paid ? 'text-brand-green' : 'text-brand-dark/60'}`}>
-                      {paid ? '+' : ''}
-                      {formatVnd(p.amount)}
-                    </div>
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium shrink-0 border ${TONE_CLASSES[status.tone]}`}>{status.label}</span>
-                  </div>
-                  <div className="text-xs text-brand-dark/50 flex items-center gap-1.5 font-medium flex-wrap">
-                    <span>{p.paymentNumber}</span>
-                    <span>•</span>
-                    <span>{METHOD_LABEL[p.paymentMethod] ?? p.paymentMethod}</span>
-                    <span>•</span>
-                    <span>{formatDate(p.confirmedAt ?? p.initiatedAt)}</span>
-                  </div>
-                </div>
-              </div>
+                <span className={`shrink-0 px-3 py-0.5 rounded-full border text-[13px] font-medium ${TONE_CLASSES[status.tone]}`}>{status.label}</span>
+              </li>
             )
           })}
-        </div>
+        </ul>
       )}
-    </div>
+    </section>
   )
 }

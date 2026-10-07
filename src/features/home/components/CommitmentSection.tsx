@@ -1,3 +1,6 @@
+import Reveal from '../../../components/ui/Reveal'
+import SectionHeader from '../../../components/ui/SectionHeader'
+
 const commitments = [
   {
     icon: 'verified',
@@ -23,34 +26,24 @@ const commitments = [
 
 export default function CommitmentSection() {
   return (
-    <section className="w-full py-16 md:py-20 bg-brand-light border-t border-brand-dark/10">
+    <section className="w-full py-20 md:py-28 bg-brand-green">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="max-w-2xl mb-10 md:mb-12">
-          <p className="text-xs tracking-[0.25em]  text-brand-dark/50 mb-2 font-helvetica-neue">
-            Cam kết dịch vụ
-          </p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl text-brand-dark tracking-tight font-helvetica-neue leading-[1.15]">
-            Đồng hành toàn diện cùng nhà nông
-          </h2>
-        </div>
+        <SectionHeader tone="dark" eyebrow="Cam kết dịch vụ" title="Đồng hành toàn diện cùng nhà nông" />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+        <ul className="mt-10 md:mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-10">
           {commitments.map((item, index) => (
-            <div
-              key={item.title}
-              className="bg-brand-green rounded-lg p-6 flex flex-col items-start"
-            >
-              <div className="text-xs tracking-[0.2em] text-white/60 font-helvetica-neue mb-4">
-                {String(index + 1).padStart(2, '0')}
+            <Reveal as="li" key={item.title} delay={index * 0.07} className="border-t border-white/25 pt-6">
+              <div className="flex items-center justify-between text-white/75">
+                <span className="text-[13px] tracking-[0.16em]">{String(index + 1).padStart(2, '0')}</span>
+                <span className="material-symbols-outlined text-[28px] text-white" aria-hidden="true">
+                  {item.icon}
+                </span>
               </div>
-              <div className="w-12 h-12 rounded-full bg-white/15 border border-white/25 text-white flex items-center justify-center mb-4">
-                <span className="material-symbols-outlined text-[24px]">{item.icon}</span>
-              </div>
-              <h3 className="text-base font-medium text-white mb-2">{item.title}</h3>
-              <p className="text-sm text-white/75 leading-relaxed">{item.desc}</p>
-            </div>
+              <h3 className="mt-6 text-xl font-medium text-white">{item.title}</h3>
+              <p className="mt-2 text-[15px] md:text-base text-white/80 leading-relaxed">{item.desc}</p>
+            </Reveal>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   )

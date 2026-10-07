@@ -32,7 +32,8 @@
 
   --color-text-primary: #172118;
   --color-text-secondary: #465348;
-  --color-text-muted: #7a8a7c;
+  /* Was #7a8a7c (3.4:1 on cream, fails AA). No class uses this token yet; #627165 is >=4.6:1 on every surface. */
+  --color-text-muted: #627165;
 
   --color-status-error: #c62828;
   --color-status-error-surface: #ffebee;
@@ -45,6 +46,91 @@
 
   --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
   --shadow-floating: 0 20px 40px -10px rgba(46, 125, 50, 0.12);
+
+  /* Radius (Editorial Agritech): cards/panels 2px, inputs 4px, modals 8px, CTA buttons and filter chips stay pill.
+     New names only: the existing rounded-* utilities keep their values until each screen is redesigned. */
+  --radius-surface: 2px;
+  --radius-input: 4px;
+  --radius-modal: 8px;
+  --radius-pill: 9999px;
+
+  /* Containers in px on purpose. max-w-7xl is 80rem, which is 1360px while the root font size is 106.25%.
+     Use as max-w-marketing / max-w-application / max-w-reading. */
+  --container-marketing: 1280px;
+  --container-application: 1280px;
+  --container-reading: 720px;
+}
+
+/* Motion tokens. Plain custom properties, not @theme: Tailwind already owns --ease-out and --ease-in
+   and redefining them would change every existing ease-out/ease-in utility.
+   Keep in sync with src/motion/tokens.ts. */
+:root {
+  --dur-micro: 200ms;
+  --dur-standard: 350ms;
+  --dur-image: 550ms;
+  --dur-large: 700ms;
+  --dur-counter: 1000ms;
+
+  --motion-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-ease-in: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* Type roles (mobile first, px so they do not depend on the html font-size decision).
+   Not applied anywhere yet: screens adopt them as they are redesigned.
+   Rules: no new text under 13px (--type-min); important body copy 15-17px or more;
+   use text-text-primary / text-text-secondary / text-text-muted instead of brand-dark/40..55 for text that matters. */
+:root {
+  --type-min: 13px;
+
+  --type-display: 38px;
+  --type-display-lh: 42px;
+  --type-h1: 30px;
+  --type-h1-lh: 36px;
+  --type-h2: 26px;
+  --type-h2-lh: 32px;
+  --type-h3: 19px;
+  --type-h3-lh: 26px;
+  --type-body: 16px;
+  --type-body-lh: 26px;
+  --type-small: 15px;
+  --type-small-lh: 22px;
+  --type-caption: 13px;
+  --type-caption-lh: 18px;
+  --type-label: 12px;
+  --type-label-lh: 16px;
+  --type-label-tracking: 0.18em;
+  --type-button: 16px;
+  --type-button-lh: 20px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --type-display: 56px;
+    --type-display-lh: 60px;
+    --type-h1: 38px;
+    --type-h1-lh: 44px;
+    --type-h2: 30px;
+    --type-h2-lh: 38px;
+    --type-h3: 20px;
+    --type-h3-lh: 28px;
+    --type-body: 17px;
+    --type-body-lh: 28px;
+    --type-button: 15px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --type-display: 72px;
+    --type-display-lh: 76px;
+    --type-h1: 44px;
+    --type-h1-lh: 50px;
+    --type-h2: 34px;
+    --type-h2-lh: 42px;
+    --type-h3: 22px;
+    --type-h3-lh: 30px;
+  }
 }
 
 *,
@@ -153,4 +239,105 @@ input:-webkit-autofill {
 
 .toast-enter {
   animation: toast-enter 0.2s ease-out;
+}
+
+/* Reduced motion: drop decorative animation, keep feedback.
+   Spinners stay (they are loading feedback). Hover/focus/status transitions are kept but capped at 150ms. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 150ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .animate-fade-up,
+  .animate-fade-down,
+  .toast-enter,
+  .animate-pulse {
+    animation: none !important;
+  }
+}
+
+/* Keyboard focus ring for components that opt in (light and dark backgrounds). */
+@utility focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-dark);
+    outline-offset: 2px;
+  }
+}
+
+@utility focus-ring-light {
+  &:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+  }
+}
+
+/* Endless horizontal band (homepage). The track holds two identical halves, so -50% loops without a jump. */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+}
+
+.marquee-track[data-reverse] {
+  animation-direction: reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none !important;
+  }
+}
+
+/* Short fade for content that swaps in place (product grid after a filter or page change). */
+@keyframes fade-swap {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-swap {
+  animation: fade-swap 0.22s var(--motion-ease-standard) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-swap {
+    animation: none !important;
+  }
+}
+
+/* Scanning bar that sweeps down a photo while a diagnosis runs. Transform only. */
+@keyframes scan-sweep {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.scan-line {
+  animation: scan-sweep 1.8s var(--motion-ease-standard) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scan-line {
+    animation: none !important;
+    display: none;
+  }
 }

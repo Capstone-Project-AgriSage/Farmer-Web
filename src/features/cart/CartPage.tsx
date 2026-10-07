@@ -3,7 +3,6 @@ import Breadcrumb from '../../components/ui/Breadcrumb'
 import { useCart } from '../../context/CartContext'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import CartItemRow from './components/CartItemRow'
-import CartPerksGrid from './components/CartPerksGrid'
 import CartSummarySidebar from './components/CartSummarySidebar'
 
 export default function CartPage() {
@@ -106,8 +105,6 @@ export default function CartPage() {
                 ))}
               </div>
             </div>
-
-            <CartPerksGrid />
           </div>
 
           <CartSummarySidebar

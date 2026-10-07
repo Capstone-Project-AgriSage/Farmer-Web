@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { formatVnd } from '../../../data/format'
-import { handleImageError } from '../../../utils/image'
+import { PRODUCT_IMAGE_FALLBACK, handleImageError } from '../../../utils/image'
 import type { CartItem } from '../../../api/types'
 
 interface CartItemRowProps {
@@ -24,7 +24,7 @@ export default function CartItemRow({ item, alternate, onQuantityChange, onRemov
           <img
             alt={item.productName}
             className="w-full h-full object-contain hover:scale-105 transition-transform"
-            src={item.imageUrl || ''}
+            src={item.imageUrl || PRODUCT_IMAGE_FALLBACK}
             onError={handleImageError}
           />
         </div>

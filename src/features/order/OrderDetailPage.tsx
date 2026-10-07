@@ -8,7 +8,7 @@ import { describeApiError } from '../../api/client'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import type { MyDelivery, OrderPaymentSummary, OrderResponse } from '../../api/types'
 import OrderPaymentPanel from './components/OrderPaymentPanel'
-import { DELIVERY_STATUS, FAILURE_REASON, ORDER_STATUS, TONE_CLASSES, formatAddress, labelOf } from './orderLabels'
+import { ATTEMPT_STATUS, DELIVERY_STATUS, FAILURE_REASON, ORDER_STATUS, TONE_CLASSES, formatAddress, formatDateTime, labelOf } from './orderLabels'
 
 export default function OrderDetailPage() {
   const { code: orderId } = useParams<{ code: string }>()
@@ -244,6 +244,53 @@ export default function OrderDetailPage() {
                             ))}
                           </ul>
                         </div>
+
+                        {/* One note can take several trips (FE_GUIDE_FLOW_2 §2): show each attempt and its proof photo. */}
+                        {delivery.attempts.length > 0 && (
+                          <div className="pt-4 mt-4 border-t border-brand-dark/5">
+                            <div className="text-[11px] font-semibold tracking-wider text-brand-dark/40 mb-3">Các lần giao</div>
+                            <ol className="space-y-2">
+                              {delivery.attempts.map((attempt) => {
+                                const attemptStatus = labelOf(ATTEMPT_STATUS, attempt.status)
+                                return (
+                                  <li key={attempt.attemptNumber} className="bg-white p-3 rounded-xl border border-brand-dark/5 flex gap-3 items-start">
+                                    <div className="flex-1 min-w-0 text-[13px] text-brand-dark/70 space-y-1">
+                                      <div className="flex flex-wrap items-center gap-2">
+                                        <span className="font-medium text-brand-dark">Lần {attempt.attemptNumber}</span>
+                                        <span className={`px-2 py-0.5 text-[10px] rounded-full border ${TONE_CLASSES[attemptStatus.tone]}`}>
+                                          {attemptStatus.label}
+                                        </span>
+                                        <span className="text-[11px] text-brand-dark/45">
+                                          {formatDateTime(attempt.completedAt || attempt.startedAt)}
+                                        </span>
+                                      </div>
+                                      {attempt.failureReasonCode && (
+                                        <p>Lý do: {FAILURE_REASON[attempt.failureReasonCode] ?? attempt.failureReasonCode}</p>
+                                      )}
+                                      {attempt.receiverName && <p>Người nhận: <strong className="text-brand-dark">{attempt.receiverName}</strong></p>}
+                                    </div>
+                                    {attempt.proofImageUrl && (
+                                      <a
+                                        href={attempt.proofImageUrl}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="shrink-0"
+                                        title="Xem ảnh giao hàng"
+                                      >
+                                        <img
+                                          src={attempt.proofImageUrl}
+                                          alt={`Ảnh giao hàng lần ${attempt.attemptNumber}`}
+                                          className="w-20 h-20 object-cover rounded-lg border border-brand-dark/10"
+                                          loading="lazy"
+                                        />
+                                      </a>
+                                    )}
+                                  </li>
+                                )
+                              })}
+                            </ol>
+                          </div>
+                        )}
                       </div>
                     )
                   })}

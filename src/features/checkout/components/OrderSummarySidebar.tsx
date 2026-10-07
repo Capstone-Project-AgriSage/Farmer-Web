@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { formatVnd } from '../../../data/format'
-import { handleImageError } from '../../../utils/image'
+import { PRODUCT_IMAGE_FALLBACK, handleImageError } from '../../../utils/image'
 import type { CartItem } from '../../../api/types'
 
 interface OrderSummarySidebarProps {
@@ -41,13 +41,13 @@ export default function OrderSummarySidebar({
         </div>
         <div className="divide-y divide-brand-dark/10 max-h-72 overflow-y-auto pr-1 space-y-1">
           {items.map((item) => (
-            <div key={item.storeProductId} className="py-2.5 flex items-center justify-between gap-3">
+            <div key={item.id} className="py-2.5 flex items-center justify-between gap-3">
               <div className="flex items-center gap-2.5">
                 <div className="w-12 h-12 border border-brand-dark/10 bg-brand-cream p-1 flex-shrink-0 flex items-center justify-center">
                   <img
                     alt={item.productName}
                     className="w-full h-full object-contain"
-                    src={item.imageUrl || ''}
+                    src={item.imageUrl || PRODUCT_IMAGE_FALLBACK}
                     onError={handleImageError}
                   />
                 </div>

@@ -63,18 +63,19 @@ export default function OrderPaymentPanel({ order, summary, onStale }: OrderPaym
       ) : summary === null ? (
         <p className="text-sm text-brand-dark/50">Không tải được thông tin thanh toán.</p>
       ) : (
-        <dl className="grid grid-cols-3 gap-3 text-sm">
-          <div>
-            <dt className="text-[11px] text-brand-dark/50">Tổng đơn</dt>
-            <dd className="font-medium text-brand-dark">{formatVnd(summary.orderTotal)}</dd>
+        // One row per figure: the panel is narrow and millions of đồng do not fit three columns.
+        <dl className="space-y-1.5 text-sm">
+          <div className="flex items-baseline justify-between gap-3">
+            <dt className="text-brand-dark/55">Tổng đơn</dt>
+            <dd className="font-medium text-brand-dark whitespace-nowrap">{formatVnd(summary.orderTotal)}</dd>
           </div>
-          <div>
-            <dt className="text-[11px] text-brand-dark/50">Đã thanh toán</dt>
-            <dd className="font-medium text-brand-green">{formatVnd(summary.paidAmount)}</dd>
+          <div className="flex items-baseline justify-between gap-3">
+            <dt className="text-brand-dark/55">Đã thanh toán</dt>
+            <dd className="font-medium text-brand-green whitespace-nowrap">{formatVnd(summary.paidAmount)}</dd>
           </div>
-          <div>
-            <dt className="text-[11px] text-brand-dark/50">Còn phải trả</dt>
-            <dd className={`font-medium ${remaining > 0 ? 'text-amber-700' : 'text-brand-dark'}`}>{formatVnd(remaining)}</dd>
+          <div className="flex items-baseline justify-between gap-3">
+            <dt className="text-brand-dark/55">Còn phải trả</dt>
+            <dd className={`font-medium whitespace-nowrap ${remaining > 0 ? 'text-amber-700' : 'text-brand-dark'}`}>{formatVnd(remaining)}</dd>
           </div>
         </dl>
       )}

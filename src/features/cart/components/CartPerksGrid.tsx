@@ -1,5 +1,5 @@
 const perks: [string, string, string][] = [
-  ['local_shipping', 'Giao xe tải tận vườn', 'Miễn phí cho đơn từ 2.000.000 đ'],
+  ['local_shipping', 'Giao xe tải tận vườn', 'Miễn phí giao hàng'],
   ['assignment_return', 'Đổi trả miễn phí 7 ngày', 'Bao đổi bao bể vỡ do vận chuyển'],
   ['inventory_2', 'Hỗ trợ bốc dỡ kho bãi', 'Nhân viên khiêng xếp vào kho vườn'],
 ]

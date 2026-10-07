@@ -14,11 +14,19 @@ interface OrderPaymentPanelProps {
 
 const CLOSED_STATUSES = ['CANCELLED', 'PARTIALLY_CANCELLED']
 
+const REFUND_STATUS: Record<string, string> = {
+  PENDING: 'cửa hàng sẽ liên hệ hoàn tiền',
+  COMPLETED: 'đã hoàn tiền',
+  FAILED: 'hoàn tiền chưa thành công, cửa hàng sẽ liên hệ lại',
+  CANCELLED: 'đã huỷ yêu cầu hoàn tiền',
+}
+
 export default function OrderPaymentPanel({ order, summary, onStale }: OrderPaymentPanelProps) {
   const [isPaying, setIsPaying] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const isCredit = order.settlementType === 'CREDIT'
+  const isCancelled = order.status === 'CANCELLED'
   const remaining = summary?.remainingToPay ?? 0
   const canPay = !isCredit && summary !== null && remaining > 0 && !CLOSED_STATUSES.includes(order.status)
 
@@ -43,7 +51,12 @@ export default function OrderPaymentPanel({ order, summary, onStale }: OrderPaym
 
   return (
     <div className="space-y-4">
-      {isCredit ? (
+      {isCancelled ? (
+        <p className="text-sm text-brand-dark/70">
+          Đơn đã huỷ, Bác không cần thanh toán thêm.
+          {(summary?.refunds.length ?? 0) > 0 && ' Khoản đã trả sẽ được hoàn lại như bên dưới.'}
+        </p>
+      ) : isCredit ? (
         <p className="text-sm text-brand-dark/70">
           Đơn mua chịu: số tiền được ghi vào công nợ sau khi cửa hàng xác nhận đơn.
         </p>
@@ -92,7 +105,7 @@ export default function OrderPaymentPanel({ order, summary, onStale }: OrderPaym
           <p className="font-medium text-brand-dark mb-1">Hoàn tiền</p>
           {summary!.refunds.map((r) => (
             <p key={r.id}>
-              {r.refundNumber}: {formatVnd(r.amount)} — {r.status === 'COMPLETED' ? 'đã hoàn' : 'cửa hàng sẽ liên hệ hoàn tiền'}
+              {r.refundNumber}: {formatVnd(r.amount)} — {REFUND_STATUS[r.status] ?? 'cửa hàng sẽ liên hệ hoàn tiền'}
             </p>
           ))}
         </div>

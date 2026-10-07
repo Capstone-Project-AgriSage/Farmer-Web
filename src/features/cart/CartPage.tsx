@@ -6,15 +6,11 @@ import CartItemRow from './components/CartItemRow'
 import CartPerksGrid from './components/CartPerksGrid'
 import CartSummarySidebar from './components/CartSummarySidebar'
 
-const FREE_SHIPPING_THRESHOLD = 2000000
-
 export default function CartPage() {
   const { items, subtotal, updateQuantity, removeFromCart, clearCart } = useCart()
   const navigate = useNavigate()
   useDocumentTitle('Giỏ hàng của tôi')
 
-  const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : 30000
-  const total = subtotal + shippingFee
   const hasUnavailableItem = items.some(item => !item.isAvailable)
 
   if (items.length === 0) {
@@ -117,10 +113,7 @@ export default function CartPage() {
           <CartSummarySidebar
             itemCount={items.length}
             subtotal={subtotal}
-            discount={0}
-            appliedVoucher={null}
-            shippingFee={shippingFee}
-            total={total}
+            total={subtotal}
             hasUnavailableItem={hasUnavailableItem}
             onCheckout={() => navigate('/checkout')}
           />

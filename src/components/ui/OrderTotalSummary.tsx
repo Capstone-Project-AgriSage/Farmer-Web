@@ -16,10 +16,12 @@ export default function OrderTotalSummary({ total, discount }: OrderTotalSummary
           {formatVnd(total)}
         </span>
       </div>
-      <div className="text-right text-[11px] text-brand-green flex items-center justify-end gap-1">
-        <span className="material-symbols-outlined text-[13px]">trending_down</span>
-        Tiết kiệm {formatVnd(discount)} cho mùa vụ này
-      </div>
+      {discount > 0 && (
+        <div className="text-right text-[11px] text-brand-green flex items-center justify-end gap-1">
+          <span className="material-symbols-outlined text-[13px]">trending_down</span>
+          Tiết kiệm {formatVnd(discount)} cho mùa vụ này
+        </div>
+      )}
     </div>
   )
 }

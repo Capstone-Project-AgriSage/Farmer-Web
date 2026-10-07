@@ -4,9 +4,6 @@ import OrderTotalSummary from '../../../components/ui/OrderTotalSummary'
 interface CartSummarySidebarProps {
   itemCount: number
   subtotal: number
-  discount: number
-  appliedVoucher: string | null
-  shippingFee: number
   total: number
   hasUnavailableItem?: boolean
   onCheckout: () => void
@@ -15,9 +12,6 @@ interface CartSummarySidebarProps {
 export default function CartSummarySidebar({
   itemCount,
   subtotal,
-  discount,
-  appliedVoucher: _appliedVoucher,
-  shippingFee,
   total,
   hasUnavailableItem,
   onCheckout,
@@ -35,17 +29,15 @@ export default function CartSummarySidebar({
           </div>
 
           <div className="flex items-center justify-between text-brand-dark/60">
-            <span>Phí vận chuyển xe tải tận vườn:</span>
-            <span className="text-brand-green  tracking-wide">
-              {shippingFee === 0 ? 'Miễn phí' : formatVnd(shippingFee)}
-            </span>
+            <span>Phí giao hàng tận vườn:</span>
+            <span className="text-brand-green tracking-wide">Miễn phí</span>
           </div>
           <div className="flex items-center justify-between text-brand-dark/60">
             <span>Thuế VAT (Hóa đơn đỏ điện tử):</span>
             <span className="text-brand-dark/45">Đã bao gồm</span>
           </div>
         </div>
-        <OrderTotalSummary total={total} discount={discount} />
+        <OrderTotalSummary total={total} discount={0} />
         <button
           onClick={onCheckout}
           disabled={hasUnavailableItem}
@@ -70,7 +62,7 @@ export default function CartSummarySidebar({
           </p>
           <div className="flex items-center gap-2 pt-1 border-t border-brand-dark/10 text-[11px] text-brand-dark/45">
             <span className="material-symbols-outlined text-[15px] text-brand-green">verified</span>
-            <span>Thanh toán VietQR / Thẻ ATM / Tiền mặt COD khi nhận hàng</span>
+            <span>Thanh toán online qua payOS (VietQR) hoặc mua chịu khi được cấp hạn mức</span>
           </div>
         </div>
       </div>

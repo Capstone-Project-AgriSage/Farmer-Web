@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { useNotifications } from '../../hooks/useNotifications'
 import { useHeroVisible } from './heroSignal'
 
 interface HeaderProps {
@@ -24,6 +25,7 @@ export default function Header({ cartCount }: HeaderProps) {
   const navigate = useNavigate()
   const { isAuthenticated, logout } = useAuth()
   const heroVisible = useHeroVisible()
+  const { unreadCount } = useNotifications()
   const [lastPathname, setLastPathname] = useState(location.pathname)
   const headerRef = useRef<HTMLElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
@@ -125,15 +127,22 @@ export default function Header({ cartCount }: HeaderProps) {
             </Link>
             {isAuthenticated && (
               <>
-                {/* No unread count: there is no notifications API yet. */}
                 <Link
                   to="/notifications"
-                  aria-label="Thông báo"
-                  className="focus-ring inline-flex items-center justify-center w-11 h-11 text-brand-dark/80 hover:text-brand-dark transition-colors"
+                  aria-label={unreadCount > 0 ? `Thông báo, ${unreadCount} chưa đọc` : 'Thông báo'}
+                  className="focus-ring relative inline-flex items-center justify-center w-11 h-11 text-brand-dark/80 hover:text-brand-dark transition-colors"
                 >
                   <span className="material-symbols-outlined text-[24px]" aria-hidden="true">
                     notifications
                   </span>
+                  {unreadCount > 0 && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute top-1 right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-rose-500 text-white text-xs leading-[18px] text-center"
+                    >
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )}
                 </Link>
                 <Link to="/account" className={utilityLinkClass}>
                   Tài khoản
@@ -238,7 +247,7 @@ export default function Header({ cartCount }: HeaderProps) {
               <>
                 <li>
                   <Link to="/notifications" className="focus-ring flex items-center min-h-[48px] text-lg text-brand-dark">
-                    Thông báo
+                    Thông báo{unreadCount > 0 ? ` (${unreadCount > 99 ? '99+' : unreadCount})` : ''}
                   </Link>
                 </li>
                 <li>

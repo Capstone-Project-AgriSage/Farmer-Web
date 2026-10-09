@@ -16,7 +16,7 @@ const item = (n, status = 'READ') => ({ id: id(n), notificationType: 'ORDER_STAT
   data: { entityType: 'ORDER', entityId: id(1000 + n) }, status,
   readAt: status === 'UNREAD' ? null : '2026-10-09T01:00:00Z', createdAt: '2026-10-09T00:00:00Z' });
 
-async function fixture({ role = management ? 'SALES_STAFF' : 'FARMER', count = 21, viewport = { width: 1440, height: 900 } } = {}) {
+async function fixture({ role = management ? 'SALES_STAFF' : 'FARMER', count = 21, viewport = { width: 1440, height: 900 }, clock = false } = {}) {
   const context = await browser.newContext({ viewport });
   await context.addInitScript(({ management }) => {
     if (location.pathname !== '/notifications') return
@@ -58,9 +58,12 @@ async function fixture({ role = management ? 'SALES_STAFF' : 'FARMER', count = 2
     return json({ items: [], totalCount: 0, totalPages: 0 });
   });
   const page = await context.newPage();
+  if (clock) await page.clock.install();
   const errors = []; page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(baseUrl + '/notifications');
-  await page.locator('article[data-notification-id]').first().waitFor();
+  if (viewport.width >= 768) await bell(page, state.records.filter((record) => record.status === 'UNREAD').length).waitFor();
+  if (count === 0) await page.getByText('Bạn chưa có thông báo nào.').waitFor();
+  else await page.waitForFunction((expected) => document.querySelectorAll('article[data-notification-id]').length === expected, Math.min(count, 20));
   return { context, page, state, errors };
 }
 async function passed(name) { checks++; console.log('PASS ' + name); }
@@ -143,6 +146,41 @@ try {
   assert(state.requests.some((r) => r.method === 'DELETE'));
   await context.close();
 
+  const incoming = await fixture({ count: 0, clock: true });
+  incoming.state.records.push({ ...item(100, 'UNREAD'), notificationType: 'DELIVERY_FAILED', title: 'Giao hàng thất bại',
+    data: { entityType: 'DELIVERY', entityId: id(1100), orderId: id(1200) } });
+  await incoming.page.clock.runFor(30_100);
+  await bell(incoming.page, 1).waitFor();
+  await incoming.page.getByText('Giao hàng thất bại', { exact: true }).waitFor();
+  assert.equal(await row(incoming.page, 100).getByRole('link').getAttribute('href'), '/orders/' + id(1200));
+  await incoming.context.close();
+  await passed('incoming delivery failure refreshes the empty farmer inbox and badge automatically');
+
+  const navigation = await fixture({ count: 0, clock: true });
+  const links = [
+    ['PAYMENT_FAILED', 'PAYMENT', id(1200), '/orders/' + id(1200)],
+    ['DEBT_PAYMENT_CONFIRMED', 'PAYMENT', null, '/debt'],
+    ['RETURN_RESULT', 'SALES_RETURN', id(1200), '/orders/' + id(1200)],
+    ['REFUND_RESULT', 'REFUND', id(1200), '/orders/' + id(1200)],
+    ['DIAGNOSIS_RECOMMENDATIONS', 'DIAGNOSIS_CASE', null, null],
+  ];
+  links.forEach(([notificationType, entityType, orderId], n) => navigation.state.records.push({ ...item(200 + n, 'UNREAD'),
+    notificationType, data: { entityType, entityId: id(1300 + n), orderId } }));
+  await navigation.page.clock.runFor(30_100);
+  await bell(navigation.page, links.length).waitFor();
+  for (let n = 0; n < links.length; n++) {
+    await row(navigation.page, 200 + n).waitFor();
+    if (links[n][3] === null) assert.equal(await row(navigation.page, 200 + n).getByRole('link').count(), 0);
+    else assert.equal(await row(navigation.page, 200 + n).getByRole('link').getAttribute('href'), links[n][3]);
+  }
+  await navigation.page.evaluate(async () => { await document.fonts.ready; });
+  for (let n = 0; n < links.length; n++) {
+    const icon = row(navigation.page, 200 + n).locator('.material-symbols-outlined').first();
+    assert(await icon.evaluate((element) => element.getBoundingClientRect().width <= 32), 'notification icon must render a glyph, not its literal name');
+  }
+  assert.deepEqual(navigation.errors, []);
+  await navigation.context.close();
+  await passed('payment, debt, return and refund links are correct; real diagnosis notices do not link to demo results');
   const expiry = await fixture();
   expiry.state.unauthorized = true;
   await button(expiry.page, 'Tải lại').click();

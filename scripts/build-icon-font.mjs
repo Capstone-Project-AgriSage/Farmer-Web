@@ -8,7 +8,7 @@
 //   2. a string given to an icon property:                                 icon: 'storefront'   iconName="home"
 //   3. any snake_case string literal ('local_shipping'): almost always an icon in this code base
 // A single-word icon that reaches the page some other way (a ternary, an array of strings) is missed: add it to EXTRA.
-const EXTRA = []
+const EXTRA = ['payments', 'psychology'] // Single-word names returned by notificationIcon().
 
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, statSync } from 'node:fs'
 import { join, dirname } from 'node:path'

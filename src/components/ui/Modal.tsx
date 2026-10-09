@@ -1,4 +1,6 @@
 import { useEffect, useId, useRef, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
+import './modal.css'
 
 interface ModalProps {
   title: string
@@ -16,15 +18,17 @@ const FOCUSABLE = 'a[href], button:not([disabled]), textarea:not([disabled]), in
 
 /**
  * Dialog with Esc to close, Tab kept inside, focus moved in on open and returned on close, and page scrolling locked.
- * Corners 8px, one light shadow, no blur.
+ * Shared spacious layout: fixed header/footer, scrolling content, responsive width.
  */
 export default function Modal({ title, icon, iconClassName = 'text-primary-dark', onClose, busy = false, children, footer }: ModalProps) {
   const titleId = useId()
   const panelRef = useRef<HTMLDivElement>(null)
   const onCloseRef = useRef(onClose)
-  onCloseRef.current = onClose
   const busyRef = useRef(busy)
-  busyRef.current = busy
+  useEffect(() => {
+    onCloseRef.current = onClose
+    busyRef.current = busy
+  }, [onClose, busy])
 
   useEffect(() => {
     const opener = document.activeElement as HTMLElement | null
@@ -32,7 +36,7 @@ export default function Modal({ title, icon, iconClassName = 'text-primary-dark'
     document.body.style.overflow = 'hidden'
     // First field if there is one, otherwise the first control; the close button comes first in the DOM, so skip it.
     const items = panel ? Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE)) : []
-    ;(items.find((el) => el.matches('input, textarea, select')) ?? items[1] ?? items[0])?.focus()
+      ; (items.find((el) => el.matches('input, textarea, select')) ?? items[1] ?? items[0])?.focus()
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && !busyRef.current) {
@@ -60,9 +64,9 @@ export default function Modal({ title, icon, iconClassName = 'text-primary-dark'
     }
   }, [])
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[70] bg-brand-dark/50 flex items-center justify-center p-4"
+      className="modal-overlay"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget && !busy) onClose()
       }}
@@ -73,9 +77,9 @@ export default function Modal({ title, icon, iconClassName = 'text-primary-dark'
         aria-modal="true"
         aria-labelledby={titleId}
         data-lenis-prevent
-        className="fade-swap bg-brand-cream border border-brand-dark/15 rounded-[var(--radius-modal)] shadow-[0_8px_24px_rgb(0,0,0,0.12)] w-full max-w-lg max-h-[90vh] overflow-y-auto"
+        className="modal-panel fade-swap"
       >
-        <div className="flex items-center justify-between gap-4 px-6 py-4 border-b border-brand-dark/15">
+        <div className="modal-header flex items-center justify-between gap-4">
           <h2 id={titleId} className="flex items-center gap-2 text-lg font-medium text-text-primary">
             {icon && (
               <span className={`material-symbols-outlined ${iconClassName}`} style={{ fontSize: 24 }} aria-hidden="true">
@@ -84,15 +88,16 @@ export default function Modal({ title, icon, iconClassName = 'text-primary-dark'
             )}
             {title}
           </h2>
-          <button type="button" onClick={onClose} disabled={busy} aria-label="Đóng" className="focus-ring w-11 h-11 -mr-2 flex items-center justify-center text-text-secondary hover:text-text-primary disabled:opacity-40">
+          <button type="button" onClick={onClose} disabled={busy} aria-label="Đóng" className="modal-close focus-ring">
             <span className="material-symbols-outlined" style={{ fontSize: 24 }} aria-hidden="true">
               close
             </span>
           </button>
         </div>
-        <div className="px-6 py-5">{children}</div>
-        {footer && <div className="px-6 py-4 border-t border-brand-dark/15 flex justify-end gap-3">{footer}</div>}
+        <div className="modal-body">{children}</div>
+        {footer && <div className="modal-footer">{footer}</div>}
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

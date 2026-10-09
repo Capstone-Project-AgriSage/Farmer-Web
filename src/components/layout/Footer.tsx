@@ -1,12 +1,58 @@
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useMotionPolicy } from '../../motion/useMotionPolicy'
 
 const linkClass =
   'focus-ring-light inline-block py-1 text-[15px] text-white/75 hover:text-white hover:underline underline-offset-4 transition-colors'
 
+/**
+ * The brand name across the full width of the footer, sized with container units so it fills the column at every width.
+ * full motion: the letters rise one after another the first time the footer scrolls into view (CSS transitions; the footer
+ * sits outside the pages' LazyMotion provider). Otherwise it is simply there. Decorative: screen readers skip it.
+ */
+function Wordmark() {
+  const animate = useMotionPolicy() === 'full'
+  const ref = useRef<HTMLDivElement>(null)
+  const [seen, setSeen] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!animate || !el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setSeen(true)
+          observer.disconnect()
+        }
+      },
+      { rootMargin: '0px 0px -10% 0px' },
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [animate])
+
+  const shown = !animate || seen
+  return (
+    <div ref={ref} aria-hidden="true" className="@container max-w-7xl mx-auto px-6 lg:px-8 overflow-hidden select-none pointer-events-none -mt-6 lg:-mt-12 pb-4 lg:pb-8">
+      <p className="whitespace-nowrap text-[26cqw] leading-[1.24] font-light tracking-[-0.05em] text-white">
+        {[...'AgriSage'].map((letter, index) => (
+          <span
+            key={index}
+            className="inline-block transition-transform duration-[1100ms] ease-[var(--motion-ease-out)]"
+            style={{ transform: shown ? 'translateY(0)' : 'translateY(110%)', transitionDelay: animate ? `${index * 45}ms` : '0ms' }}
+          >
+            {letter}
+          </span>
+        ))}
+      </p>
+    </div>
+  )
+}
+
 export default function Footer() {
   return (
     <footer className="w-full bg-brand-dark mt-auto text-white border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-14 lg:py-16">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-14 lg:pt-16 pb-6 lg:pb-8">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-12">
           <div className="md:col-span-5 space-y-4">
             <div>
@@ -92,6 +138,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
+      <Wordmark />
       <div className="border-t border-white/10 py-5">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-[13px] text-white/65 gap-2">
           <p>© 2024 AgriSage. Bản quyền kỹ thuật.</p>

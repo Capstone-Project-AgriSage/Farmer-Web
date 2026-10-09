@@ -4,13 +4,37 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&family=Oswald:wght@500&family=Montserrat:wght@700&family=Roboto+Slab:wght@600&family=Raleway:wght@700&display=swap"
-      rel="stylesheet"
-    />
     <title>AgriSage - Nông nghiệp số & Chẩn đoán AI</title>
+    <script>
+      // Home page hero: get its background going before the app code has loaded. Only on / so other pages do not pay for it.
+      // Which background it shows follows the motion policy (src/motion/useMotionPolicy.ts): the video with full motion, a
+      // photo otherwise (reduced motion, Save Data, or a screen under 768px). Keep this in sync with HeroSection.tsx.
+      if (location.pathname === '/') {
+        var narrow = matchMedia('(max-width: 767px)').matches
+        var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+        var saveData = !!(navigator.connection && navigator.connection.saveData)
+        var link = document.createElement('link')
+        if (reduce || saveData || narrow) {
+          // The photo is the largest paint: download the size this screen will use.
+          link.rel = 'preload'
+          link.as = 'image'
+          link.type = 'image/webp'
+          link.setAttribute('fetchpriority', 'high')
+          link.setAttribute('imagesizes', '100vw')
+          link.setAttribute(
+            'imagesrcset',
+            narrow
+              ? '/images/misc/hero-rice-field-m-640.webp 640w, /images/misc/hero-rice-field-m-960.webp 960w'
+              : '/images/misc/hero-rice-field-640.webp 640w, /images/misc/hero-rice-field-1280.webp 1280w, /images/misc/hero-rice-field-1920.webp 1920w'
+          )
+        } else {
+          // The video comes from another host: open that connection now so it starts sooner.
+          link.rel = 'preconnect'
+          link.href = 'https://assets.mixkit.co'
+        }
+        document.head.appendChild(link)
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

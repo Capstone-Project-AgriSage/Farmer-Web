@@ -26,11 +26,13 @@ export default function Reveal({ as = 'div', delay = 0, y = 24, className, child
 
   const full = policy === 'full'
   const Tag = motionTags[as]
+  // `transform` and `opacity` (not `y`) so Motion hands the animation to the browser (WAAPI, compositor thread):
+  // it stays smooth while the main thread is busy with layout or scripts. Same for every reveal component.
   return (
     <Tag
       className={className}
-      initial={{ opacity: 0, y: full ? y : 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, transform: `translateY(${full ? y : 12}px)` }}
+      whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
       viewport={{ once: true, margin: '0px 0px -12% 0px' }}
       transition={{ duration: full ? DURATION.reveal : DURATION.standard, delay: full ? delay : 0, ease: [...EASE.out] }}
     >

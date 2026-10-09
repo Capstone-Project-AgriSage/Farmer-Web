@@ -3,27 +3,20 @@ import { Link } from 'react-router-dom'
 import Reveal from '../../../components/ui/Reveal'
 import SectionHeader from '../../../components/ui/SectionHeader'
 
-// Answers restate what the app already does (checkout, debt book, orders, AI Doctor, footer contact details).
+// Answers restate what the app already does (checkout, debt book, AI Doctor). Order tracking is shown in the "how it works"
+// chapter and the support contact sits next to the list, so those two questions were dropped.
 const faqs = [
   {
     q: 'Mua chịu hoạt động như thế nào?',
-    a: 'Đại lý cấp hạn mức mua chịu cho từng nông hộ. Khi đã có hạn mức, bác chọn mua chịu lúc đặt hàng và theo dõi các khoản nợ, hạn trả trong mục Sổ nợ. Nếu chưa có hạn mức, bác liên hệ đại lý để được mở Sổ nợ.',
+    a: 'Đại lý cấp hạn mức mua chịu cho từng nông hộ. Khi đã có hạn mức, bác chọn mua chịu lúc đặt hàng và theo dõi khoản nợ trong mục Sổ nợ.',
   },
   {
     q: 'Tôi thanh toán đơn hàng bằng cách nào?',
-    a: 'Bác có thể thanh toán qua payOS (VietQR) khi đặt hàng, hoặc mua chịu nếu đã có hạn mức. Trạng thái thanh toán của từng đơn xem trong mục Đơn hàng.',
-  },
-  {
-    q: 'Làm sao biết đơn hàng của tôi đang ở đâu?',
-    a: 'Khi đặt hàng, bác chọn giao tận nơi hoặc nhận tại cửa hàng. Trong mục Đơn hàng, bác xem trạng thái đơn, từng lần giao và ảnh giao hàng của đơn đó.',
+    a: 'Thanh toán qua payOS (VietQR) khi đặt hàng, hoặc mua chịu nếu đại lý đã cấp hạn mức.',
   },
   {
     q: 'Bác sĩ cây trồng AI chẩn đoán như thế nào?',
-    a: 'Bác gửi ảnh lá hoặc thân lúa, chọn giai đoạn sinh trưởng và mô tả triệu chứng để AI đưa ra gợi ý chẩn đoán. Danh mục thuốc thương mại chỉ hiển thị sau khi đại lý thẩm định hình ảnh.',
-  },
-  {
-    q: 'Cần hỗ trợ thì liên hệ ai?',
-    a: 'Bác gọi tổng đài kỹ sư 1900 6828 (7:00 – 20:00), hoặc gửi yêu cầu ở trang Liên hệ đại lý.',
+    a: 'Bác gửi ảnh lá hoặc thân lúa và chọn giai đoạn sinh trưởng để AI gợi ý chẩn đoán. Thuốc thương mại chỉ hiện sau khi đại lý thẩm định hình ảnh.',
   },
 ]
 

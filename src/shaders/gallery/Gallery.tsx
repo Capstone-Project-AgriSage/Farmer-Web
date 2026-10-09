@@ -100,7 +100,32 @@ export function Gallery({
     let documentVisible = !document.hidden;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    // AgriSage change: each picture is decoded off the main thread (img.decode) and sent to the GPU as soon as it
+    // arrives (initTexture), instead of being decoded and uploaded inside the first render. That first render used to be
+    // a long task right while the page was being scrolled. Browsers without decode() keep the TextureLoader path.
+    const canDecode = typeof HTMLImageElement !== "undefined" && "decode" in HTMLImageElement.prototype;
     const textures = GALLERY_IMAGE_URLS.map((url) => {
+      if (canDecode) {
+        const texture = new THREE.Texture();
+        texture.encoding = THREE.sRGBEncoding;
+        texture.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+        const image = new Image();
+        image.decoding = "async";
+        image.src = url;
+        image
+          .decode()
+          .then(() => {
+            if (disposed) return;
+            texture.image = image;
+            texture.needsUpdate = true;
+            renderer.initTexture(texture);
+            renderer.render(scene, camera);
+          })
+          .catch(() => {
+            // A picture that fails to load leaves its panels empty; the others still show.
+          });
+        return texture;
+      }
       const texture = loader.load(url, () => {
         if (disposed) {
           texture.dispose();
@@ -178,7 +203,9 @@ export function Gallery({
       const bounds = host.getBoundingClientRect();
       const width = Math.max(1, Math.round(bounds.width));
       const height = Math.max(1, Math.round(bounds.height));
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      // AgriSage change: 1.5 instead of 2. Each frame draws ~45% fewer pixels on high-density screens; with antialiasing
+      // on, the pictures look the same at this size.
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
       renderer.setSize(width, height, false);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
@@ -201,6 +228,9 @@ export function Gallery({
     intersectionObserver.observe(host);
     document.addEventListener("visibilitychange", handleVisibility);
     resize();
+    // AgriSage change: build the shader programs now (the component may be mounted ahead of time, while the page is idle)
+    // rather than on the first frame the gallery is on screen.
+    renderer.compile(scene, camera);
     start();
 
     return () => {
@@ -232,7 +262,12 @@ export function Gallery({
         aria-hidden="true"
         style={{
           opacity: clamp(opacity, 0.05, 1),
-          filter: `hue-rotate(${clamp(hue, -180, 180)}deg) saturate(${clamp(saturation, 0, 2)}) brightness(${clamp(brightness, 0.35, 1.65)})`,
+          // AgriSage change: no filter at the default values. Even an identity filter makes the browser run a filter
+          // pass over the whole canvas on every frame.
+          filter:
+            hue === 0 && saturation === 1 && brightness === 1
+              ? undefined
+              : `hue-rotate(${clamp(hue, -180, 180)}deg) saturate(${clamp(saturation, 0, 2)}) brightness(${clamp(brightness, 0.35, 1.65)})`,
         }}
       />
     </div>

@@ -69,12 +69,12 @@ const timeline = [
 ]
 
 const categories: { name: string; group: ProductGroup; image: string }[] = [
-  { name: 'Phân bón NPK & Vi lượng', group: 'Phân bón NPK & Vi lượng', image: '/images/categories/npk.jpg' },
-  { name: 'Thuốc BVTV & Trừ nấm', group: 'Thuốc BVTV & Trừ nấm', image: '/images/categories/bvtv.jpg' },
-  { name: 'Phân hữu cơ vi sinh', group: 'Phân hữu cơ vi sinh', image: '/images/categories/huu-co.jpg' },
-  { name: 'Hạt giống & Cây giống', group: 'Hạt giống & Cây giống', image: '/images/categories/hat-giong.jpg' },
-  { name: 'Tưới nhỏ giọt & Thiết bị', group: 'Tưới nhỏ giọt & Thiết bị', image: '/images/categories/tuoi-nho-giot.jpg' },
-  { name: 'Thuốc trừ sâu sinh học', group: 'Thuốc trừ sâu sinh học', image: '/images/categories/sinh-hoc.jpg' },
+  { name: 'Phân bón NPK & Vi lượng', group: 'Phân bón NPK & Vi lượng', image: '/images/categories/npk.webp' },
+  { name: 'Thuốc BVTV & Trừ nấm', group: 'Thuốc BVTV & Trừ nấm', image: '/images/categories/bvtv.webp' },
+  { name: 'Phân hữu cơ vi sinh', group: 'Phân hữu cơ vi sinh', image: '/images/categories/huu-co.webp' },
+  { name: 'Hạt giống & Cây giống', group: 'Hạt giống & Cây giống', image: '/images/categories/hat-giong.webp' },
+  { name: 'Tưới nhỏ giọt & Thiết bị', group: 'Tưới nhỏ giọt & Thiết bị', image: '/images/categories/tuoi-nho-giot.webp' },
+  { name: 'Thuốc trừ sâu sinh học', group: 'Thuốc trừ sâu sinh học', image: '/images/categories/sinh-hoc.webp' },
 ]
 
 const branches = [

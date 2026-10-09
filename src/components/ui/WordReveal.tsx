@@ -38,8 +38,8 @@ export default function WordReveal({ text, inView = false, baseDelay = 0, startI
           <span className="inline-block overflow-hidden align-top pt-[0.14em] pb-[0.1em] -mt-[0.14em] -mb-[0.1em] pr-[0.06em]">
             <m.span
               className="inline-block origin-bottom-left"
-              initial={{ y: '115%', rotate: 4 }}
-              animate={visible ? { y: 0, rotate: 0 } : undefined}
+              initial={{ transform: 'translateY(115%) rotate(4deg)' }}
+              animate={visible ? { transform: 'translateY(0%) rotate(0deg)' } : undefined}
               transition={{ duration, delay: baseDelay + (startIndex + index) * stagger, ease: [...EASE.out] }}
             >
               {word}

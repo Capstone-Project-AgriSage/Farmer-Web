@@ -36,7 +36,12 @@ export default function ImageReveal({ className = '', radius = '2px', delay = 0,
         animate={seen ? { clipPath: `inset(0 0 0% 0 round ${radius})` } : undefined}
         transition={{ duration: 1.3, delay, ease }}
       >
-        <m.div className="w-full h-full" initial={{ scale: 1.25 }} animate={seen ? { scale: 1 } : undefined} transition={{ duration: 1.8, delay, ease }}>
+        <m.div
+          className="w-full h-full"
+          initial={{ transform: 'scale(1.25)' }}
+          animate={seen ? { transform: 'scale(1)' } : undefined}
+          transition={{ duration: 1.8, delay, ease }}
+        >
           {children}
         </m.div>
       </m.div>

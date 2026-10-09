@@ -23,8 +23,9 @@ function HeroItem({ policy, delay, duration, className, children }: { policy: Mo
   return (
     <m.div
       className={className}
-      initial={{ opacity: 0, y: full ? 16 : 12 }}
-      animate={{ opacity: 1, y: 0 }}
+      // transform/opacity: run by the browser (WAAPI), so the entrance stays smooth while the page is still loading.
+      initial={{ opacity: 0, transform: `translateY(${full ? 16 : 12}px)` }}
+      animate={{ opacity: 1, transform: 'translateY(0px)' }}
       transition={{ duration: full ? duration : DURATION.standard, delay: full ? delay : 0, ease: [...EASE.out] }}
     >
       {children}
@@ -32,8 +33,17 @@ function HeroItem({ policy, delay, duration, className, children }: { policy: Mo
   )
 }
 
+// Browsers with view timelines move the photo themselves (index.css, .hero-parallax): no script per scroll frame.
+const cssViewTimeline = typeof CSS !== 'undefined' && CSS.supports('animation-timeline: view()')
+
 /** Moves the hero photo up to ~7% of the hero height while scrolling. Only mounted for desktop with full motion. */
 function ParallaxLayer({ targetRef, children }: { targetRef: RefObject<HTMLElement | null>; children: ReactNode }) {
+  if (cssViewTimeline) return <div className="absolute inset-x-0 -top-[8%] -bottom-[8%] hero-parallax">{children}</div>
+  return <MotionParallaxLayer targetRef={targetRef}>{children}</MotionParallaxLayer>
+}
+
+/** Fallback for browsers without view timelines. */
+function MotionParallaxLayer({ targetRef, children }: { targetRef: RefObject<HTMLElement | null>; children: ReactNode }) {
   const { scrollYProgress } = useScroll({ target: targetRef, offset: ['start start', 'end start'] })
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '6%'])
   return (
@@ -106,7 +116,7 @@ export default function HeroSection() {
   )
 
   return (
-    <section ref={sectionRef} className="relative w-full min-h-[88svh] lg:min-h-[min(100svh,960px)] flex items-center overflow-hidden bg-brand-cream">
+    <section ref={sectionRef} className="hero-view-timeline relative w-full min-h-[88svh] lg:min-h-[min(100svh,960px)] flex items-center overflow-hidden bg-brand-cream">
       <div className="absolute inset-0">
         {parallax ? (
           <ParallaxLayer targetRef={sectionRef}>
@@ -184,7 +194,12 @@ export default function HeroSection() {
 /** Photo settles from 1.07 to 1 as the page opens. */
 function ScaleIn({ children }: { children: ReactNode }) {
   return (
-    <m.div className="absolute inset-0" initial={{ scale: 1.07 }} animate={{ scale: 1 }} transition={{ duration: 1.3, ease: [...EASE.out] }}>
+    <m.div
+      className="absolute inset-0"
+      initial={{ transform: 'scale(1.07)' }}
+      animate={{ transform: 'scale(1)' }}
+      transition={{ duration: 1.3, ease: [...EASE.out] }}
+    >
       {children}
     </m.div>
   )

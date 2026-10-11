@@ -4,7 +4,6 @@ import { authApi } from '../api/authApi'
 import { profileApi } from '../api/profileApi'
 import { ApiError } from '../api/client'
 
-const STORAGE_KEY = 'agrisage.farmer_auth.v1'
 const TOKEN_KEY = 'agrisage.farmer_token'
 
 // Filled from the login response and GET /api/me/profile; credit and addresses have their own APIs.
@@ -53,7 +52,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (isAuthenticated) {
-      localStorage.setItem(STORAGE_KEY, '1')
       // Sync profile from backend if available
       profileApi.getProfile()
         .then((prof) => {
@@ -69,7 +67,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // Ignore background sync error
         })
     } else {
-      localStorage.setItem(STORAGE_KEY, '0')
       localStorage.removeItem(TOKEN_KEY)
       setFarmer(EMPTY_FARMER)
     }
@@ -82,7 +79,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new ApiError(403, 'Forbidden', 'Tài khoản nhân viên không dùng được trang nông dân. Vui lòng đăng nhập trang quản lý.')
     }
     localStorage.setItem(TOKEN_KEY, res.accessToken)
-    localStorage.setItem(STORAGE_KEY, '1')
     setIsAuthenticated(true)
     if (res.user) {
       setFarmer((prev) => ({
@@ -104,7 +100,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
     })
     localStorage.setItem(TOKEN_KEY, res.accessToken)
-    localStorage.setItem(STORAGE_KEY, '1')
     setIsAuthenticated(true)
     if (res.user) {
       setFarmer((prev) => ({
@@ -120,7 +115,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     localStorage.removeItem(TOKEN_KEY)
     localStorage.removeItem('agrisage_token')
-    localStorage.setItem(STORAGE_KEY, '0')
     setIsAuthenticated(false)
   }
 

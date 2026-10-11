@@ -4,22 +4,17 @@ import type { MyCreditSummary } from '../../../api/types'
 import { formatVnd } from '../../../data/format'
 
 export type PaymentMethod = 'payos' | 'credit'
-export type CopyField = 'account' | 'memo'
 
 interface PaymentMethodSelectorProps {
   paymentMethod: PaymentMethod
   onPaymentMethodChange: (method: PaymentMethod) => void
   total: number
-  copiedField: CopyField | null
-  onCopy: (field: CopyField, value: string) => void
 }
 
 export default function PaymentMethodSelector({
   paymentMethod,
   onPaymentMethodChange,
   total,
-  copiedField: _copiedField,
-  onCopy: _onCopy,
 }: PaymentMethodSelectorProps) {
   // The credit line comes from the server (GET /api/me/credit); 404 means the farmer has no credit profile. The server checks
   // it again when the order is created, so this only decides what the page offers.

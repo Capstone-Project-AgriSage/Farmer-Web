@@ -5,7 +5,6 @@ import { startPayosPayment } from './payos'
 import { ApiError, describeApiError } from '../../api/client'
 import { useCart } from '../../context/CartContext'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
-import { useClipboard } from '../../hooks/useClipboard'
 import CheckoutStepper from './components/CheckoutStepper'
 import AddressForm, {
   addressFormDefaults,
@@ -14,7 +13,7 @@ import AddressForm, {
   type AddressFormValues,
 } from './components/AddressForm'
 import ShippingMethodSelector from './components/ShippingMethodSelector'
-import PaymentMethodSelector, { type CopyField, type PaymentMethod } from './components/PaymentMethodSelector'
+import PaymentMethodSelector, { type PaymentMethod } from './components/PaymentMethodSelector'
 import OrderSummarySidebar from './components/OrderSummarySidebar'
 
 
@@ -27,10 +26,8 @@ export default function CheckoutPage() {
   const [addressErrors, setAddressErrors] = useState<AddressFormErrors>({})
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('payos')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const { copiedField, copy } = useClipboard<CopyField>()
   const addressFormRef = useRef<HTMLDivElement>(null)
 
-  const discount = 0
   // The API has no shipping fee: the order total is the sum of its lines, and the store delivers online orders for free.
   const shippingFee = 0
   const total = subtotal + shippingFee
@@ -117,15 +114,12 @@ export default function CheckoutPage() {
               paymentMethod={paymentMethod}
               onPaymentMethodChange={setPaymentMethod}
               total={total}
-              copiedField={copiedField}
-              onCopy={copy}
             />
           </div>
 
           <OrderSummarySidebar
             items={items}
             subtotal={subtotal}
-            discount={discount}
             shippingFee={shippingFee}
             total={total}
             onConfirm={handleConfirm}

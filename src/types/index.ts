@@ -41,60 +41,6 @@ export interface Product {
   diseaseTags?: string[]
 }
 
-export interface CartItem {
-  product: Product
-  quantity: number
-}
-
-export type OrderStatus = 'PENDING_CONFIRMATION' | 'PENDING_PAYMENT' | 'PROCESSING' | 'SHIPPING' | 'COMPLETED' | 'CANCELLED'
-
-export type PaymentMethod = 'VIETQR' | 'SEASONAL_CREDIT'
-
-export type DeliveryStatus = 'PENDING' | 'IN_TRANSIT' | 'DELIVERED' | 'FAILED'
-
-export interface DeliveryPhase {
-  id: string
-  status: DeliveryStatus
-  items: CartItem[]
-  deliveryDate?: string
-  driverName?: string
-  driverPhone?: string
-  failReason?: string
-}
-
-export interface OrderHallmark {
-  certification: string
-  traceCode: string
-  qrUrl?: string
-  description?: string
-}
-
-export interface Order {
-  code: string
-  items: CartItem[]
-  subtotal: number
-  discount?: number
-  shippingFee: number
-  total: number
-  voucherCode?: string
-  recipientName: string
-  recipientPhone: string
-  address: string
-  paymentMethod: PaymentMethod
-  status: OrderStatus
-  paymentStatus:
-    | 'AWAITING_TRANSFER'
-    | 'AWAITING_AGENT_VERIFICATION'
-    | 'PAID'
-    | 'AWAITING_CREDIT_APPROVAL'
-    | 'CREDIT_APPROVED'
-  createdAt: string
-  estimatedDelivery?: string
-  notes?: string
-  deliveries?: DeliveryPhase[]
-  hallmark?: OrderHallmark
-}
-
 export interface FarmerUser {
   id: string
   name: string
@@ -110,16 +56,6 @@ export interface StoreInfo {
   bankName: string
   bankAccountNumber: string
   bankAccountName: string
-}
-
-export interface RiceDiseaseClass {
-  id: 'leaf_blast' | 'bacterial_leaf_blight' | 'brown_spot' | 'sheath_blight' | 'healthy'
-  name: string
-  scientificName: string
-  vietnameseAliases: string[]
-  symptoms: string[]
-  activeIngredients: string[]
-  preventionSteps: string[]
 }
 
 export interface DiagnosisCase {

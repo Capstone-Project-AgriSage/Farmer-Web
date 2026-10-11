@@ -79,7 +79,3 @@ export const mockDiagnosisCases: DiagnosisCase[] = [
     reviewedAt: '08:40 05/10/2024',
   },
 ]
-
-export function getDiagnosisCaseById(id: string): DiagnosisCase | undefined {
-  return mockDiagnosisCases.find((c) => c.id === id)
-}

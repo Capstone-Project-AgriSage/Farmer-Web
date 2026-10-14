@@ -11,7 +11,7 @@ export default function RootLayout() {
   const { itemCount } = useCart()
 
   return (
-    <div className="bg-brand-cream font-helvetica-neue text-brand-dark min-h-screen flex flex-col justify-between selection:bg-brand-light selection:text-brand-dark antialiased">
+    <div className="bg-brand-cream font-helvetica-neue text-brand-dark min-h-screen flex flex-col justify-between selection:bg-brand-green selection:text-white antialiased">
       <ScrollToTop />
       <Header cartCount={itemCount} />
       <main className="flex-1 w-full bg-brand-cream">

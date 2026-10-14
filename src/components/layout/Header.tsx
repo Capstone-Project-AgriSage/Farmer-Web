@@ -10,11 +10,12 @@ interface HeaderProps {
 
 const navLinks = [
   { to: '/', label: 'Trang chủ' },
+  { to: '/about', label: 'Giới thiệu' },
   { to: '/products', label: 'Vật tư lúa' },
   { to: '/ai-doctor', label: 'Chẩn đoán AI' },
   { to: '/orders', label: 'Đơn hàng' },
   { to: '/debt', label: 'Sổ nợ' },
-  { to: '/about', label: 'Giới thiệu' },
+  { to: '/contact', label: 'Liên hệ' },
 ]
 
 const MENU_ID = 'site-menu'
@@ -113,7 +114,7 @@ export default function Header({ cartCount }: HeaderProps) {
             <span className="text-xl text-brand-dark tracking-tight font-helvetica-neue">AgriSage</span>
           </Link>
 
-          <nav aria-label="Điều hướng chính" className="hidden lg:flex items-center gap-7">
+          <nav aria-label="Điều hướng chính" className="hidden lg:flex items-center gap-5 xl:gap-7">
             {navLinks.slice(1).map((link) => (
               <NavLink key={link.label} to={link.to} className={desktopLinkClass}>
                 {link.label}

@@ -8,6 +8,7 @@ const HomePage = lazy(() => import('./features/home/HomePage'))
 const LoginPage = lazy(() => import('./features/auth/LoginPage'))
 const RegisterPage = lazy(() => import('./features/auth/RegisterPage'))
 const ForgotPasswordPage = lazy(() => import('./features/auth/ForgotPasswordPage'))
+const ResetPasswordPage = lazy(() => import('./features/auth/ResetPasswordPage'))
 const VerifyPhonePage = lazy(() => import('./features/auth/VerifyPhonePage'))
 const ProductsPage = lazy(() => import('./features/products/ProductsPage'))
 const ProductDetailPage = lazy(() => import('./features/products/ProductDetailPage'))
@@ -35,6 +36,7 @@ const publicRoutes = [
   { path: 'login', element: <LoginPage /> },
   { path: 'register', element: <RegisterPage /> },
   { path: 'forgot-password', element: <ForgotPasswordPage /> },
+  { path: 'reset-password', element: <ResetPasswordPage /> },
   { path: 'products', element: <ProductsPage /> },
   { path: 'products/:slug', element: <ProductDetailPage /> },
   { path: 'cart', element: <CartPage /> },

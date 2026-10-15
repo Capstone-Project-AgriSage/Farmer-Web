@@ -49,4 +49,15 @@ export const authApi = {
     }),
 
   getMe: () => api<CurrentUserResponse>('/api/auth/me'),
+
+  /** Sends a 6-digit code by SMS to the account's phone (202, also when a code was sent less than a minute ago). */
+  requestPhoneVerification: () =>
+    api<void>('/api/auth/phone-verification/request', { method: 'POST' }),
+
+  /** 204 when the code matches; 422 for a wrong, used or expired code (5 wrong tries kill the code). */
+  confirmPhone: (code: string) =>
+    api<void>('/api/auth/phone-verification/confirm', {
+      method: 'POST',
+      body: JSON.stringify({ code }),
+    }),
 }

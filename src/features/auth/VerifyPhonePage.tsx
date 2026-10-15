@@ -172,7 +172,7 @@ export default function VerifyPhonePage() {
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-brand-dark/40">
-                <span className="material-symbols-outlined text-[18px]">sms</span>
+                <span className="material-symbols-outlined text-[18px]">verified_user</span>
               </div>
               <input
                 id="phoneCode"

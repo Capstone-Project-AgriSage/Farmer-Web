@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { useAuth } from '../../context/AuthContext'
-import { isValidPhoneOrEmail } from '../../utils/validation'
+import { isValidEmail, isVietnameseMobile } from '../../utils/validation'
+import { ApiError } from '../../api/client'
 import FieldError from '../../components/ui/FieldError'
 import AuthLayout from './components/AuthLayout'
-import GoogleAuthButton from './components/GoogleAuthButton'
 
 interface FormErrors {
   fullName?: string
@@ -14,6 +14,31 @@ interface FormErrors {
   confirmPassword?: string
   terms?: string
   general?: string
+}
+
+/** Turns what the API answered into messages next to the right field (the server's own text is English). */
+function describeRegisterError(err: unknown): FormErrors {
+  if (err instanceof ApiError) {
+    if (err.status === 409) {
+      return {
+        contact: 'Số điện thoại hoặc email này đã có tài khoản. Hãy đăng nhập, hoặc chọn "Quên mật khẩu".',
+      }
+    }
+    if (err.status === 400 && err.errors) {
+      const keys = Object.keys(err.errors).map((k) => k.toLowerCase())
+      const next: FormErrors = {}
+      if (keys.some((k) => k.includes('phone') || k.includes('email') || k.includes('contact'))) {
+        next.contact = 'Số điện thoại di động hoặc email không hợp lệ.'
+      }
+      if (keys.some((k) => k.includes('password'))) next.password = 'Mật khẩu cần từ 8 đến 128 ký tự.'
+      if (keys.some((k) => k.includes('fullname'))) next.fullName = 'Họ và tên cần từ 1 đến 150 ký tự.'
+      if (Object.keys(next).length > 0) return next
+    }
+    if (err.status === 429) return { general: 'Bạn thao tác quá nhanh. Vui lòng đợi một phút rồi thử lại.' }
+    if (err.status === 503) return { general: 'Dịch vụ tạm gián đoạn, vui lòng thử lại sau.' }
+    return { general: err.detail || 'Đăng ký không thành công. Vui lòng thử lại.' }
+  }
+  return { general: 'Không kết nối được máy chủ. Vui lòng kiểm tra đường truyền rồi thử lại.' }
 }
 
 export default function RegisterPage() {
@@ -33,14 +58,17 @@ export default function RegisterPage() {
   const validate = (): FormErrors => {
     const next: FormErrors = {}
     if (!fullName.trim()) next.fullName = 'Vui lòng nhập họ và tên'
+    else if (fullName.trim().length > 150) next.fullName = 'Họ và tên tối đa 150 ký tự'
 
-    if (!contact.trim()) {
+    const value = contact.trim()
+    if (!value) {
       next.contact = 'Vui lòng nhập email hoặc số điện thoại'
-    } else if (!isValidPhoneOrEmail(contact)) {
-      next.contact = 'Email hoặc số điện thoại không hợp lệ'
+    } else if (value.includes('@') ? !isValidEmail(value) : !isVietnameseMobile(value)) {
+      next.contact = 'Nhập số điện thoại di động Việt Nam (ví dụ 0912 345 678) hoặc email hợp lệ'
     }
 
     if (password.length < 8) next.password = 'Mật khẩu cần tối thiểu 8 ký tự'
+    else if (password.length > 128) next.password = 'Mật khẩu tối đa 128 ký tự'
     if (confirmPassword !== password) next.confirmPassword = 'Mật khẩu xác nhận không khớp'
     if (!terms) next.terms = 'Bạn cần đồng ý với điều khoản để tiếp tục'
 
@@ -54,13 +82,12 @@ export default function RegisterPage() {
     if (Object.keys(nextErrors).length === 0) {
       setIsSubmitting(true)
       try {
-        await register(fullName, contact, password)
-        navigate('/')
-      } catch (err: any) {
-        setErrors((prev) => ({
-          ...prev,
-          general: err?.message || 'Đăng ký không thành công. Vui lòng thử lại.',
-        }))
+        const value = contact.trim()
+        await register(fullName.trim(), value, password)
+        // Registration sends no SMS; a farmer who signed up with a phone goes on to confirm it (and may skip).
+        navigate(value.includes('@') ? '/' : '/verify-phone')
+      } catch (err) {
+        setErrors(describeRegisterError(err))
       } finally {
         setIsSubmitting(false)
       }
@@ -104,7 +131,7 @@ export default function RegisterPage() {
           </div>
           <FieldError message={errors.fullName} />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+        <div className="text-left">
           <div>
             <label className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-1" htmlFor="regContact">
               Email / Số điện thoại
@@ -124,28 +151,9 @@ export default function RegisterPage() {
               />
             </div>
             <FieldError message={errors.contact} />
-          </div>
-          <div>
-            <label className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-1" htmlFor="farmRegion">
-              Khu vực canh tác
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-brand-dark/40">
-                <span className="material-symbols-outlined text-[18px]">location_on</span>
-              </div>
-              <select
-                className="w-full pl-9 pr-3 py-2.5 bg-brand-cream border border-brand-dark/15 text-brand-dark text-sm focus:border-brand-green focus:outline-none transition-colors cursor-pointer"
-                id="farmRegion"
-                name="region"
-                defaultValue="Cần Thơ (Thới Lai, Cờ Đỏ, Ô Môn...)"
-              >
-                <option>Cần Thơ (Thới Lai, Cờ Đỏ, Ô Môn...)</option>
-                <option>An Giang (Châu Phú, Thoại Sơn...)</option>
-                <option>Đồng Tháp (Lấp Vò, Tháp Mười...)</option>
-                <option>Kiên Giang (Tân Hiệp, Giồng Riềng...)</option>
-                <option>Khu vực Đồng bằng Sông Cửu Long khác</option>
-              </select>
-            </div>
+            <p className="text-[11px] text-brand-dark/50 mt-1">
+              Đăng ký bằng số điện thoại, chúng tôi sẽ gửi mã SMS để xác minh ngay sau khi tạo tài khoản.
+            </p>
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
@@ -237,6 +245,11 @@ export default function RegisterPage() {
           </label>
           <FieldError message={errors.terms} />
         </div>
+        {errors.general && (
+          <p role="alert" className="text-sm text-status-error text-left">
+            {errors.general}
+          </p>
+        )}
         <div className="pt-2">
           <button
             className="w-full h-11 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide  text-sm transition-colors flex items-center justify-center gap-2 focus:outline-none cursor-pointer disabled:opacity-70"
@@ -248,19 +261,7 @@ export default function RegisterPage() {
           </button>
         </div>
       </form>
-      <div className="relative my-5 text-center">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-brand-dark/10"></div>
-        </div>
-        <span className="relative bg-white px-3 text-[11px] text-brand-dark/50  tracking-[0.25em]">
-          Hoặc tiếp tục với
-        </span>
-      </div>
-      <GoogleAuthButton
-        label="Đăng ký bằng Google"
-        onClick={() => register('google-oauth', 'google-oauth', 'google-oauth').then(() => navigate('/'))}
-      />
-      <div className="text-center pt-4 text-xs text-brand-dark/60">
+      <div className="text-center pt-5 text-xs text-brand-dark/60">
         <span>Đã có tài khoản?</span>
         <Link
           className="text-brand-green hover:text-brand-dark hover:underline ml-1 inline-flex items-center gap-0.5 transition-colors"

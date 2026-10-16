@@ -1,7 +1,9 @@
 import { useState, useEffect, useId, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { useAuth } from '../../context/AuthContext'
+import { authApi } from '../../api/authApi'
 import { profileApi } from '../../api/profileApi'
 import type { FarmerProfile, AddressResponse, AddressRequest } from '../../api/types'
 import AddressModal from './components/AddressModal'
@@ -140,6 +142,8 @@ export default function AccountPage() {
   const [loadError, setLoadError] = useState<string | null>(null)
   const [notice, setNotice] = useState<{ tone: 'success' | 'error'; text: string } | null>(null)
   const [isSavingProfile, setIsSavingProfile] = useState(false)
+  // null until /api/auth/me answers (the status is a convenience; the page works without it)
+  const [phoneVerified, setPhoneVerified] = useState<boolean | null>(null)
 
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState({
@@ -165,6 +169,10 @@ export default function AccountPage() {
       ])
       setProfile(prof)
       setAddresses(addrs)
+      authApi
+        .getMe()
+        .then((me) => setPhoneVerified(me.phoneVerified))
+        .catch(() => setPhoneVerified(null))
       setFormData({
         fullName: prof.fullName || '',
         gender: prof.gender || '',
@@ -327,6 +335,17 @@ export default function AccountPage() {
                 <p className="mt-1.5 text-[16px] text-text-secondary tabular-nums">
                   {profile.phoneNumber || 'Chưa cập nhật số điện thoại'} · Đại lý: <span className="text-text-primary">{activeStore.name}</span>
                 </p>
+                {profile.phoneNumber && phoneVerified === true && (
+                  <p className="mt-1 text-[14px] text-status-success">Số điện thoại đã được xác minh</p>
+                )}
+                {profile.phoneNumber && phoneVerified === false && (
+                  <p className="mt-1 text-[14px] text-text-secondary">
+                    Số điện thoại chưa xác minh.{' '}
+                    <Link to="/verify-phone" className="text-brand-green underline">
+                      Xác minh bằng mã SMS
+                    </Link>
+                  </p>
+                )}
               </div>
               {!isEditing && (
                 <button

@@ -1,53 +1,126 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
-import { mockDiagnosisCases } from '../../data/mockDiagnosisCases'
+import { describeDiagnosisError, diagnosisApi } from '../../api/diagnosisApi'
+import type { DiagnosisCaseStatus, MyDiagnosisCaseListItem } from '../../api/types'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
-import type { DiagnosisCase } from '../../types'
+import { diseaseDisplayName, formatDiagnosisTime, historyFilters, statusBadgeClass, statusLabel } from './model'
 
-const statusMeta: Record<DiagnosisCase['status'], { label: string; icon: string; className: string }> = {
-  CONFIRMED: {
-    label: 'Đã xác nhận',
-    icon: 'verified',
-    className: 'bg-brand-light border-brand-dark/10 text-brand-green',
-  },
-  CORRECTED: {
-    label: 'Đã hiệu chỉnh',
-    icon: 'edit_note',
-    className: 'bg-brand-light border-brand-dark/10 text-brand-green',
-  },
-  PENDING_AGENT_REVIEW: {
-    label: 'Chờ thẩm định',
-    icon: 'hourglass_top',
-    className: 'border-amber-600/40 text-amber-900',
-  },
-  INCONCLUSIVE: {
-    label: 'Không kết luận',
-    icon: 'report',
-    className: 'border-rose-600/40 text-rose-800',
-  },
+const PAGE_SIZE = 20
+
+function CaseRow({ item }: { item: MyDiagnosisCaseListItem }) {
+  const hasDisease = Boolean(item.diseaseCode || item.diseaseName)
+  const uncertain = item.certainty === 'UNCERTAIN'
+  const name = diseaseDisplayName(item.diseaseCode, item.diseaseName)
+  const title = !hasDisease ? item.caseNumber : uncertain ? `Có thể là ${name} (AI chưa chắc)` : name
+  const [icon, tone] = !hasDisease
+    ? ['local_florist', 'bg-brand-light text-text-muted']
+    : uncertain
+      ? ['help', 'bg-status-warning-surface text-status-warning']
+      : ['eco', 'bg-status-success-surface text-status-success']
+
+  return (
+    <li>
+      <Link
+        to={`/ai-doctor/cases/${item.id}`}
+        data-testid={`diagnosis-row-${item.id}`}
+        className="focus-ring flex items-center gap-4 py-5 px-1 border-b border-brand-dark/15 hover:bg-brand-light/50 transition-colors"
+      >
+        <span className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${tone}`}>
+          <span className="material-symbols-outlined" style={{ fontSize: 24 }} aria-hidden="true">
+            {icon}
+          </span>
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-base md:text-lg text-text-primary">{title}</span>
+          <span className="block mt-0.5 text-[15px] text-text-secondary">
+            {hasDisease ? `${item.caseNumber} · ` : ''}
+            {formatDiagnosisTime(item.submittedAt)}
+          </span>
+          <span className={`inline-block mt-2 px-3 py-0.5 rounded-full text-[13px] ${statusBadgeClass(item.status)}`}>{statusLabel(item.status)}</span>
+        </span>
+        <span className="material-symbols-outlined text-text-muted" style={{ fontSize: 22 }} aria-hidden="true">
+          chevron_right
+        </span>
+      </Link>
+    </li>
+  )
 }
 
-const filters: { id: string; label: string; statuses: DiagnosisCase['status'][] }[] = [
-  { id: 'ALL', label: 'Tất cả', statuses: ['CONFIRMED', 'CORRECTED', 'PENDING_AGENT_REVIEW', 'INCONCLUSIVE'] },
-  { id: 'REVIEWED', label: 'Đã thẩm định', statuses: ['CONFIRMED', 'CORRECTED'] },
-  { id: 'PENDING', label: 'Chờ thẩm định', statuses: ['PENDING_AGENT_REVIEW'] },
-  { id: 'INCONCLUSIVE', label: 'Không kết luận', statuses: ['INCONCLUSIVE'] },
-]
+type Filter = DiagnosisCaseStatus | ''
 
-const isReviewed = (c: DiagnosisCase) => c.status === 'CONFIRMED' || c.status === 'CORRECTED'
+interface Loaded {
+  filter: Filter
+  items: MyDiagnosisCaseListItem[]
+  page: number
+  totalPages: number
+  totalCount: number
+}
 
 export default function DiagnosisHistoryPage() {
   useDocumentTitle('Lịch sử chẩn đoán AI')
+  const [filter, setFilter] = useState<Filter>('')
+  const [attempt, setAttempt] = useState(0)
+  // Each answer remembers the filter (and attempt) it belongs to, so loading is derived, not set before each request.
+  const [loaded, setLoaded] = useState<Loaded | null>(null)
+  const [loadError, setLoadError] = useState<{ filter: Filter; attempt: number; message: string } | null>(null)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const [moreError, setMoreError] = useState<string | null>(null)
 
-  const [filterId, setFilterId] = useState('ALL')
-  const [expandedId, setExpandedId] = useState<string | null>(null)
+  useEffect(() => {
+    let live = true
+    diagnosisApi.list({ status: filter || undefined, page: 1, pageSize: PAGE_SIZE }).then(
+      (res) => {
+        if (live) setLoaded({ filter, items: res.items, page: 1, totalPages: res.totalPages, totalCount: res.totalCount })
+      },
+      (err: unknown) => {
+        if (live) setLoadError({ filter, attempt, message: describeDiagnosisError(err, 'load') })
+      },
+    )
+    return () => {
+      live = false
+    }
+  }, [filter, attempt])
 
-  const activeFilter = filters.find((f) => f.id === filterId) ?? filters[0]
-  const cases = mockDiagnosisCases.filter((c) => activeFilter.statuses.includes(c.status))
+  const current = loaded?.filter === filter ? loaded : null
+  const error = !current && loadError?.filter === filter && loadError.attempt === attempt ? loadError.message : null
+  const isLoading = !current && !error
+  const items = current?.items ?? []
+
+  const chooseFilter = (next: Filter) => {
+    setMoreError(null)
+    setFilter(next)
+  }
+
+  const loadMore = async () => {
+    if (!current) return
+    const nextPage = current.page + 1
+    setIsLoadingMore(true)
+    setMoreError(null)
+    try {
+      const res = await diagnosisApi.list({ status: current.filter || undefined, page: nextPage, pageSize: PAGE_SIZE })
+      setLoaded((prev) =>
+        prev && prev.filter === current.filter
+          ? {
+              ...prev,
+              items: [...prev.items, ...res.items.filter((i) => !prev.items.some((p) => p.id === i.id))],
+              page: nextPage,
+              totalPages: res.totalPages,
+              totalCount: res.totalCount,
+            }
+          : prev,
+      )
+    } catch (err) {
+      setMoreError(describeDiagnosisError(err, 'load'))
+    } finally {
+      setIsLoadingMore(false)
+    }
+  }
+
+  const solidButton = 'focus-ring inline-flex items-center min-h-[44px] px-7 rounded-full bg-brand-dark text-white hover:bg-brand-green text-[15px] transition-colors'
 
   return (
-    <>
+    <div className="bg-brand-cream min-h-screen">
       <Breadcrumb
         items={[
           { label: 'Trang chủ', to: '/' },
@@ -55,152 +128,97 @@ export default function DiagnosisHistoryPage() {
           { label: 'Lịch sử chẩn đoán' },
         ]}
       />
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 bg-brand-cream">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-helvetica-neue tracking-tight text-brand-dark">
-              Lịch Sử Chẩn Đoán AI
-            </h1>
-            <p className="text-xs sm:text-sm text-brand-dark/60 mt-1">
-              {mockDiagnosisCases.length} ca bệnh đã gửi chẩn đoán
-            </p>
+            <p className="text-[13px] uppercase tracking-[0.16em] text-text-secondary mb-3">Bác sĩ cây trồng AI</p>
+            <h1 className="text-[length:var(--type-h1)] leading-[var(--type-h1-lh)] font-light tracking-tight text-text-primary">Lịch sử chẩn đoán</h1>
+            {current && <p className="mt-2 text-[15px] text-text-secondary">{current.totalCount} ca</p>}
           </div>
-          <Link
-            to="/ai-doctor"
-            className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-brand-dark text-white hover:bg-brand-dark/90 tracking-wide  text-sm rounded-full transition-colors self-start sm:self-auto shrink-0"
-          >
-            <span className="material-symbols-outlined text-[16px]">add_a_photo</span>
-            <span>Chẩn đoán mới</span>
+          <Link to="/ai-doctor" className={`${solidButton} gap-2 self-start sm:self-auto shrink-0`}>
+            <span className="material-symbols-outlined" style={{ fontSize: 20 }} aria-hidden="true">
+              add_a_photo
+            </span>
+            Chẩn đoán mới
           </Link>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {filters.map((f) => {
-            const count = mockDiagnosisCases.filter((c) => f.statuses.includes(c.status)).length
-            return (
-              <button
-                key={f.id}
-                type="button"
-                onClick={() => setFilterId(f.id)}
-                className={`px-3 py-1 rounded-full text-xs tracking-wide  border transition-colors ${
-                  filterId === f.id
-                    ? 'bg-brand-dark text-white border-brand-dark'
-                    : 'bg-white text-brand-dark/70 border-brand-dark/10 hover:border-brand-dark/30 hover:text-brand-dark'
-                }`}
-              >
-                {f.label} ({count})
-              </button>
-            )
-          })}
+        <div role="group" aria-label="Lọc theo trạng thái" className="flex flex-wrap gap-2 mb-6">
+          {historyFilters.map((f) => (
+            <button
+              key={f || 'ALL'}
+              type="button"
+              aria-pressed={filter === f}
+              onClick={() => chooseFilter(f)}
+              className={`focus-ring min-h-[44px] px-4 rounded-full text-[15px] border transition-colors ${
+                filter === f ? 'bg-brand-dark text-white border-brand-dark' : 'bg-white text-text-primary border-brand-dark/25 hover:border-brand-dark/60'
+              }`}
+            >
+              {statusLabel(f)}
+            </button>
+          ))}
         </div>
 
-        <div className="bg-white border border-brand-dark/10 divide-y divide-brand-dark/10">
-          {cases.length === 0 && (
-            <div className="p-8 text-center text-sm text-brand-dark/50">Không có ca chẩn đoán nào.</div>
-          )}
-          {cases.map((c) => {
-            const meta = statusMeta[c.status]
-            const isExpanded = expandedId === c.id
-            const diseaseName = isReviewed(c) ? (c.verifiedDiseaseName ?? c.predictedDiseaseName) : c.predictedDiseaseName
-            return (
-              <div key={c.id}>
+        {isLoading ? (
+          <ul className="border-t border-brand-dark/15" aria-busy="true" aria-label="Đang tải lịch sử chẩn đoán">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <li key={i} className="py-6 border-b border-brand-dark/15 flex items-center gap-4" aria-hidden="true">
+                <div className="w-12 h-12 rounded-full bg-brand-dark/10 animate-pulse" />
+                <div className="space-y-3 flex-1">
+                  <div className="h-5 w-48 bg-brand-dark/10 rounded-[var(--radius-surface)] animate-pulse" />
+                  <div className="h-4 w-64 max-w-full bg-brand-dark/10 rounded-[var(--radius-surface)] animate-pulse" />
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : error ? (
+          <div role="alert" className="border border-brand-dark/15 bg-white p-10 text-center rounded-[var(--radius-surface)]">
+            <p className="text-lg text-text-primary">{error}</p>
+            <button type="button" onClick={() => setAttempt((n) => n + 1)} className={`${solidButton} mt-5`}>
+              Thử lại
+            </button>
+          </div>
+        ) : items.length === 0 ? (
+          <div className="border border-brand-dark/15 bg-white p-12 text-center rounded-[var(--radius-surface)]">
+            <span className="material-symbols-outlined text-text-muted" style={{ fontSize: 48 }} aria-hidden="true">
+              local_florist
+            </span>
+            <p className="mt-3 text-lg text-text-primary">
+              {filter ? `Không có ca "${statusLabel(filter)}".` : 'Bác chưa gửi ảnh lá lúa nào để AI chẩn đoán.'}
+            </p>
+            {!filter && (
+              <Link to="/ai-doctor" className={`${solidButton} mt-5`}>
+                Chụp ảnh lá lúa
+              </Link>
+            )}
+          </div>
+        ) : (
+          <>
+            <ul className="border-t border-brand-dark/15 bg-white px-4 rounded-[var(--radius-surface)]">
+              {items.map((item) => (
+                <CaseRow key={item.id} item={item} />
+              ))}
+            </ul>
+            {current && current.page < current.totalPages && (
+              <div className="mt-6 text-center">
+                {moreError && (
+                  <p role="alert" className="mb-3 text-[15px] text-status-error">
+                    {moreError}
+                  </p>
+                )}
                 <button
                   type="button"
-                  onClick={() => setExpandedId(isExpanded ? null : c.id)}
-                  className="w-full p-5 md:p-6 flex items-start gap-4 text-left hover:bg-brand-light/50 transition-colors"
+                  onClick={loadMore}
+                  disabled={isLoadingMore}
+                  className="focus-ring min-h-[44px] px-7 rounded-full border border-brand-dark/30 text-[15px] text-text-primary hover:bg-brand-dark hover:text-white hover:border-brand-dark transition-colors disabled:opacity-45"
                 >
-                  <img
-                    src={c.imageUrl}
-                    alt={c.predictedDiseaseName}
-                    className="w-16 h-16 sm:w-20 sm:h-20 object-cover border border-brand-dark/10 shrink-0"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-helvetica-neue tracking-tight text-sm sm:text-base text-brand-dark">
-                        {diseaseName}
-                      </span>
-                      <span className="text-xs font-helvetica-neue text-brand-dark/50">({c.id})</span>
-                    </div>
-                    <div className="text-xs text-brand-dark/60 mt-1">
-                      {c.cropStage} · AI tin cậy {c.aiConfidence}%
-                    </div>
-                    <div className="flex items-center gap-2 flex-wrap mt-2">
-                      <span
-                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] tracking-wide border ${meta.className}`}
-                      >
-                        <span className="material-symbols-outlined text-[12px]">{meta.icon}</span>
-                        {meta.label}
-                      </span>
-                      <span className="text-[11px] text-brand-dark/50">Gửi lúc {c.createdAt}</span>
-                    </div>
-                  </div>
-                  <span
-                    className={`material-symbols-outlined text-brand-dark/40 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-                  >
-                    expand_more
-                  </span>
+                  {isLoadingMore ? 'Đang tải…' : moreError ? 'Thử tải thêm' : 'Xem thêm'}
                 </button>
-
-                {isExpanded && (
-                  <div className="px-5 md:px-6 pb-6 space-y-4 text-xs">
-                    <img
-                      src={c.imageUrl}
-                      alt={c.predictedDiseaseName}
-                      className="w-full max-h-80 object-cover border border-brand-dark/10"
-                    />
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div className="p-3 bg-brand-light border border-brand-dark/10">
-                        <div className="text-brand-dark/50">AI dự đoán</div>
-                        <div className="text-brand-dark mt-0.5">
-                          {c.predictedDiseaseName} · {c.aiConfidence}%
-                        </div>
-                      </div>
-                      <div className="p-3 bg-brand-light border border-brand-dark/10">
-                        <div className="text-brand-dark/50">Kết luận của đại lý</div>
-                        <div className="text-brand-dark mt-0.5">
-                          {c.verifiedDiseaseName ?? (c.status === 'PENDING_AGENT_REVIEW' ? 'Đang chờ thẩm định' : 'Chưa kết luận')}
-                        </div>
-                        {c.reviewedAt && <div className="text-brand-dark/50 mt-0.5">Thẩm định lúc {c.reviewedAt}</div>}
-                      </div>
-                    </div>
-
-                    {c.reviewerNote && (
-                      <div className="p-3 border border-brand-dark/10 text-brand-dark/70 leading-relaxed">
-                        <strong className="text-brand-dark">{c.reviewerName ?? 'Đại lý'}:</strong> {c.reviewerNote}
-                      </div>
-                    )}
-
-                    {c.rejectionReason && (
-                      <div className="p-3 border border-rose-600/30 bg-rose-50 text-rose-900 leading-relaxed">
-                        <strong>Lý do không kết luận:</strong> {c.rejectionReason}
-                      </div>
-                    )}
-
-                    {isReviewed(c) && c.recommendedProducts.length > 0 && (
-                      <div className="space-y-2">
-                        <div className="text-brand-dark/50 tracking-wide ">Thuốc được đề xuất</div>
-                        <div className="flex flex-wrap gap-2">
-                          {c.recommendedProducts.map((p) => (
-                            <Link
-                              key={p.slug}
-                              to={`/products/${p.slug}`}
-                              className="flex items-center gap-2 p-2 pr-3 border border-brand-dark/10 hover:border-brand-dark/30 transition-colors"
-                            >
-                              <img src={p.image} alt={p.name} className="w-10 h-10 object-contain bg-brand-light" />
-                              <span className="text-brand-dark">{p.name}</span>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
               </div>
-            )
-          })}
-        </div>
+            )}
+          </>
+        )}
       </div>
-    </>
+    </div>
   )
 }

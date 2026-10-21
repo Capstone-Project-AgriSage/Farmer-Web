@@ -23,7 +23,7 @@ export const articles: Article[] = [
       'Theo khuyến cáo từ trạm BVTV Thới Lai và đội ngũ kỹ sư nông học AgriSage tại các vùng trọng điểm lúa Thới Lai, Cờ Đỏ (Cần Thơ), thời tiết se lạnh có sương mù kéo dài kèm độ ẩm trên 90% là điều kiện tối ưu để nấm Magnaporthe oryzae gây bệnh đạo ôn lá bùng phát mạnh trên các giống lúa OM5451, Đài Thơm 8, ST25.',
       'Biểu hiện ban đầu là các chấm kim màu nâu nhỏ, sau phát triển thành hình thoi đặc trưng với tâm màu xám trắng và viền nâu đỏ. Nếu không can thiệp kịp thời trong 3-5 ngày, các vết bệnh liên kết làm cháy khô toàn bộ chóp lá và lá đòng, dẫn đến suy kiệt năng suất vụ lúa.',
       'Kỹ sư AgriSage khuyến cáo bà con: tạm ngưng bón phân đạm urê và phân bón lá có hàm lượng đạm cao; giữ mực nước ruộng ổn định 3-5cm; đồng thời tiến hành phun ngay hoạt chất Tricyclazole (Beam 75WP) hoặc Isoprothiolane theo liều lượng 25-30g cho bình 25 lít nước.',
-      'Bà con có thể chụp ảnh triệu chứng lá lúa gửi qua tính năng Bác sĩ cây trồng AI trên ứng dụng để được chẩn đoán chính xác mức độ nhiễm bệnh và được kỹ sư đại lý Hai Thắng kiểm duyệt phác đồ phun xịt.',
+      'Bà con có thể chụp ảnh triệu chứng lá lúa gửi qua tính năng Bác sĩ cây trồng AI trên ứng dụng để AI nhận diện bệnh ngay, rồi hỏi kỹ sư đại lý Hai Thắng trước khi phun xịt.',
     ],
   },
   {

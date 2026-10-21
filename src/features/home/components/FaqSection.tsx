@@ -16,7 +16,7 @@ const faqs = [
   },
   {
     q: 'Bác sĩ cây trồng AI chẩn đoán như thế nào?',
-    a: 'Bác gửi ảnh lá hoặc thân lúa và chọn giai đoạn sinh trưởng để AI gợi ý chẩn đoán. Thuốc thương mại chỉ hiện sau khi đại lý thẩm định hình ảnh.',
+    a: 'Bác gửi ảnh lá lúa, AI cho kết quả ngay: tên bệnh, cách xử lý và sản phẩm gợi ý khi AI chắc chắn. Khi AI chưa chắc, app không gợi ý thuốc mà khuyên chụp lại hoặc hỏi cửa hàng. Kết quả chỉ để tham khảo.',
   },
 ]
 

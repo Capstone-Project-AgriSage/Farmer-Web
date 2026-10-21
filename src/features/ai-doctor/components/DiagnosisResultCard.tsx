@@ -1,214 +1,235 @@
-import { useEffect, useState } from 'react'
-import { confidenceTone, type DiagnosisScenario } from '../model'
+import type { ReactNode } from 'react'
+import type { DiagnosisResult, MyDiagnosisCase } from '../../../api/types'
+import { certaintyHeading, diseaseDisplayName, isWaiting, treatmentTypeLabel } from '../model'
 
 interface DiagnosisResultCardProps {
-  result: DiagnosisScenario
+  diagnosisCase: MyDiagnosisCase
   previewUrl: string | null
-  showAlternatives: boolean
-  onToggleAlternatives: () => void
-  onReset: () => void
-  onSubmittedToAgent?: () => void
-  isInconclusive?: boolean
-}
-
-// Severity is shown as an icon plus words, never colour alone.
-const SEVERITY_STYLE: Record<DiagnosisScenario['severity'], { icon: string; className: string }> = {
-  'Nhẹ': { icon: 'info', className: 'bg-status-info-surface text-status-info' },
-  'Trung bình': { icon: 'warning', className: 'bg-status-warning-surface text-status-warning' },
-  'Nặng': { icon: 'error', className: 'bg-status-error-surface text-status-error' },
-  'Bình thường': { icon: 'check_circle', className: 'bg-status-success-surface text-status-success' },
+  /** "Chụp lại" / "Gửi ảnh khác": back to an empty upload form. */
+  onNewPhoto: () => void
+  onRetry?: () => void
+  retrying?: boolean
+  retryError?: string | null
+  /** Extra action in the card header, such as a link to the case page. */
+  headerAction?: ReactNode
 }
 
 function SectionLabel({ children }: { children: string }) {
   return <h3 className="text-[13px] uppercase tracking-[0.16em] text-text-secondary mb-3">{children}</h3>
 }
 
-export default function DiagnosisResultCard({ result, previewUrl, showAlternatives, onToggleAlternatives, onReset, onSubmittedToAgent, isInconclusive }: DiagnosisResultCardProps) {
-  const tone = confidenceTone(result.confidence)
-  const severity = SEVERITY_STYLE[result.severity]
-  const [sentForReview, setSentForReview] = useState(false)
-  const [isSendingReview, setIsSendingReview] = useState(false)
-  // The bar fills from 0 to the confidence once the card is on screen.
-  const [barShown, setBarShown] = useState(false)
+function Icon({ name, size = 20, className = '' }: { name: string; size?: number; className?: string }) {
+  return (
+    <span className={`material-symbols-outlined shrink-0 ${className}`} style={{ fontSize: size }} aria-hidden="true">
+      {name}
+    </span>
+  )
+}
 
-  useEffect(() => {
-    const frame = requestAnimationFrame(() => setBarShown(true))
-    return () => cancelAnimationFrame(frame)
-  }, [])
+const has = (text: string | null | undefined) => Boolean(text && text.trim())
 
-  const handleSendForReview = () => {
-    setIsSendingReview(true)
-    setTimeout(() => {
-      setIsSendingReview(false)
-      setSentForReview(true)
-      onSubmittedToAgent?.()
-    }, 800)
+const outlineButton =
+  'focus-ring inline-flex items-center justify-center gap-2 min-h-[48px] px-5 rounded-full border border-brand-dark/30 text-[15px] text-text-primary hover:bg-brand-dark hover:text-white hover:border-brand-dark transition-colors disabled:opacity-45 disabled:cursor-not-allowed'
+const solidButton =
+  'focus-ring inline-flex items-center justify-center gap-2 min-h-[48px] px-6 rounded-full bg-brand-dark text-white hover:bg-brand-green text-[15px] transition-colors disabled:opacity-70 disabled:cursor-not-allowed'
+
+/** The AI result (or an old store-confirmed result): disease, how sure, what to do. Never a probability (D8). */
+function ResultBody({ result, previewUrl, onNewPhoto }: { result: DiagnosisResult; previewUrl: string | null; onNewPhoto: () => void }) {
+  const d = result.disease
+  const uncertain = result.certainty === 'UNCERTAIN'
+  const fromAi = result.certainty !== 'VERIFIED'
+  const healthy = d.isHealthy && !uncertain
+  const name = diseaseDisplayName(d.code, d.name)
+  const treatments = [...result.treatments].sort((a, b) => a.rankOrder - b.rankOrder)
+  const noContent = !has(d.symptoms) && !has(d.prevention) && treatments.length === 0
+  const tone = healthy ? 'text-status-success' : 'text-status-warning'
+
+  return (
+    <>
+      <section className="px-5 sm:px-8 py-7 flex flex-col sm:flex-row gap-5 sm:gap-6">
+        {previewUrl && (
+          <img src={previewUrl} alt="Ảnh lá lúa đã gửi" className="w-full sm:w-28 h-40 sm:h-28 object-cover rounded-[var(--radius-surface)] border border-brand-dark/15 shrink-0" />
+        )}
+        <div className="min-w-0">
+          <p className={`flex items-center gap-1.5 text-[15px] font-medium ${tone}`} data-testid="diagnosis-certainty">
+            <Icon name={uncertain ? 'help' : healthy ? 'check_circle' : fromAi ? 'psychology' : 'verified'} />
+            {certaintyHeading(result.certainty)}
+          </p>
+          <p className="mt-1 text-[length:var(--type-h2)] leading-[var(--type-h2-lh)] font-light tracking-tight text-text-primary" data-testid="diagnosis-disease">
+            {name}
+          </p>
+          {d.name && d.name !== name && <p className="mt-1 text-[15px] italic text-text-secondary">{d.name}</p>}
+          {healthy && <p className="mt-2 text-[15px] md:text-base text-status-success">Cây không có dấu hiệu bệnh.</p>}
+          {fromAi && <p className="mt-2 text-[15px] text-text-secondary">Kết quả do AI dự đoán từ ảnh, có thể chưa chính xác.</p>}
+        </div>
+      </section>
+
+      {uncertain && (
+        <section className="px-5 sm:px-8 pb-7">
+          <div role="status" data-testid="diagnosis-uncertain" className="p-5 border border-status-warning/40 bg-status-warning-surface rounded-[var(--radius-surface)]">
+            <p className="flex items-center gap-2 text-lg font-medium text-text-primary">
+              <Icon name="photo_camera" size={24} className="text-status-warning" />
+              Nên chụp lại hoặc hỏi cửa hàng
+            </p>
+            <p className="mt-2 text-[15px] md:text-base text-text-primary leading-relaxed">
+              AI chưa chắc đây là bệnh gì nên chưa gợi ý thuốc. Bác chụp lại gần một lá bệnh, đủ sáng, hoặc mang mẫu lá đến cửa hàng để được tư vấn.
+            </p>
+            <button type="button" onClick={onNewPhoto} className={`${solidButton} mt-4`}>
+              <Icon name="photo_camera" />
+              Chụp lại
+            </button>
+          </div>
+        </section>
+      )}
+
+      {has(result.reviewerComment) && (
+        <section className="px-5 sm:px-8 py-7 border-t border-brand-dark/15">
+          <SectionLabel>Nhận xét của cửa hàng</SectionLabel>
+          <p className="text-base text-text-primary leading-relaxed">{result.reviewerComment}</p>
+        </section>
+      )}
+
+      {has(d.symptoms) && (
+        <section className="px-5 sm:px-8 py-7 border-t border-brand-dark/15">
+          <SectionLabel>Triệu chứng</SectionLabel>
+          <p className="text-base text-text-primary leading-relaxed">{d.symptoms}</p>
+        </section>
+      )}
+
+      {has(d.prevention) && (
+        <section className="px-5 sm:px-8 py-7 border-t border-brand-dark/15">
+          <SectionLabel>Cách phòng ngừa</SectionLabel>
+          <p className="text-base text-text-primary leading-relaxed">{d.prevention}</p>
+        </section>
+      )}
+
+      {treatments.length > 0 && (
+        <section className="px-5 sm:px-8 py-7 border-t border-brand-dark/15" data-testid="diagnosis-treatments">
+          <SectionLabel>Cách xử lý</SectionLabel>
+          <ol className="space-y-5">
+            {treatments.map((t, index) => (
+              <li key={t.id} className="flex gap-4">
+                <span className="shrink-0 w-8 h-8 rounded-full bg-brand-dark text-white text-[15px] flex items-center justify-center" aria-hidden="true">
+                  {index + 1}
+                </span>
+                <div className="min-w-0 pt-0.5">
+                  <p className="flex flex-wrap items-center gap-2">
+                    <span className="px-2.5 py-0.5 rounded-full bg-brand-light text-[13px] text-text-secondary">{treatmentTypeLabel(t.type)}</span>
+                    <span className="text-base md:text-[17px] font-medium text-text-primary">{t.title}</span>
+                  </p>
+                  <p className="mt-1.5 text-base text-text-primary leading-relaxed">{t.instructions}</p>
+                  {has(t.activeIngredientName) && <p className="mt-1 text-[15px] text-text-secondary">Hoạt chất: {t.activeIngredientName}</p>}
+                  {has(t.precautions) && (
+                    <p className="mt-2 flex items-start gap-2 text-[15px] text-status-warning">
+                      <Icon name="warning" size={18} className="mt-0.5" />
+                      Lưu ý: {t.precautions}
+                    </p>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      {noContent && !d.isHealthy && (
+        <section className="px-5 sm:px-8 py-7 border-t border-brand-dark/15">
+          <SectionLabel>Cách xử lý</SectionLabel>
+          <p className="text-base text-text-secondary">Cửa hàng chưa nhập hướng dẫn cho bệnh này. Bác hỏi cửa hàng để được tư vấn.</p>
+        </section>
+      )}
+
+      {(fromAi || treatments.length > 0) && (
+        <section className="px-5 sm:px-8 pb-7">
+          <p className="p-4 border-l-4 border-status-warning bg-status-warning-surface text-[15px] text-text-primary leading-relaxed">
+            {fromAi
+              ? 'Kết quả do AI gợi ý, không thay thế tư vấn của cán bộ kỹ thuật. Bác đọc kỹ nhãn thuốc và hỏi cửa hàng trước khi dùng.'
+              : 'Bác đọc kỹ hướng dẫn và liên hệ cửa hàng khi cần thêm tư vấn trước khi dùng thuốc.'}
+          </p>
+        </section>
+      )}
+    </>
+  )
+}
+
+export default function DiagnosisResultCard({ diagnosisCase: c, previewUrl, onNewPhoto, onRetry, retrying = false, retryError, headerAction }: DiagnosisResultCardProps) {
+  let body: ReactNode
+  if (c.result) {
+    body = <ResultBody result={c.result} previewUrl={previewUrl} onNewPhoto={onNewPhoto} />
+  } else if (c.status === 'INCONCLUSIVE') {
+    body = (
+      <section className="px-5 sm:px-8 py-7" data-testid="diagnosis-inconclusive">
+        <p className="flex items-center gap-2 text-lg font-medium text-text-primary">
+          <Icon name="photo_camera" size={24} className="text-status-info" />
+          Cửa hàng chưa kết luận được
+        </p>
+        <p className="mt-2 text-base text-text-primary leading-relaxed">Ảnh chưa đủ rõ để kết luận. Bác chụp lại và gửi ảnh mới.</p>
+        {has(c.inconclusive?.comment) && (
+          <p className="mt-3 p-4 bg-brand-light text-[15px] text-text-primary leading-relaxed rounded-[var(--radius-surface)]">Cửa hàng nhắn: "{c.inconclusive?.comment}"</p>
+        )}
+        <button type="button" onClick={onNewPhoto} className={`${solidButton} mt-4`}>
+          <Icon name="photo_camera" />
+          Chụp lại
+        </button>
+      </section>
+    )
+  } else if (c.status === 'CANCELLED') {
+    body = <p className="px-5 sm:px-8 py-7 text-base text-text-secondary">Bác đã huỷ ca này. Cần khám lại thì gửi ảnh mới.</p>
+  } else if (c.status === 'FAILED' || c.canRetry) {
+    body = (
+      <section className="px-5 sm:px-8 py-7" data-testid="diagnosis-failed">
+        <p className="flex items-center gap-2 text-lg font-medium text-text-primary">
+          <Icon name="cloud_off" size={24} className="text-status-error" />
+          Chưa phân tích được ảnh
+        </p>
+        <p className="mt-2 text-base text-text-primary leading-relaxed">
+          Dịch vụ AI đang bận hoặc chưa sẵn sàng. Bác thử lại sau ít phút, hoặc gửi một ảnh khác. Ảnh đã gửi vẫn được lưu.
+        </p>
+        {retryError && (
+          <p role="alert" className="mt-3 flex items-start gap-2 text-[15px] text-status-error">
+            <Icon name="error" />
+            {retryError}
+          </p>
+        )}
+        <div className="mt-4 flex flex-wrap gap-3">
+          {c.canRetry && onRetry && (
+            <button type="button" onClick={onRetry} disabled={retrying} className={solidButton}>
+              <Icon name={retrying ? 'progress_activity' : 'refresh'} className={retrying ? 'animate-spin' : ''} />
+              {retrying ? 'AI đang phân tích lại…' : 'Thử lại'}
+            </button>
+          )}
+          <button type="button" onClick={onNewPhoto} disabled={retrying} className={outlineButton}>
+            <Icon name="photo_camera" />
+            Gửi ảnh khác
+          </button>
+        </div>
+      </section>
+    )
+  } else {
+    body = (
+      <section className="px-5 sm:px-8 py-7" role="status">
+        <p className="flex items-center gap-2 text-lg font-medium text-text-primary">
+          <Icon name="hourglass_top" size={24} className="text-status-warning" />
+          {isWaiting(c.status) ? 'AI đang phân tích ảnh' : 'Đang cập nhật kết quả'}
+        </p>
+        <p className="mt-2 text-base text-text-secondary">Thường chỉ mất vài giây. Trang sẽ tự cập nhật.</p>
+      </section>
+    )
   }
 
   return (
-    <div className="bg-white border border-brand-dark/15 rounded-[var(--radius-surface)]">
-      <div className="flex items-center justify-between gap-4 px-5 sm:px-8 py-4 border-b border-brand-dark/15">
-        <h2 className="text-[13px] uppercase tracking-[0.16em] text-text-secondary">Kết quả chẩn đoán</h2>
-        <button type="button" onClick={onReset} className="focus-ring inline-flex items-center gap-1.5 min-h-[44px] text-[15px] text-text-primary hover:underline underline-offset-4">
-          <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden="true">
-            refresh
-          </span>
-          Chẩn đoán ảnh khác
-        </button>
+    <div className="bg-white border border-brand-dark/15 rounded-[var(--radius-surface)]" data-testid="diagnosis-result">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 sm:px-8 py-4 border-b border-brand-dark/15">
+        <h2 className="text-[13px] uppercase tracking-[0.16em] text-text-secondary">Kết quả chẩn đoán · {c.caseNumber}</h2>
+        <div className="flex flex-wrap items-center gap-x-4">
+          {headerAction}
+          <button type="button" onClick={onNewPhoto} className="focus-ring inline-flex items-center gap-1.5 min-h-[44px] text-[15px] text-text-primary hover:underline underline-offset-4">
+            <Icon name="refresh" size={18} />
+            Chẩn đoán ảnh khác
+          </button>
+        </div>
       </div>
-
-      {/* 1. What is wrong with the plant */}
-      <section className="px-5 sm:px-8 py-7 flex flex-col sm:flex-row gap-5 sm:gap-6">
-        {previewUrl && <img src={previewUrl} alt="Ảnh đã chẩn đoán" className="w-full sm:w-28 h-40 sm:h-28 object-cover rounded-[var(--radius-surface)] border border-brand-dark/15 shrink-0" />}
-        <div className="min-w-0">
-          <p className="text-[length:var(--type-h2)] leading-[var(--type-h2-lh)] font-light tracking-tight text-text-primary">{result.diseaseName}</p>
-          <p className="mt-1 text-[15px] italic text-text-secondary">{result.pathogen}</p>
-          <p className={`mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[15px] font-medium ${severity.className}`}>
-            <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden="true">
-              {severity.icon}
-            </span>
-            Mức độ: {result.severity}
-          </p>
-        </div>
-      </section>
-
-      {isInconclusive ? (
-        <section className="px-5 sm:px-8 pb-7">
-          <div role="alert" className="p-5 border border-status-error/40 bg-status-error-surface rounded-[var(--radius-surface)]">
-            <p className="flex items-center gap-2 text-lg font-medium text-text-primary">
-              <span className="material-symbols-outlined text-status-error" style={{ fontSize: 24 }} aria-hidden="true">
-                error
-              </span>
-              Chưa đủ cơ sở kết luận
-            </p>
-            <p className="mt-2 text-[15px] md:text-base text-text-primary leading-relaxed">
-              Hình ảnh không đủ rõ hoặc triệu chứng chưa điển hình, nên hệ thống không đưa ra phác đồ tự động để đảm bảo an toàn. Bác chụp lại ảnh rõ hơn hoặc gửi ảnh để kỹ sư đại lý xem trực tiếp.
-            </p>
-          </div>
-        </section>
-      ) : (
-        <>
-          {/* 2. What to do right now */}
-          <section className="px-5 sm:px-8 pb-7 border-t border-brand-dark/15 pt-7">
-            <SectionLabel>Việc cần làm ngay tại ruộng</SectionLabel>
-            <ol className="space-y-4">
-              {result.treatmentSteps.map((step, index) => (
-                <li key={step} className="flex gap-4">
-                  <span className="shrink-0 w-8 h-8 rounded-full bg-brand-dark text-white text-[15px] flex items-center justify-center" aria-hidden="true">
-                    {index + 1}
-                  </span>
-                  <span className="text-base md:text-[17px] text-text-primary leading-relaxed pt-0.5">{step}</span>
-                </li>
-              ))}
-            </ol>
-
-            <div className="mt-6 p-4 border-l-4 border-status-warning bg-status-warning-surface text-[15px] text-text-primary leading-relaxed">
-              <p className="flex items-center gap-2 font-medium">
-                <span className="material-symbols-outlined text-status-warning" style={{ fontSize: 20 }} aria-hidden="true">
-                  verified_user
-                </span>
-                Chính sách An toàn Nông nghiệp AgriSage
-              </p>
-              <p className="mt-1">
-                Danh mục thuốc BVTV và phân bón thương mại <strong>chỉ hiển thị sau khi Đại lý Hai Thắng thẩm định trực tiếp hình ảnh</strong>, để tránh kháng thuốc hoặc dùng sai hoạt chất.
-              </p>
-            </div>
-          </section>
-        </>
-      )}
-
-      {/* 3. How sure the AI is */}
-      <section className="px-5 sm:px-8 py-7 border-t border-brand-dark/15">
-        <SectionLabel>Độ tin cậy của AI</SectionLabel>
-        <div className="flex items-baseline justify-between gap-4">
-          <p className={`text-[15px] md:text-base font-medium ${tone.text}`}>{tone.label}</p>
-          <p className={`text-[length:var(--type-h2)] leading-none font-light ${tone.text}`}>{result.confidence}%</p>
-        </div>
-        <div className="mt-3 h-3 rounded-full bg-brand-light overflow-hidden" role="img" aria-label={`Độ tin cậy ${result.confidence}%`}>
-          <div
-            className={`h-full w-full rounded-full origin-left ${tone.bar} transition-transform duration-[var(--dur-large)] ease-[var(--motion-ease-out)]`}
-            style={{ transform: `scaleX(${barShown ? result.confidence / 100 : 0})` }}
-          />
-        </div>
-      </section>
-
-      {/* 4. What the dealer is doing about it */}
-      <section className="px-5 sm:px-8 py-7 border-t border-brand-dark/15">
-        <SectionLabel>Chuyên gia đang xử lý</SectionLabel>
-        {sentForReview ? (
-          <div role="status" className="flex items-start gap-3 p-4 bg-brand-light border border-brand-dark/15 rounded-[var(--radius-surface)]">
-            <span className="material-symbols-outlined text-status-warning shrink-0" style={{ fontSize: 26 }} aria-hidden="true">
-              hourglass_top
-            </span>
-            <div>
-              <p className="text-base font-medium text-text-primary">Đã chuyển ca tới Đại lý Hai Thắng (#AI-2401)</p>
-              <p className="mt-1 text-[15px] text-text-secondary leading-relaxed">
-                Trạng thái: <strong className="text-text-primary">Chờ đại lý duyệt phác đồ thương mại</strong>. Khi thẩm định viên xác nhận, thuốc đặc trị sẽ hiện ngay tại đây và có thông báo gửi về tài khoản của bác.
-              </p>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <p className="text-[15px] md:text-base text-text-secondary leading-relaxed">
-              Gửi ca này cho đại lý để được thẩm định và mở phác đồ thương mại. <span className="text-text-muted">Đại lý: Hai Thắng (Thới Lai)</span>
-            </p>
-            <button
-              type="button"
-              onClick={handleSendForReview}
-              disabled={isSendingReview}
-              className="focus-ring w-full min-h-[52px] rounded-full bg-brand-dark text-white hover:bg-brand-green text-[15px] md:text-base tracking-wide transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
-            >
-              <span className={`material-symbols-outlined ${isSendingReview ? 'animate-spin' : ''}`} style={{ fontSize: 20 }} aria-hidden="true">
-                {isSendingReview ? 'progress_activity' : 'send'}
-              </span>
-              {isSendingReview ? 'Đang chuyển hình ảnh…' : 'Gửi đại lý Hai Thắng duyệt thuốc điều trị'}
-            </button>
-          </div>
-        )}
-      </section>
-
-      {/* Details: kept below the decision */}
-      {!isInconclusive && (
-        <section className="px-5 sm:px-8 py-7 border-t border-brand-dark/15">
-          <SectionLabel>Triệu chứng AI nhận diện được</SectionLabel>
-          <ul className="space-y-2.5">
-            {result.symptomsDetected.map((symptom) => (
-              <li key={symptom} className="flex items-start gap-3 text-[15px] md:text-base text-text-secondary leading-relaxed">
-                <span className="material-symbols-outlined text-primary-dark shrink-0 mt-0.5" style={{ fontSize: 20 }} aria-hidden="true">
-                  check_circle
-                </span>
-                {symptom}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      <section className="border-t border-brand-dark/15">
-        <button
-          type="button"
-          onClick={onToggleAlternatives}
-          aria-expanded={showAlternatives}
-          aria-controls="alternatives-list"
-          className="focus-ring w-full flex items-center justify-between px-5 sm:px-8 min-h-[60px] text-left"
-        >
-          <span className="text-[13px] uppercase tracking-[0.16em] text-text-secondary">Khả năng khác ({result.alternatives.length})</span>
-          <span className="material-symbols-outlined text-text-primary" style={{ fontSize: 24 }} aria-hidden="true">
-            {showAlternatives ? 'expand_less' : 'expand_more'}
-          </span>
-        </button>
-        {showAlternatives && (
-          <ul id="alternatives-list" className="px-5 sm:px-8 pb-6 space-y-2">
-            {result.alternatives.length === 0 && <li className="text-[15px] text-text-secondary">Không có khả năng khác.</li>}
-            {result.alternatives.map((alt) => (
-              <li key={alt.name} className="flex items-center justify-between text-[15px] bg-brand-light border border-brand-dark/10 px-4 py-3 rounded-[var(--radius-surface)]">
-                <span className="text-text-primary">{alt.name}</span>
-                <span className="text-text-secondary">{alt.confidence}%</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+      {body}
     </div>
   )
 }

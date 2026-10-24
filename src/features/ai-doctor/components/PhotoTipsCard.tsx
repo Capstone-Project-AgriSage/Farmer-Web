@@ -1,5 +1,7 @@
+// Same advice as the Farmer app: the AI was trained on single close leaves, so a whole-plant photo is often UNCERTAIN.
 const tips = [
-  'Chụp cận cảnh vùng lá/cành/rễ có dấu hiệu bất thường rõ nhất',
+  'Chụp một lá bệnh, để lá chiếm gần hết khung hình',
+  'Chụp gần vết bệnh, không chụp cả cây hay cả ruộng',
   'Chụp dưới ánh sáng tự nhiên, tránh ngược sáng hoặc quá tối',
   'Giữ máy ổn định, lấy nét rõ vào vùng bị bệnh',
 ]
@@ -11,7 +13,7 @@ export default function PhotoTipsCard() {
         <span className="material-symbols-outlined text-primary-dark" style={{ fontSize: 20 }} aria-hidden="true">
           tips_and_updates
         </span>
-        Mẹo chụp ảnh chuẩn xác
+        Mẹo chụp ảnh để AI nhận đúng bệnh
       </h4>
       <ul className="mt-4 space-y-3">
         {tips.map((tip, index) => (

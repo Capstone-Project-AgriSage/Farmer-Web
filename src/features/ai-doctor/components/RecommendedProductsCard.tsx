@@ -1,65 +1,84 @@
-import ProductCard from '../../../components/ui/ProductCard'
-import type { Product } from '../../../types'
+import { Link } from 'react-router-dom'
+import type { DiagnosisResult } from '../../../api/types'
+import { PRODUCT_IMAGE_FALLBACK, handleImageError } from '../../../utils/image'
+import { diseaseDisplayName } from '../model'
 
 interface RecommendedProductsCardProps {
-  diseaseName: string
-  reviewerName?: string
-  reviewerNote?: string
-  products: Product[]
-  isVerified?: boolean
+  result: DiagnosisResult
 }
 
-export default function RecommendedProductsCard({ diseaseName, reviewerName, reviewerNote, products, isVerified = false }: RecommendedProductsCardProps) {
-  if (!isVerified) {
+function Heading({ icon, children }: { icon: string; children: string }) {
+  return (
+    <h4 className="flex items-center gap-2 text-lg font-medium text-text-primary">
+      <span className="material-symbols-outlined text-primary-dark" style={{ fontSize: 24 }} aria-hidden="true">
+        {icon}
+      </span>
+      {children}
+    </h4>
+  )
+}
+
+/**
+ * Products for the result: only a CONFIDENT, non-healthy AI result (matched by active ingredient, at most 5) or an old
+ * store-confirmed case. An UNCERTAIN result never shows a product (AI_DIAGNOSIS.md D2/D13).
+ */
+export default function RecommendedProductsCard({ result }: RecommendedProductsCardProps) {
+  const uncertain = result.certainty === 'UNCERTAIN'
+  if (result.disease.isHealthy && !uncertain) return null
+
+  if (uncertain) {
     return (
-      <div className="bg-white border border-brand-dark/15 rounded-[var(--radius-surface)] p-6">
-        <h4 className="flex items-center gap-2 text-lg font-medium text-text-primary">
-          <span className="material-symbols-outlined text-status-warning" style={{ fontSize: 24 }} aria-hidden="true">
-            hourglass_top
-          </span>
-          Phác đồ thương mại: chờ thẩm định
-        </h4>
+      <div className="bg-white border border-brand-dark/15 rounded-[var(--radius-surface)] p-6" data-testid="diagnosis-no-products">
+        <Heading icon="storefront">Chưa gợi ý thuốc</Heading>
         <p className="mt-3 text-[15px] text-text-secondary leading-relaxed">
-          Đại lý Hai Thắng đối chiếu hình ảnh lá lúa với hoạt chất phòng trừ phù hợp. Thuốc BVTV sẽ được mở ngay khi thẩm định hoàn tất.
-        </p>
-        <p className="mt-4 pt-4 border-t border-brand-dark/10 flex items-center justify-between text-[13px] text-text-secondary">
-          <span>Tiêu chuẩn mô hình: Rice-V2.1</span>
-          <span className="text-primary-dark">Tự động đồng bộ</span>
+          AI chưa chắc chắn nên chưa gợi ý thuốc hay sản phẩm. Bác chụp lại gần một lá bệnh, hoặc hỏi cửa hàng để được tư vấn.
         </p>
       </div>
     )
   }
 
+  const products = [...result.products].sort((a, b) => a.rankOrder - b.rankOrder)
+  const disease = diseaseDisplayName(result.disease.code, result.disease.name)
+
   return (
-    <div className="bg-white border border-brand-dark/15 rounded-[var(--radius-surface)] p-6 space-y-5">
-      <div className="pb-4 border-b border-brand-dark/10">
-        <p className="flex items-center justify-between text-[13px] uppercase tracking-[0.16em] text-text-secondary">
-          <span className="inline-flex items-center gap-1.5">
-            <span className="material-symbols-outlined text-primary-dark" style={{ fontSize: 18 }} aria-hidden="true">
-              verified
-            </span>
-            Đã thẩm định chuyên môn
-          </span>
-          <span>Kho Thới Lai</span>
-        </p>
-        <h4 className="mt-3 text-lg font-medium text-text-primary leading-snug">Thuốc đặc trị được duyệt cho "{diseaseName}"</h4>
-        {reviewerName && <p className="mt-1 text-[15px] text-primary-dark">Thẩm định bởi: {reviewerName}</p>}
+    <div className="bg-white border border-brand-dark/15 rounded-[var(--radius-surface)] p-6 space-y-4" data-testid="diagnosis-products">
+      <div>
+        <Heading icon="shopping_bag">Sản phẩm gợi ý</Heading>
+        <p className="mt-1 text-[15px] text-text-secondary">Cho bệnh {disease}</p>
       </div>
 
-      {reviewerNote && (
-        <p className="p-4 bg-brand-light border-l-4 border-primary-dark text-[15px] text-text-secondary leading-relaxed">
-          <strong className="text-text-primary">Chỉ dẫn từ đại lý:</strong> {reviewerNote}
-        </p>
+      {products.length > 0 ? (
+        <ul className="divide-y divide-brand-dark/10">
+          {products.map((p) => (
+            <li key={p.storeProductId}>
+              <Link to={`/products/${p.storeProductId}`} className="focus-ring flex items-center gap-4 py-3 rounded-[var(--radius-surface)] hover:bg-brand-light/60 transition-colors">
+                <img
+                  src={p.imageUrl || PRODUCT_IMAGE_FALLBACK}
+                  alt=""
+                  onError={handleImageError}
+                  className="w-14 h-14 object-contain bg-brand-light rounded-[var(--radius-surface)] shrink-0"
+                />
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[15px] md:text-base font-medium text-text-primary">{p.name}</span>
+                  {p.reason && <span className="block mt-0.5 text-[15px] text-text-secondary">{p.reason}</span>}
+                </span>
+                <span className="material-symbols-outlined text-text-muted" style={{ fontSize: 22 }} aria-hidden="true">
+                  chevron_right
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-[15px] text-text-secondary leading-relaxed">Cửa hàng chưa có sản phẩm gợi ý cho bệnh này, bác hỏi cửa hàng để được tư vấn.</p>
       )}
 
-      {products.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
-          {products.map((p) => (
-            <ProductCard key={p.slug} product={p} />
-          ))}
-        </div>
-      ) : (
-        <p className="text-[15px] text-text-secondary">Chưa có sản phẩm phù hợp trong danh mục hiện tại, bác vui lòng liên hệ đại lý Hai Thắng.</p>
+      {products.length > 0 && (
+        <p className="pt-4 border-t border-brand-dark/10 text-[15px] text-text-secondary leading-relaxed">
+          {result.certainty === 'VERIFIED'
+            ? 'Cửa hàng đã chọn các sản phẩm này cho ca của bác.'
+            : 'Gợi ý theo hoạt chất trị bệnh. Bác đọc kỹ nhãn thuốc và hỏi cửa hàng trước khi dùng.'}
+        </p>
       )}
     </div>
   )

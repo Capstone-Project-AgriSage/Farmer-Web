@@ -344,3 +344,94 @@ export interface PagedResult<T> {
   pageSize: number;
   totalPages: number;
 }
+
+// ---- AI diagnosis (/api/me/diagnosis-cases, AI_DIAGNOSIS.md 2.0) ----
+// No store review since 2026-10-21: the farmer sees the AI result at once. The API never returns a probability.
+
+export type DiagnosisCaseStatus =
+  | 'SUBMITTED' | 'PROCESSING' | 'AI_COMPLETED' | 'UNDER_REVIEW' | 'VERIFIED' | 'INCONCLUSIVE' | 'FAILED' | 'CANCELLED'
+
+/** CONFIDENT: treatments and products. UNCERTAIN: no chemical treatment, no product. VERIFIED: an old case a store reviewed. */
+export type DiagnosisCertainty = 'CONFIDENT' | 'UNCERTAIN' | 'VERIFIED'
+
+export interface DiagnosisDisease {
+  id: string;
+  code: string;
+  name: string;
+  isHealthy: boolean;
+  symptoms: string | null;
+  prevention: string | null;
+}
+
+export interface DiagnosisImage {
+  id: string;
+  /** Signed URL, valid until expiresAt (about an hour). */
+  imageUrl: string;
+  expiresAt: string;
+  isPrimary: boolean;
+  fileName: string | null;
+  uploadedAt: string;
+}
+
+export interface DiagnosisTreatment {
+  id: string;
+  type: 'CULTURAL' | 'CHEMICAL' | 'PREVENTIVE' | 'OTHER' | string;
+  title: string;
+  instructions: string;
+  precautions: string | null;
+  rankOrder: number;
+  reason: string | null;
+  activeIngredientName?: string | null;
+}
+
+/** A sellable product of the store; storeProductId is the catalog id (/products/:id). No price here. */
+export interface DiagnosisProduct {
+  storeProductId: string;
+  productId: string;
+  name: string;
+  sku: string;
+  imageUrl: string | null;
+  reason: string | null;
+  rankOrder: number;
+}
+
+export interface DiagnosisResult {
+  disease: DiagnosisDisease;
+  /** Only on an old VERIFIED case. */
+  reviewerComment: string | null;
+  treatments: DiagnosisTreatment[];
+  products: DiagnosisProduct[];
+  certainty: DiagnosisCertainty;
+  /** RETAKE_PHOTO_OR_ASK_STORE when the AI is not sure. */
+  hint: string | null;
+}
+
+export interface DiagnosisInconclusive {
+  comment: string | null;
+  hint: string;
+}
+
+export interface MyDiagnosisCase {
+  id: string;
+  caseNumber: string;
+  status: DiagnosisCaseStatus;
+  submittedAt: string;
+  completedAt: string | null;
+  farmerNote: string | null;
+  image: DiagnosisImage | null;
+  result: DiagnosisResult | null;
+  inconclusive: DiagnosisInconclusive | null;
+  /** The AI failed (or the case stalled): the farmer may run it again. */
+  canRetry: boolean;
+}
+
+export interface MyDiagnosisCaseListItem {
+  id: string;
+  caseNumber: string;
+  status: DiagnosisCaseStatus;
+  submittedAt: string;
+  completedAt: string | null;
+  diseaseCode: string | null;
+  diseaseName: string | null;
+  certainty: DiagnosisCertainty | null;
+}

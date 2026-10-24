@@ -5,7 +5,7 @@ export default function HotlineCard() {
         support_agent
       </span>
       <div className="flex-1 min-w-0">
-        <p className="text-base font-medium text-white">Cần kỹ sư xác nhận trực tiếp?</p>
+        <p className="text-base font-medium text-white">Cần cửa hàng tư vấn thêm?</p>
         <p className="text-[15px] text-white/80">Hỗ trợ miễn phí 7:00 - 20:00</p>
       </div>
       <a

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { useAuth } from '../../context/AuthContext'
 import { isValidPhoneOrEmail } from '../../utils/validation'
@@ -7,9 +7,19 @@ import AuthLayout from './components/AuthLayout'
 import GoogleAuthButton from './components/GoogleAuthButton'
 import Spinner from '../../components/ui/Spinner'
 
+/** Where to go after signing in: the page that sent the farmer here, only if it is a path of this site. */
+function returnPath(state: unknown): string {
+  const from = (state as { from?: { pathname?: unknown; search?: unknown } } | null)?.from
+  const pathname = typeof from?.pathname === 'string' ? from.pathname : ''
+  if (!pathname.startsWith('/') || pathname.startsWith('//') || pathname.startsWith('/login')) return '/'
+  return pathname + (typeof from?.search === 'string' ? from.search : '')
+}
+
 export default function LoginPage() {
   useDocumentTitle('Đăng nhập')
   const navigate = useNavigate()
+  const location = useLocation()
+  const target = returnPath(location.state)
   const { login } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
@@ -32,7 +42,7 @@ export default function LoginPage() {
     setIsSubmitting(true)
     try {
       await login(email, password)
-      navigate('/')
+      navigate(target, { replace: true })
     } catch (err: any) {
       setError(err?.message || 'Đăng nhập không thành công. Vui lòng kiểm tra lại thông tin.')
     } finally {
@@ -171,7 +181,7 @@ export default function LoginPage() {
       </div>
       <GoogleAuthButton
         label="Đăng nhập bằng Google"
-        onClick={() => login('google-oauth', 'google-oauth').then(() => navigate('/'))}
+        onClick={() => login('google-oauth', 'google-oauth').then(() => navigate(target, { replace: true }))}
         className="mb-6"
       />
       <div className="text-center pt-1 text-sm text-brand-dark/60">

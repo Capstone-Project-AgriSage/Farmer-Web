@@ -58,23 +58,3 @@ export interface StoreInfo {
   bankAccountName: string
 }
 
-export interface DiagnosisCase {
-  id: string
-  farmerId: string
-  farmerName: string
-  imageUrl: string
-  cropStage: string
-  predictedDiseaseId: string
-  predictedDiseaseName: string
-  aiConfidence: number
-  status: 'PENDING_AGENT_REVIEW' | 'CONFIRMED' | 'CORRECTED' | 'INCONCLUSIVE'
-  verifiedDiseaseId?: string
-  verifiedDiseaseName?: string
-  reviewerNote?: string
-  reviewerName?: string
-  recommendedProducts: Product[]
-  createdAt: string
-  reviewedAt?: string
-  rejectionReason?: string
-}
-

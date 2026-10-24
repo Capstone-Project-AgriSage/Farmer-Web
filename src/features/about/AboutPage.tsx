@@ -286,7 +286,7 @@ export default function AboutPage() {
               </h2>
               <Reveal as="p" delay={0.3} y={16} className="mt-5 text-base md:text-lg text-white/80 leading-relaxed">
                 {isAuthenticated
-                  ? 'Chụp ảnh lá lúa để nhận gợi ý chẩn đoán; phác đồ thương mại được đại lý thẩm định trước khi áp dụng.'
+                  ? 'Chụp ảnh lá lúa, AI cho biết bệnh và cách xử lý ngay; khi AI chưa chắc, bác được khuyên chụp lại hoặc hỏi cửa hàng.'
                   : 'Đăng ký tài khoản để trải nghiệm mua vật tư chính hãng và chẩn đoán AI miễn phí.'}
               </Reveal>
             </div>

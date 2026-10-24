@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
+import { DIAGNOSIS_IMAGE_TYPES } from '../../../api/diagnosisApi'
 import { parseStageLabel, riceStageOptions, type RiceStageValue } from '../model'
 import type { DiagnosisStatus, PickedImage } from '../useDiagnosis'
 
@@ -13,9 +14,16 @@ interface UploadFormProps {
   onStageChange: (stage: RiceStageValue) => void
   onSymptomTextChange: (text: string) => void
   onAnalyze: () => void
+  /** A guest sees the whole form; the button asks to sign in before the photo is sent. */
+  needsSignIn: boolean
+  onSignIn: () => void
+  submitError: string | null
 }
 
-const ANALYZING_STEPS = ['Đang nhận diện vùng bệnh trên lá…', 'Đối chiếu với các triệu chứng đã biết…', 'Đang tổng hợp gợi ý chẩn đoán…']
+const ANALYZING_STEPS = ['AI đang nhận diện vùng bệnh trên lá…', 'Đối chiếu với 5 bệnh lúa AI đã học…', 'Đang chuẩn bị kết quả và cách xử lý…']
+const ACCEPT = DIAGNOSIS_IMAGE_TYPES.join(',')
+/** The stage line takes the rest of the backend's 1000-character note. */
+const SYMPTOM_MAX = 900
 
 const formatSize = (bytes: number) => (bytes >= 1024 * 1024 ? `${(bytes / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`)
 
@@ -29,7 +37,7 @@ function StepTitle({ number, children, hint }: { number: string; children: strin
   )
 }
 
-export default function UploadForm({ image, fileError, status, stage, symptomText, onFileSelected, onResetImage, onStageChange, onSymptomTextChange, onAnalyze }: UploadFormProps) {
+export default function UploadForm({ image, fileError, status, stage, symptomText, onFileSelected, onResetImage, onStageChange, onSymptomTextChange, onAnalyze, needsSignIn, onSignIn, submitError }: UploadFormProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [stepIndex, setStepIndex] = useState(0)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -59,12 +67,13 @@ export default function UploadForm({ image, fileError, status, stage, symptomTex
     if (cameraInputRef.current) cameraInputRef.current.value = ''
   }
 
-  const canAnalyze = Boolean(image) && !analyzing
+  // A sent photo already has its case: choose another photo to diagnose again.
+  const canAnalyze = Boolean(image) && !analyzing && status !== 'result'
 
   return (
     <div className="bg-white border border-brand-dark/15 rounded-[var(--radius-surface)]">
-      <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => pick(e.target.files?.[0])} />
-      <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => pick(e.target.files?.[0])} />
+      <input ref={fileInputRef} type="file" accept={ACCEPT} className="hidden" onChange={(e) => pick(e.target.files?.[0])} />
+      <input ref={cameraInputRef} type="file" accept={ACCEPT} capture="environment" className="hidden" onChange={(e) => pick(e.target.files?.[0])} />
 
       {/* 1. Photo */}
       <section className="p-5 sm:p-8">
@@ -106,7 +115,7 @@ export default function UploadForm({ image, fileError, status, stage, symptomTex
               </span>
               <p className="mt-3 text-lg text-text-primary">{isDragging ? 'Thả ảnh vào đây' : 'Chụp hoặc chọn ảnh lá lúa'}</p>
               <p id="photo-help" className="mt-1 text-[15px] text-text-secondary max-w-sm">
-                Kéo thả ảnh vào đây hoặc bấm để chọn. Chụp rõ vết đốm, cháy bìa mép lá hoặc bẹ chân lúa.
+                Kéo thả ảnh vào đây hoặc bấm để chọn. Chụp gần một lá bệnh, rõ vết đốm hoặc cháy mép lá. Ảnh JPEG, PNG hoặc WebP, tối đa 5 MB.
               </p>
               <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
                 <span className="inline-flex items-center min-h-[44px] px-6 rounded-full bg-brand-dark text-white text-[15px]">Chọn ảnh</span>
@@ -196,6 +205,7 @@ export default function UploadForm({ image, fileError, status, stage, symptomTex
           value={symptomText}
           onChange={(e) => onSymptomTextChange(e.target.value)}
           disabled={analyzing}
+          maxLength={SYMPTOM_MAX}
           rows={4}
           aria-label="Mô tả triệu chứng ngoài ruộng"
           placeholder="Ví dụ: Vết mắt én xuất hiện sau đợt sương mù lạnh 3 ngày trước, ruộng đang bón thúc đợt 2..."
@@ -207,9 +217,21 @@ export default function UploadForm({ image, fileError, status, stage, symptomTex
       <div className="sticky bottom-0 z-20 lg:static p-5 sm:p-8 pt-4 border-t border-brand-dark/15 bg-white rounded-b-[var(--radius-surface)]">
         {status === 'error' && (
           <div role="alert" className="mb-4 p-4 border border-status-error/40 bg-status-error-surface text-[15px] text-text-primary rounded-[var(--radius-surface)]">
-            Chưa chẩn đoán được lần này. Ảnh và thông tin của bác vẫn còn nguyên, bác bấm thử lại nhé.
+            {submitError ?? 'Chưa gửi được ảnh lần này.'} Ảnh và thông tin của bác vẫn còn nguyên.
           </div>
         )}
+        {needsSignIn ? (
+          <button
+            type="button"
+            onClick={onSignIn}
+            className="focus-ring w-full min-h-[56px] rounded-full bg-brand-dark text-white hover:bg-brand-green text-base tracking-wide transition-colors flex items-center justify-center gap-2.5"
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: 22 }} aria-hidden="true">
+              login
+            </span>
+            Đăng nhập để gửi ảnh
+          </button>
+        ) : (
         <button
           type="button"
           onClick={onAnalyze}
@@ -229,12 +251,21 @@ export default function UploadForm({ image, fileError, status, stage, symptomTex
               <span className="material-symbols-outlined" style={{ fontSize: 22 }} aria-hidden="true">
                 document_scanner
               </span>
-              {status === 'error' ? 'Thử lại' : status === 'result' ? 'Chẩn đoán lại' : 'Chẩn đoán bệnh lúa ngay'}
+              {status === 'error' ? 'Gửi lại' : status === 'result' ? 'Đã gửi ảnh này' : 'Gửi ảnh để AI chẩn đoán'}
             </>
           )}
         </button>
+        )}
         <p id="analyze-hint" role="status" aria-live="polite" className="mt-3 text-center text-[15px] text-text-secondary">
-          {analyzing ? ANALYZING_STEPS[stepIndex] : image ? 'Sẵn sàng. Bác bấm nút để bắt đầu chẩn đoán.' : 'Bác cần chọn ảnh trước khi chẩn đoán.'}
+          {needsSignIn
+            ? 'Bác cần đăng nhập tài khoản nông dân để gửi ảnh và xem lại các ca đã gửi.'
+            : analyzing
+              ? ANALYZING_STEPS[stepIndex]
+              : status === 'result'
+                ? 'Đã có kết quả bên dưới. Chọn ảnh khác để chẩn đoán tiếp.'
+                : image
+                  ? 'Sẵn sàng. AI cho kết quả sau vài giây.'
+                  : 'Bác cần chọn ảnh trước khi chẩn đoán.'}
         </p>
       </div>
     </div>

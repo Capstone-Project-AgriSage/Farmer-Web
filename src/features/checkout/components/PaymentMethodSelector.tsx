@@ -6,22 +6,17 @@ import { usePermissions } from '../../../context/PermissionContext'
 import PermissionAction from '../../../components/auth/PermissionAction'
 
 export type PaymentMethod = 'payos' | 'credit'
-export type CopyField = 'account' | 'memo'
 
 interface PaymentMethodSelectorProps {
   paymentMethod: PaymentMethod
   onPaymentMethodChange: (method: PaymentMethod) => void
   total: number
-  copiedField: CopyField | null
-  onCopy: (field: CopyField, value: string) => void
 }
 
 export default function PaymentMethodSelector({
   paymentMethod,
   onPaymentMethodChange,
   total,
-  copiedField: _copiedField,
-  onCopy: _onCopy,
 }: PaymentMethodSelectorProps) {
   const { hasPermission } = usePermissions()
   const canReadCredit = hasPermission('MY_CREDIT.READ')

@@ -25,11 +25,13 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   const token = localStorage.getItem('agrisage.farmer_token') || localStorage.getItem('agrisage_token')
   const baseUrl = import.meta.env.VITE_API_URL || ''
   const isJwt = Boolean(token && token !== '0' && token !== '1' && token.includes('.'))
+  // A FormData body (photo upload) needs the browser to set multipart/form-data with its boundary.
+  const isForm = init.body instanceof FormData
 
   const res = await fetch(`${baseUrl}${path}`, {
     ...init,
     headers: {
-      'Content-Type': 'application/json',
+      ...(isForm ? {} : { 'Content-Type': 'application/json' }),
       ...(isJwt ? { Authorization: `Bearer ${token}` } : {}),
       ...init.headers,
     },

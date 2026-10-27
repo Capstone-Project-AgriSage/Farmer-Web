@@ -25,3 +25,6 @@ dist-ssr
 
 # Local project checkpoint for AI sessions
 PROJECT_CONTEXT.md
+
+# Tool cache
+.impeccable/

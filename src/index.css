@@ -145,55 +145,6 @@ body {
   padding: 0;
 }
 
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fade-down {
-  from {
-    opacity: 0;
-    transform: translateY(-12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-up {
-  animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.animate-fade-down {
-  animation: fade-down 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.stagger-1 {
-  animation-delay: 0ms;
-}
-.stagger-2 {
-  animation-delay: 120ms;
-}
-.stagger-3 {
-  animation-delay: 240ms;
-}
-.stagger-4 {
-  animation-delay: 360ms;
-}
-.stagger-5 {
-  animation-delay: 480ms;
-}
-.stagger-6 {
-  animation-delay: 600ms;
-}
-
 /* Only the icons the app uses (12 KB instead of 1.1 MB). Rebuild with: npm run icons. block: no icon names flash as text. */
 @font-face {
   font-family: 'Material Symbols Subset';
@@ -255,8 +206,6 @@ input:-webkit-autofill {
     transition-delay: 0ms !important;
   }
 
-  .animate-fade-up,
-  .animate-fade-down,
   .toast-enter,
   .animate-pulse {
     animation: none !important;

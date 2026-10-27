@@ -162,7 +162,7 @@ try {
     ['DEBT_PAYMENT_CONFIRMED', 'PAYMENT', null, '/debt'],
     ['RETURN_RESULT', 'SALES_RETURN', id(1200), '/orders/' + id(1200)],
     ['REFUND_RESULT', 'REFUND', id(1200), '/orders/' + id(1200)],
-    ['DIAGNOSIS_RECOMMENDATIONS', 'DIAGNOSIS_CASE', null, null],
+    ['AI_DIAGNOSIS_COMPLETED', 'DIAGNOSIS_CASE', null, '/ai-doctor/cases/' + id(1304)],
   ];
   links.forEach(([notificationType, entityType, orderId], n) => navigation.state.records.push({ ...item(200 + n, 'UNREAD'),
     notificationType, data: { entityType, entityId: id(1300 + n), orderId } }));
@@ -180,7 +180,7 @@ try {
   }
   assert.deepEqual(navigation.errors, []);
   await navigation.context.close();
-  await passed('payment, debt, return and refund links are correct; real diagnosis notices do not link to demo results');
+  await passed('payment, debt, return, refund and diagnosis links are correct');
   const expiry = await fixture();
   expiry.state.unauthorized = true;
   await button(expiry.page, 'Tải lại').click();

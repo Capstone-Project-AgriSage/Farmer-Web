@@ -36,7 +36,7 @@ export function notificationTarget(item: NotificationItem): string | null {
     case 'ORDER': return '/orders/' + data.entityId
     case 'PAYMENT': return orderId ? '/orders/' + orderId : data.orderId === null ? '/debt' : '/orders'
     case 'DELIVERY': case 'SALES_RETURN': case 'REFUND': return orderId ? '/orders/' + orderId : '/orders'
-    // Diagnosis history still contains demo data; link it after the owned diagnosis API is integrated.
+    case 'DIAGNOSIS_CASE': return '/ai-doctor/cases/' + data.entityId
     case 'DEBT_ENTRY': case 'CREDIT_PROFILE': return '/debt'
     default: return null
   }

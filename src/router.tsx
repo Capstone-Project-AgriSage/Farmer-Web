@@ -9,6 +9,8 @@ const HomePage = lazy(() => import('./features/home/HomePage'))
 const LoginPage = lazy(() => import('./features/auth/LoginPage'))
 const RegisterPage = lazy(() => import('./features/auth/RegisterPage'))
 const ForgotPasswordPage = lazy(() => import('./features/auth/ForgotPasswordPage'))
+const ResetPasswordPage = lazy(() => import('./features/auth/ResetPasswordPage'))
+const VerifyPhonePage = lazy(() => import('./features/auth/VerifyPhonePage'))
 const ProductsPage = lazy(() => import('./features/products/ProductsPage'))
 const ProductDetailPage = lazy(() => import('./features/products/ProductDetailPage'))
 const CartPage = lazy(() => import('./features/cart/CartPage'))
@@ -28,6 +30,7 @@ const OrdersPage = lazy(() => import('./features/order/OrdersPage'))
 const OrderDetailPage = lazy(() => import('./features/order/OrderDetailPage'))
 const NotificationsPage = lazy(() => import('./features/notifications/NotificationsPage'))
 const DiagnosisHistoryPage = lazy(() => import('./features/ai-doctor/DiagnosisHistoryPage'))
+const DiagnosisCasePage = lazy(() => import('./features/ai-doctor/DiagnosisCasePage'))
 const NotFoundPage = lazy(() => import('./features/misc/NotFoundPage'))
 
 const publicRoutes = [
@@ -35,6 +38,7 @@ const publicRoutes = [
   { path: 'login', element: <LoginPage /> },
   { path: 'register', element: <RegisterPage /> },
   { path: 'forgot-password', element: <ForgotPasswordPage /> },
+  { path: 'reset-password', element: <ResetPasswordPage /> },
   { path: 'products', element: <ProductsPage /> },
   { path: 'products/:slug', element: <ProductDetailPage /> },
   { path: 'cart', element: <PermissionRoute codes={['MY_CART.READ']} allowGuest><CartPage /></PermissionRoute> },
@@ -48,6 +52,7 @@ const publicRoutes = [
 
 // Requires an authenticated farmer session — see src/context/AuthContext.tsx.
 const protectedRoutes = [
+  { path: 'verify-phone', element: <VerifyPhonePage /> },
   { path: 'checkout', element: <PermissionRoute codes={['MY_ORDERS.CHECKOUT', 'MY_CART.READ']}><CheckoutPage /></PermissionRoute> },
   { path: 'payments/payos/return', element: <PermissionRoute codes={['MY_PAYMENTS.READ']}><PayosReturnPage /></PermissionRoute> },
   { path: 'payments/payos/cancel', element: <PermissionRoute codes={['MY_PAYMENTS.CANCEL']}><PayosCancelPage /></PermissionRoute> },
@@ -57,7 +62,8 @@ const protectedRoutes = [
   { path: 'orders', element: <PermissionRoute codes={['MY_ORDERS.READ']}><OrdersPage /></PermissionRoute> },
   { path: 'orders/:code', element: <PermissionRoute codes={['MY_ORDERS.READ']}><OrderDetailPage /></PermissionRoute> },
   { path: 'notifications', element: <NotificationsPage /> },
-  { path: 'ai-doctor/history', element: <DiagnosisHistoryPage /> },
+  { path: 'ai-doctor/history', element: <PermissionRoute codes={['MY_DIAGNOSIS.READ']}><DiagnosisHistoryPage /></PermissionRoute> },
+  { path: 'ai-doctor/cases/:id', element: <PermissionRoute codes={['MY_DIAGNOSIS.READ']}><DiagnosisCasePage /></PermissionRoute> },
 ].map((route) => ({ ...route, errorElement: <RouteErrorBoundary /> }))
 
 export const router = createBrowserRouter([

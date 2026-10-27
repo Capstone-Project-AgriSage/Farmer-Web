@@ -7,7 +7,6 @@ import type { CartItem } from '../../../api/types'
 interface OrderSummarySidebarProps {
   items: CartItem[]
   subtotal: number
-  discount: number
   shippingFee: number
   total: number
   onConfirm: () => void
@@ -18,7 +17,6 @@ interface OrderSummarySidebarProps {
 export default function OrderSummarySidebar({
   items,
   subtotal,
-  discount: _discount,
   shippingFee,
   total,
   onConfirm,

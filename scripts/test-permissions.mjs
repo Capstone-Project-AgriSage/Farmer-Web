@@ -121,9 +121,12 @@ try {
   await pass('backend 403 refreshes permissions and hides revoked action', cartCase)
 
   state.codes = ['MY_CART.READ']
+  const reads = state.requests.filter((request) => request.path === '/api/me/permissions').length
   await page.clock.fastForward(15_100)
+  assert.equal(state.requests.filter((request) => request.path === '/api/me/permissions').length, reads, 'no idle permission polling')
+  await page.evaluate(() => window.dispatchEvent(new CustomEvent('agrisage-realtime-change', { detail: { topic: 'permissions' } })))
   await page.getByRole('button', { name: /Xóa tất cả/ }).waitFor({ state: 'detached' })
-  await pass('visible 15-second polling applies revocation', cartCase)
+  await pass('idle view makes no permission polls and realtime applies revocation', cartCase)
   await page.goto(baseUrl + '/orders')
   await page.getByRole('heading', { name: /chưa được cấp quyền/ }).waitFor()
   assert.equal(state.requests.filter((request) => request.path === '/api/me/orders').length, 0)

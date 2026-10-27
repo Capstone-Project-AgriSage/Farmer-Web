@@ -1,3 +1,4 @@
+import PermissionAction from '../auth/PermissionAction'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { Product } from '../../types'
@@ -159,7 +160,7 @@ export default function ProductCard({ product, showcase }: { product: Product; s
               </p>
             )}
           </div>
-          <button
+          <PermissionAction codes={["MY_CART.ADD_ITEM"]} allowGuest><button
             type="button"
             onClick={handleQuickAdd}
             disabled={outOfStock || isAdding || !product.storeProductId}
@@ -172,7 +173,7 @@ export default function ProductCard({ product, showcase }: { product: Product; s
             <span className={`material-symbols-outlined ${isAdding ? 'animate-spin' : ''}`} style={{ fontSize: 20 }} aria-hidden="true">
               {isAdding ? 'progress_activity' : justAdded ? 'check' : 'add_shopping_cart'}
             </span>
-          </button>
+          </button></PermissionAction>
         </div>
 
         <Link

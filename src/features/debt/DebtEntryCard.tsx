@@ -1,3 +1,4 @@
+import PermissionAction from '../../components/auth/PermissionAction'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { formatVnd } from '../../data/format'
@@ -91,13 +92,13 @@ export default function DebtEntryCard({ entry, onDispute }: DebtEntryCardProps) 
           {open ? 'Ẩn chi tiết' : 'Xem chi tiết'}
         </button>
         {canDispute(entry.status) && (
-          <button
+          <PermissionAction codes={["MY_DEBT.DISPUTE"]}><button
             type="button"
             onClick={() => onDispute(entry)}
             className="focus-ring min-h-[44px] px-5 rounded-full border border-status-error/50 text-[15px] text-status-error hover:bg-status-error-surface transition-colors"
           >
             Khiếu nại
-          </button>
+          </button></PermissionAction>
         )}
       </div>
 

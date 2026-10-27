@@ -1,3 +1,5 @@
+import PermissionAction from '../../components/auth/PermissionAction'
+import { usePermissions } from '../../context/PermissionContext'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
@@ -14,6 +16,7 @@ const formatDate = (iso: string) => new Date(iso).toLocaleDateString('vi-VN')
 
 export default function OrdersPage() {
   useDocumentTitle('Lịch sử đơn hàng')
+  const { hasPermission } = usePermissions()
   const [notification, setNotification] = useState<string | null>(null)
   const [orders, setOrders] = useState<OrderListItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -53,6 +56,7 @@ export default function OrdersPage() {
   }
 
   const handleCancelOrder = async (order: OrderListItem) => {
+    if (!hasPermission('MY_ORDERS.CANCEL')) return
     if (confirm('Bác có chắc chắn muốn hủy đơn hàng này không?')) {
       try {
         await ordersApi.cancelOrder(order.id, 'Người dùng hủy')
@@ -141,13 +145,13 @@ export default function OrdersPage() {
                       <p className="text-xl font-medium text-text-primary whitespace-nowrap">{formatVnd(order.totalAmount)}</p>
                       <div className="flex items-center gap-2">
                         {order.status === 'PENDING_CONFIRMATION' && (
-                          <button
+                          <PermissionAction codes={["MY_ORDERS.CANCEL"]}><button
                             type="button"
                             onClick={() => handleCancelOrder(order)}
                             className="focus-ring min-h-[44px] px-4 rounded-full text-[15px] text-status-error hover:bg-status-error-surface transition-colors"
                           >
                             Hủy đơn
-                          </button>
+                          </button></PermissionAction>
                         )}
                         <Link
                           to={`/orders/${order.id}`}

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import PermissionAction from '../auth/PermissionAction'
 import { useMotionPolicy } from '../../motion/useMotionPolicy'
 
 const linkClass =
@@ -99,11 +100,11 @@ export default function Footer() {
                   Chẩn đoán bệnh lá lúa AI
                 </Link>
               </li>
-              <li>
+              <PermissionAction codes={['MY_DEBT.READ']} allowGuest><li>
                 <Link className={linkClass} to="/debt">
                   Sổ nợ
                 </Link>
-              </li>
+              </li></PermissionAction>
             </ul>
           </div>
 

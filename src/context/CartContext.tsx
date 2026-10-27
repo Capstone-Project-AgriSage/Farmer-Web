@@ -3,6 +3,7 @@ import { cartApi, type AddToCartRequest } from '../api/cartApi'
 import { ApiError, describeApiError } from '../api/client'
 import type { Cart, CartItem } from '../api/types'
 import { useAuth } from './AuthContext'
+import { usePermissions } from './PermissionContext'
 
 interface CartContextValue {
   items: CartItem[]
@@ -26,6 +27,9 @@ const EMPTY_CART: Cart = { id: null, items: [], subtotalAmount: 0, priceListId: 
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuth()
+  const { hasPermission } = usePermissions()
+  const canRead = hasPermission('MY_CART.READ')
+  const requestVersion = useRef(0)
   const [cart, setCart] = useState<Cart | null>(null)
   const [toastMessage, setToastMessage] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -38,28 +42,32 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }
 
   const refreshCart = async () => {
-    if (!localStorage.getItem('agrisage.farmer_token')) {
+    const version = ++requestVersion.current
+    const token = localStorage.getItem('agrisage.farmer_token')
+    if (!isAuthenticated || !canRead) {
       setCart(EMPTY_CART)
+      setIsLoading(false)
       return
     }
     setIsLoading(true)
     try {
       const data = await cartApi.getCart()
-      setCart(data)
+      if (version === requestVersion.current && token === localStorage.getItem('agrisage.farmer_token')) setCart(data)
     } catch (err: any) {
       if (err?.status !== 401) {
         console.error('Failed to load cart', err)
       }
-      setCart(EMPTY_CART)
+      if (version === requestVersion.current) setCart(EMPTY_CART)
     } finally {
-      setIsLoading(false)
+      if (version === requestVersion.current) setIsLoading(false)
     }
   }
 
   // The cart lives on the server per farmer: reload it whenever the session changes.
   useEffect(() => {
     refreshCart()
-  }, [isAuthenticated])
+    return () => { requestVersion.current++ }
+  }, [isAuthenticated, canRead])
 
   const cartErrorMessage = (err: unknown, fallback: string) =>
     err instanceof ApiError && err.status === 401
@@ -71,61 +79,81 @@ export function CartProvider({ children }: { children: ReactNode }) {
       showToast('Bác vui lòng đăng nhập để mua hàng.')
       return false
     }
+    if (!hasPermission('MY_CART.ADD_ITEM')) {
+      showToast('Bác chưa được cấp quyền thêm sản phẩm vào giỏ hàng.')
+      return false
+    }
+    const token = localStorage.getItem('agrisage.farmer_token')
+    const version = ++requestVersion.current
     setIsLoading(true)
     try {
       const data = await cartApi.addItem(request)
+      if (version !== requestVersion.current || token !== localStorage.getItem('agrisage.farmer_token')) return false
       setCart(data)
       showToast(`Đã thêm "${productName}" vào giỏ hàng`)
       return true
     } catch (err) {
+      if (version !== requestVersion.current || token !== localStorage.getItem('agrisage.farmer_token')) return false
       showToast(cartErrorMessage(err, 'Không thêm được vào giỏ hàng'))
       return false
     } finally {
-      setIsLoading(false)
+      if (version === requestVersion.current) setIsLoading(false)
     }
   }
 
   const updateQuantity = async (itemId: string, quantity: number) => {
+    if (!hasPermission('MY_CART.UPDATE')) return
+    const token = localStorage.getItem('agrisage.farmer_token')
+    const version = ++requestVersion.current
     setIsLoading(true)
     try {
       const data = await cartApi.updateItemQuantity(itemId, quantity)
-      setCart(data)
+      if (version === requestVersion.current && token === localStorage.getItem('agrisage.farmer_token')) setCart(data)
     } catch (err) {
+      if (version !== requestVersion.current || token !== localStorage.getItem('agrisage.farmer_token')) return
       showToast(cartErrorMessage(err, 'Không cập nhật được số lượng'))
       await refreshCart()
     } finally {
-      setIsLoading(false)
+      if (version === requestVersion.current) setIsLoading(false)
     }
   }
 
   const removeFromCart = async (itemId: string) => {
+    if (!hasPermission('MY_CART.DELETE')) return
+    const token = localStorage.getItem('agrisage.farmer_token')
+    const version = ++requestVersion.current
     setIsLoading(true)
     try {
       const data = await cartApi.removeItem(itemId)
-      setCart(data)
+      if (version === requestVersion.current && token === localStorage.getItem('agrisage.farmer_token')) setCart(data)
     } catch (err) {
+      if (version !== requestVersion.current || token !== localStorage.getItem('agrisage.farmer_token')) return
       showToast(cartErrorMessage(err, 'Không xoá được sản phẩm'))
       await refreshCart()
     } finally {
-      setIsLoading(false)
+      if (version === requestVersion.current) setIsLoading(false)
     }
   }
 
   const clearCart = async () => {
+    if (!hasPermission('MY_CART.DELETE')) return
+    const token = localStorage.getItem('agrisage.farmer_token')
+    const version = ++requestVersion.current
     setIsLoading(true)
     try {
       await cartApi.clearCart()
-      setCart(EMPTY_CART)
+      if (version === requestVersion.current && token === localStorage.getItem('agrisage.farmer_token')) setCart(EMPTY_CART)
     } catch (err) {
+      if (version !== requestVersion.current || token !== localStorage.getItem('agrisage.farmer_token')) return
       showToast(cartErrorMessage(err, 'Không làm trống được giỏ hàng'))
     } finally {
-      setIsLoading(false)
+      if (version === requestVersion.current) setIsLoading(false)
     }
   }
 
-  const items = cart?.items || []
+  const items = canRead ? cart?.items || [] : []
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
-  const subtotal = cart?.subtotalAmount || 0
+  const subtotal = canRead ? cart?.subtotalAmount || 0 : 0
 
   return (
     <CartContext.Provider

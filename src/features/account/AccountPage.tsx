@@ -1,7 +1,9 @@
+import PermissionAction from '../../components/auth/PermissionAction'
 import { useState, useEffect } from 'react'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { useAuth } from '../../context/AuthContext'
+import { usePermissions } from '../../context/PermissionContext'
 import { profileApi } from '../../api/profileApi'
 import type { FarmerProfile, AddressResponse, AddressRequest } from '../../api/types'
 import AddressModal from './components/AddressModal'
@@ -31,6 +33,7 @@ function Field({ label, value }: { label: string; value: string }) {
 export default function AccountPage() {
   useDocumentTitle('Tài khoản của tôi - AgriSage')
   const { activeStore } = useAuth()
+  const { hasPermission } = usePermissions()
 
   const [profile, setProfile] = useState<FarmerProfile | null>(null)
   const [addresses, setAddresses] = useState<AddressResponse[]>([])
@@ -77,6 +80,7 @@ export default function AccountPage() {
   }
 
   const handleSaveProfile = async () => {
+    if (!hasPermission('MY_PROFILE.UPDATE')) return
     setIsSavingProfile(true)
     setNotice(null)
     try {
@@ -108,6 +112,7 @@ export default function AccountPage() {
   }
 
   const handleSaveAddress = async (data: AddressRequest) => {
+    if (!hasPermission(editingAddress ? 'MY_PROFILE.UPDATE' : 'MY_PROFILE.CREATE_ADDRESS')) return
     if (editingAddress) {
       await profileApi.updateAddress(editingAddress.id, data)
     } else {
@@ -117,6 +122,7 @@ export default function AccountPage() {
   }
 
   const handleDeleteAddress = async (id: string) => {
+    if (!hasPermission('MY_PROFILE.DELETE')) return
     if (!window.confirm('Bác có chắc chắn muốn xóa địa chỉ này?')) return
     try {
       await profileApi.deleteAddress(id)
@@ -128,6 +134,7 @@ export default function AccountPage() {
   }
 
   const handleSetDefaultAddress = async (id: string) => {
+    if (!hasPermission('MY_PROFILE.SET_DEFAULT_ADDRESS')) return
     try {
       await profileApi.setDefaultAddress(id)
       await loadData()
@@ -227,22 +234,22 @@ export default function AccountPage() {
               <SectionTitle>Thông tin cá nhân</SectionTitle>
             </div>
             {!isEditing ? (
-              <button type="button" onClick={() => setIsEditing(true)} className={`${textButton} border border-brand-dark/30`}>
+              <PermissionAction codes={["MY_PROFILE.UPDATE"]}><button type="button" onClick={() => setIsEditing(true)} className={`${textButton} border border-brand-dark/30`}>
                 Chỉnh sửa
-              </button>
+              </button></PermissionAction>
             ) : (
               <div className="flex gap-2">
                 <button type="button" onClick={handleCancelEdit} disabled={isSavingProfile} className={`${textButton} disabled:opacity-40`}>
                   Hủy
                 </button>
-                <button
+                <PermissionAction codes={["MY_PROFILE.UPDATE"]}><button
                   type="button"
                   onClick={handleSaveProfile}
                   disabled={isSavingProfile}
                   className="focus-ring min-h-[44px] px-6 rounded-full bg-brand-dark text-white hover:bg-brand-green text-[15px] transition-colors disabled:opacity-50"
                 >
                   {isSavingProfile ? 'Đang lưu…' : 'Lưu'}
-                </button>
+                </button></PermissionAction>
               </div>
             )}
           </div>
@@ -312,7 +319,7 @@ export default function AccountPage() {
               <SectionTitle>Sổ địa chỉ</SectionTitle>
             </div>
             {addresses.length < 10 && (
-              <button
+              <PermissionAction codes={["MY_PROFILE.CREATE_ADDRESS"]}><button
                 type="button"
                 onClick={() => {
                   setEditingAddress(null)
@@ -324,7 +331,7 @@ export default function AccountPage() {
                   add
                 </span>
                 Thêm địa chỉ
-              </button>
+              </button></PermissionAction>
             )}
           </div>
 
@@ -354,7 +361,7 @@ export default function AccountPage() {
                     </p>
                   </div>
                   <div className="flex items-center flex-wrap gap-1 shrink-0 -mx-2 md:mx-0">
-                    <button
+                    <PermissionAction codes={["MY_PROFILE.UPDATE"]}><button
                       type="button"
                       onClick={() => {
                         setEditingAddress(addr)
@@ -363,19 +370,19 @@ export default function AccountPage() {
                       className={textButton}
                     >
                       Sửa
-                    </button>
+                    </button></PermissionAction>
                     {!addr.isDefault && (
                       <>
-                        <button type="button" onClick={() => handleSetDefaultAddress(addr.id)} className={textButton}>
+                        <PermissionAction codes={["MY_PROFILE.SET_DEFAULT_ADDRESS"]}><button type="button" onClick={() => handleSetDefaultAddress(addr.id)} className={textButton}>
                           Đặt mặc định
-                        </button>
-                        <button
+                        </button></PermissionAction>
+                        <PermissionAction codes={["MY_PROFILE.DELETE"]}><button
                           type="button"
                           onClick={() => handleDeleteAddress(addr.id)}
                           className="focus-ring min-h-[44px] px-4 rounded-full text-[15px] text-status-error hover:bg-status-error-surface transition-colors"
                         >
                           Xóa
-                        </button>
+                        </button></PermissionAction>
                       </>
                     )}
                   </div>
@@ -386,12 +393,12 @@ export default function AccountPage() {
         </section>
       </div>
 
-      <AddressModal
+      <PermissionAction codes={[editingAddress ? 'MY_PROFILE.UPDATE' : 'MY_PROFILE.CREATE_ADDRESS']}><AddressModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         initialData={editingAddress}
         onSave={handleSaveAddress}
-      />
+      /></PermissionAction>
     </div>
   )
 }

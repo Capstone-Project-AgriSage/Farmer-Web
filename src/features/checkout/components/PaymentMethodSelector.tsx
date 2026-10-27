@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { creditApi } from '../../../api/creditApi'
 import type { MyCreditSummary } from '../../../api/types'
 import { formatVnd } from '../../../data/format'
+import { usePermissions } from '../../../context/PermissionContext'
+import PermissionAction from '../../../components/auth/PermissionAction'
 
 export type PaymentMethod = 'payos' | 'credit'
 export type CopyField = 'account' | 'memo'
@@ -21,6 +23,9 @@ export default function PaymentMethodSelector({
   copiedField: _copiedField,
   onCopy: _onCopy,
 }: PaymentMethodSelectorProps) {
+  const { hasPermission } = usePermissions()
+  const canReadCredit = hasPermission('MY_CREDIT.READ')
+  const canPay = hasPermission('MY_PAYMENTS.CREATE')
   // The credit line comes from the server (GET /api/me/credit); 404 means the farmer has no credit profile. The server checks
   // it again when the order is created, so this only decides what the page offers.
   const [credit, setCredit] = useState<MyCreditSummary | null>(null)
@@ -28,6 +33,12 @@ export default function PaymentMethodSelector({
 
   useEffect(() => {
     let cancelled = false
+    if (!canReadCredit) {
+      setCredit(null)
+      setCreditState('none')
+      return
+    }
+    setCreditState('loading')
     creditApi.getMyCredit()
       .then((summary) => {
         if (cancelled) return
@@ -40,17 +51,18 @@ export default function PaymentMethodSelector({
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [canReadCredit])
 
-  const creditActive = creditState === 'ready' && credit?.status?.toUpperCase() === 'ACTIVE'
+  const creditActive = canReadCredit && creditState === 'ready' && credit?.status?.toUpperCase() === 'ACTIVE'
   const availableCredit = creditActive && credit ? credit.availableCredit : 0
   const notEnough = creditActive && total > availableCredit
   const isCreditDisabled = !creditActive || notEnough
 
   // A credit choice that stopped being possible (smaller limit, bigger cart) goes back to payOS.
   useEffect(() => {
-    if (creditState !== 'loading' && paymentMethod === 'credit' && isCreditDisabled) onPaymentMethodChange('payos')
-  }, [creditState, paymentMethod, isCreditDisabled, onPaymentMethodChange])
+    if (creditState !== 'loading' && paymentMethod === 'credit' && isCreditDisabled && canPay) onPaymentMethodChange('payos')
+    if (paymentMethod === 'payos' && !canPay && creditActive && !isCreditDisabled) onPaymentMethodChange('credit')
+  }, [creditState, paymentMethod, isCreditDisabled, onPaymentMethodChange, canPay, creditActive])
 
   return (
     <div className="bg-white border border-brand-dark/10 p-5 sm:p-6">
@@ -63,7 +75,8 @@ export default function PaymentMethodSelector({
         </h2>
       </div>
       <div className="space-y-4">
-        <div
+        {!canPay && !canReadCredit && <p className="text-sm text-brand-dark/65">Bác chưa được cấp quyền sử dụng phương thức thanh toán. Vui lòng liên hệ cửa hàng để được hỗ trợ.</p>}
+        <PermissionAction codes={['MY_PAYMENTS.CREATE']}><div
           className={`p-4 bg-white ${
             paymentMethod === 'payos' ? 'border border-brand-dark' : 'border border-brand-dark/10'
           }`}
@@ -99,8 +112,8 @@ export default function PaymentMethodSelector({
               </div>
             </div>
           )}
-        </div>
-        <div
+        </div></PermissionAction>
+        <PermissionAction codes={['MY_CREDIT.READ']}><div
           onClick={() => !isCreditDisabled && onPaymentMethodChange('credit')}
           className={`p-4 transition-colors ${isCreditDisabled ? 'opacity-60 cursor-not-allowed bg-brand-light/30' : 'cursor-pointer bg-brand-light/60 hover:bg-brand-cream'} ${
             paymentMethod === 'credit'
@@ -160,7 +173,7 @@ export default function PaymentMethodSelector({
             </div>
             <span className="material-symbols-outlined text-brand-green text-[22px]">credit_score</span>
           </label>
-        </div>
+        </div></PermissionAction>
       </div>
     </div>
   )

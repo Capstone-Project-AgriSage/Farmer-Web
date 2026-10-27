@@ -4,6 +4,7 @@ import { ordersApi } from '../../api/ordersApi'
 import { startPayosPayment } from './payos'
 import { ApiError, describeApiError } from '../../api/client'
 import { useCart } from '../../context/CartContext'
+import { usePermissions } from '../../context/PermissionContext'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { useClipboard } from '../../hooks/useClipboard'
 import CheckoutStepper from './components/CheckoutStepper'
@@ -19,7 +20,8 @@ import OrderSummarySidebar from './components/OrderSummarySidebar'
 
 
 export default function CheckoutPage() {
-  const { items, subtotal, clearCart } = useCart()
+  const { items, subtotal, refreshCart } = useCart()
+  const { hasPermission } = usePermissions()
   const navigate = useNavigate()
   useDocumentTitle('Thanh toán đơn hàng')
 
@@ -34,12 +36,15 @@ export default function CheckoutPage() {
   // The API has no shipping fee: the order total is the sum of its lines, and the store delivers online orders for free.
   const shippingFee = 0
   const total = subtotal + shippingFee
+  const canConfirm = hasPermission('MY_ORDERS.CHECKOUT')
+    && hasPermission(paymentMethod === 'payos' ? 'MY_PAYMENTS.CREATE' : 'MY_CREDIT.READ')
 
   const handleAddressChange = (field: keyof AddressFormValues, value: string) => {
     setAddress((prev) => ({ ...prev, [field]: value }))
   }
 
   const handleConfirm = async () => {
+    if (!canConfirm) return
     const errors = validateAddressForm(address)
     setAddressErrors(errors)
     if (Object.keys(errors).length > 0) {
@@ -57,7 +62,7 @@ export default function CheckoutPage() {
         fulfillmentType: 'DELIVERY',
       }
 
-      if (address.useAddressBook && address.selectedAddressId) {
+      if (hasPermission('MY_PROFILE.READ') && address.useAddressBook && address.selectedAddressId) {
         payload.addressId = address.selectedAddressId
       } else {
         payload.deliveryAddress = {
@@ -71,7 +76,7 @@ export default function CheckoutPage() {
       }
       
       const order = await ordersApi.createOrder(payload)
-      await clearCart()
+      await refreshCart()
       
       if (paymentMethod === 'payos') {
         try {
@@ -130,6 +135,7 @@ export default function CheckoutPage() {
             total={total}
             onConfirm={handleConfirm}
             isSubmitting={isSubmitting}
+            canConfirm={canConfirm}
           />
         </div>
       </div>

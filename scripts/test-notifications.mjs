@@ -149,7 +149,7 @@ try {
   const incoming = await fixture({ count: 0, clock: true });
   incoming.state.records.push({ ...item(100, 'UNREAD'), notificationType: 'DELIVERY_FAILED', title: 'Giao hàng thất bại',
     data: { entityType: 'DELIVERY', entityId: id(1100), orderId: id(1200) } });
-  await incoming.page.clock.runFor(30_100);
+  await incoming.page.evaluate(() => window.dispatchEvent(new CustomEvent('agrisage-realtime-change', { detail: { topic: 'notifications' } })));
   await bell(incoming.page, 1).waitFor();
   await incoming.page.getByText('Giao hàng thất bại', { exact: true }).waitFor();
   assert.equal(await row(incoming.page, 100).getByRole('link').getAttribute('href'), '/orders/' + id(1200));
@@ -166,7 +166,7 @@ try {
   ];
   links.forEach(([notificationType, entityType, orderId], n) => navigation.state.records.push({ ...item(200 + n, 'UNREAD'),
     notificationType, data: { entityType, entityId: id(1300 + n), orderId } }));
-  await navigation.page.clock.runFor(30_100);
+  await navigation.page.evaluate(() => window.dispatchEvent(new CustomEvent('agrisage-realtime-change', { detail: { topic: 'notifications' } })));
   await bell(navigation.page, links.length).waitFor();
   for (let n = 0; n < links.length; n++) {
     await row(navigation.page, 200 + n).waitFor();

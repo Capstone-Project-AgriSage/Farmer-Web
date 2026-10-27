@@ -1,3 +1,4 @@
+import PermissionAction from '../../../components/auth/PermissionAction'
 import { formatVnd } from '../../../data/format'
 import { stockStatusTone } from '../../../utils/stockStatus'
 import type { CatalogPackaging } from '../../../api/types'
@@ -135,22 +136,22 @@ export default function PurchasePanel({
                 +
               </button>
             </div>
-            <button
+            <PermissionAction codes={["MY_CART.ADD_ITEM"]} allowGuest><button
               onClick={onAddToCart}
               disabled={!canBuy}
               className="flex-1 py-2.5 px-4 border border-brand-dark/20 text-brand-dark hover:bg-brand-light tracking-wide text-xs sm:text-sm rounded-full transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span className="material-symbols-outlined text-[18px]">add_shopping_cart</span>
               <span>Thêm vào giỏ</span>
-            </button>
-            <button
+            </button></PermissionAction>
+            <PermissionAction codes={["MY_CART.ADD_ITEM","MY_CART.READ","MY_ORDERS.CHECKOUT"]} allowGuest><button
               onClick={onBuyNow}
               disabled={!canBuy}
               className="flex-1 py-2.5 px-4 rounded-full bg-brand-dark text-white hover:bg-brand-green tracking-wide text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span className="material-symbols-outlined text-[18px]">shopping_cart_checkout</span>
               <span>{selected ? 'Mua ngay' : 'Chưa có giá'}</span>
-            </button>
+            </button></PermissionAction>
           </div>
         </div>
       </div>

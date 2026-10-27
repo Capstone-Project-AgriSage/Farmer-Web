@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { ordersApi } from '../../api/ordersApi'
+import { useAuth } from '../../context/AuthContext'
 import type { OrderResponse } from '../../api/types'
 import OrderSuccessStepper from './components/OrderSuccessStepper'
 import SuccessHeroBanner from './components/SuccessHeroBanner'
@@ -17,9 +18,14 @@ export default function OrderSuccessPage() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const orderId = searchParams.get('orderId')
+  const { isAuthenticated } = useAuth()
   const [order, setOrder] = useState<OrderResponse | null>(null)
 
   useEffect(() => {
+    if (!isAuthenticated || !orderId) {
+      navigate(isAuthenticated ? '/products' : '/login', { replace: true })
+      return
+    }
     if (orderId) {
       ordersApi.getOrderById(orderId)
         .then(setOrder)
@@ -28,7 +34,7 @@ export default function OrderSuccessPage() {
           navigate('/products')
         })
     }
-  }, [orderId, navigate])
+  }, [orderId, navigate, isAuthenticated])
 
   if (!order) return <div className="p-10 text-center">Đang tải thông tin đơn hàng...</div>
 

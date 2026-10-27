@@ -1,3 +1,4 @@
+import PermissionAction from '../../../components/auth/PermissionAction'
 import { formatVnd } from '../../../data/format'
 
 interface CartSummarySidebarProps {
@@ -44,7 +45,7 @@ export default function CartSummarySidebar({
             </div>
           </div>
         </div>
-        <button
+        <PermissionAction codes={["MY_ORDERS.CHECKOUT"]}><button
           onClick={onCheckout}
           disabled={hasUnavailableItem}
           className={`w-full py-3.5 px-4 rounded-full tracking-wide text-sm transition-colors flex items-center justify-center gap-2 group ${
@@ -57,7 +58,7 @@ export default function CartSummarySidebar({
           <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">
             arrow_forward
           </span>
-        </button>
+        </button></PermissionAction>
         <div className="p-3.5 bg-brand-light border border-brand-dark/10 space-y-2 text-xs">
           <div className="flex items-center gap-2 text-brand-dark">
             <span className="material-symbols-outlined text-brand-dark/60 text-[18px]">credit_score</span>

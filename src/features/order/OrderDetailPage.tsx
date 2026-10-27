@@ -1,3 +1,4 @@
+import PermissionAction from '../../components/auth/PermissionAction'
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
@@ -6,6 +7,7 @@ import { ordersApi } from '../../api/ordersApi'
 import { paymentsApi } from '../../api/paymentsApi'
 import { describeApiError } from '../../api/client'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { usePermissions } from '../../context/PermissionContext'
 import type { MyDelivery, OrderPaymentSummary, OrderResponse } from '../../api/types'
 import OrderPaymentPanel from './components/OrderPaymentPanel'
 import OrderProgress from './components/OrderProgress'
@@ -30,6 +32,9 @@ function DetailSkeleton() {
 
 export default function OrderDetailPage() {
   const { code: orderId } = useParams<{ code: string }>()
+  const { hasPermission } = usePermissions()
+  const canReadDeliveries = hasPermission('MY_DELIVERIES.READ')
+  const canReadPayments = hasPermission('MY_PAYMENTS.READ')
   const [order, setOrder] = useState<OrderResponse | null>(null)
   const [deliveries, setDeliveries] = useState<MyDelivery[]>([])
   const [paymentSummary, setPaymentSummary] = useState<OrderPaymentSummary | null>(null)
@@ -41,7 +46,7 @@ export default function OrderDetailPage() {
     if (orderId) {
       fetchOrder()
     }
-  }, [orderId])
+  }, [orderId, canReadDeliveries, canReadPayments])
 
   const fetchOrder = async () => {
     try {
@@ -49,8 +54,8 @@ export default function OrderDetailPage() {
       setLoadError(null)
       const [res, delRes, payRes] = await Promise.all([
         ordersApi.getOrderById(orderId!),
-        ordersApi.getOrderDeliveries(orderId!).catch((): MyDelivery[] => []),
-        paymentsApi.getOrderPayments(orderId!).catch(() => null),
+        canReadDeliveries ? ordersApi.getOrderDeliveries(orderId!).catch((): MyDelivery[] => []) : Promise.resolve([]),
+        canReadPayments ? paymentsApi.getOrderPayments(orderId!).catch(() => null) : Promise.resolve(null),
       ])
       setOrder(res)
       setDeliveries(delRes)
@@ -96,6 +101,7 @@ export default function OrderDetailPage() {
   }
 
   const handleCancelOrder = async () => {
+    if (!hasPermission('MY_ORDERS.CANCEL')) return
     if (confirm('Bác có chắc chắn muốn hủy đơn hàng này không?')) {
       try {
         await ordersApi.cancelOrder(order.id, 'Người dùng hủy')
@@ -110,7 +116,7 @@ export default function OrderDetailPage() {
   const status = labelOf(ORDER_STATUS, order.status)
   const isCancelled = order.status === 'CANCELLED'
   const orderedUnits = order.items.reduce((sum, item) => sum + item.quantity, 0)
-  const deliveredUnits = deliveries.reduce((sum, d) => sum + d.items.reduce((s, item) => s + item.deliveredQuantity, 0), 0)
+  const deliveredUnits = canReadDeliveries ? deliveries.reduce((sum, d) => sum + d.items.reduce((s, item) => s + item.deliveredQuantity, 0), 0) : 0
 
   return (
     <div className="bg-brand-cream text-brand-dark min-h-screen pb-20">
@@ -151,7 +157,7 @@ export default function OrderDetailPage() {
             </p>
           </div>
           {order.status === 'PENDING_CONFIRMATION' && (
-            <button
+            <PermissionAction codes={["MY_ORDERS.CANCEL"]}><button
               type="button"
               onClick={handleCancelOrder}
               className="focus-ring inline-flex items-center gap-2 min-h-[44px] px-5 rounded-full border border-status-error/50 text-[15px] text-status-error hover:bg-status-error-surface transition-colors self-start md:self-auto"
@@ -160,7 +166,7 @@ export default function OrderDetailPage() {
                 cancel
               </span>
               Hủy đơn hàng
-            </button>
+            </button></PermissionAction>
           )}
         </div>
 
@@ -185,7 +191,7 @@ export default function OrderDetailPage() {
                 delivered={deliveredUnits}
                 total={orderedUnits}
                 hasConfirmation={Boolean(order.confirmedAt)}
-                hasDeliveries={deliveries.length > 0}
+                hasDeliveries={canReadDeliveries && deliveries.length > 0}
               />
               {order.status === 'PARTIALLY_CANCELLED' && (
                 <div role="status" className="mt-6 flex items-start gap-3 p-4 border-l-4 border-status-warning bg-status-warning-surface text-[15px] text-text-primary">
@@ -207,7 +213,7 @@ export default function OrderDetailPage() {
           {/* Main column */}
           <div className="lg:col-span-7 space-y-12 min-w-0">
             {/* Deliveries */}
-            {!isCancelled && deliveries.length > 0 && (
+            {!isCancelled && canReadDeliveries && deliveries.length > 0 && (
               <section>
                 <SectionTitle>Giao hàng</SectionTitle>
                 <div className="space-y-6">
@@ -336,7 +342,7 @@ export default function OrderDetailPage() {
           <aside className="lg:col-span-5 space-y-10 lg:sticky lg:top-28">
             <section className="border border-brand-dark/15 bg-white p-6 sm:p-7 rounded-[var(--radius-surface)]">
               <SectionTitle>Thanh toán</SectionTitle>
-              <OrderPaymentPanel order={order} summary={paymentSummary} onStale={fetchOrder} />
+              <PermissionAction codes={['MY_PAYMENTS.READ']}><OrderPaymentPanel order={order} summary={paymentSummary} onStale={fetchOrder} /></PermissionAction>
             </section>
 
             <section className="border border-brand-dark/15 bg-white p-6 sm:p-7 rounded-[var(--radius-surface)]">

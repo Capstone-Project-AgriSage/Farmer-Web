@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { usePermissions } from '../../context/PermissionContext'
 import { formatVnd } from '../../data/format'
 import { debtApi } from '../../api/debtApi'
 import { describeApiError } from '../../api/client'
@@ -13,11 +14,13 @@ interface DisputeModalProps {
 }
 
 export default function DisputeModal({ entry, onClose, onDisputed }: DisputeModalProps) {
+  const { hasPermission } = usePermissions()
   const [reason, setReason] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const submit = async () => {
+    if (!hasPermission('MY_DEBT.DISPUTE')) return
     if (!reason.trim()) {
       setError('Vui lòng nhập nội dung phản hồi / lý do khiếu nại.')
       return

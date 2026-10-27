@@ -1,6 +1,8 @@
+import PermissionAction from '../../components/auth/PermissionAction'
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { paymentsApi } from '../../api/paymentsApi'
+import { usePermissions } from '../../context/PermissionContext'
 import { ApiError } from '../../api/client'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { formatVnd } from '../../data/format'
@@ -12,6 +14,9 @@ const MAX_ATTEMPTS = 5
 export default function PayosReturnPage() {
   useDocumentTitle('Kết quả thanh toán')
   const [searchParams] = useSearchParams()
+  const { hasPermission } = usePermissions()
+  const canCancel = hasPermission('MY_PAYMENTS.CANCEL')
+  const canSync = hasPermission('PAYMENTS.SYNC')
   const [payment, setPayment] = useState<PaymentResponse | null>(null)
   const [statusText, setStatusText] = useState('Đang xác nhận thanh toán...')
   const [isError, setIsError] = useState(false)
@@ -36,7 +41,7 @@ export default function PayosReturnPage() {
       setStatusText('Bác đã huỷ thanh toán')
       setIsError(true)
       setIsChecking(false)
-      if (paymentId) paymentsApi.cancelPayment(paymentId).catch(() => {})
+      if (paymentId && canCancel) paymentsApi.cancelPayment(paymentId).catch(() => {})
       clearPendingPayment()
       return
     }
@@ -51,7 +56,7 @@ export default function PayosReturnPage() {
     // The webhook may arrive after the redirect, so ask the server to re-check with payOS.
     const checkPayment = async (attempt: number) => {
       try {
-        const data = attempt === 0
+        const data = attempt === 0 || !canSync
           ? await paymentsApi.getPaymentById(paymentId)
           : await paymentsApi.syncPayment(paymentId)
         if (cancelled) return
@@ -88,11 +93,11 @@ export default function PayosReturnPage() {
       cancelled = true
       if (timer) clearTimeout(timer)
     }
-  }, [paymentId, isCancel, isSimulated, isDebtRepayment])
+  }, [paymentId, isCancel, isSimulated, isDebtRepayment, canCancel, canSync])
 
   // Test button (only for a simulated link): the server pays the link and settles it like a real status query.
   const payNow = async () => {
-    if (!paymentId || isPaying) return
+    if (!paymentId || isPaying || !hasPermission('PAYMENTS.SIMULATE_PAID')) return
     setIsPaying(true)
     try {
       const data = await paymentsApi.simulatePaid(paymentId)
@@ -140,14 +145,14 @@ export default function PayosReturnPage() {
             <p>
               Đây là môi trường thử: thanh toán không đi qua payOS và không có tiền thật. Bấm nút dưới để coi như bác đã chuyển khoản.
             </p>
-            <button
+            <PermissionAction codes={["PAYMENTS.SIMULATE_PAID"]}><button
               type="button"
               onClick={payNow}
               disabled={isPaying}
               className="focus-ring mt-4 min-h-[48px] px-6 rounded-full bg-brand-dark text-white hover:bg-brand-green disabled:opacity-60 text-base transition-colors"
             >
               {isPaying ? 'Đang xử lý…' : 'Thanh toán nhanh (chỉ môi trường thử)'}
-            </button>
+            </button></PermissionAction>
           </div>
         )}
 

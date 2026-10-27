@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import RootLayout from './layouts/RootLayout'
 import RouteErrorBoundary from './components/RouteErrorBoundary'
 import ProtectedRoute from './components/auth/ProtectedRoute'
+import PermissionRoute from './components/auth/PermissionRoute'
 
 const HomePage = lazy(() => import('./features/home/HomePage'))
 const LoginPage = lazy(() => import('./features/auth/LoginPage'))
@@ -36,8 +37,8 @@ const publicRoutes = [
   { path: 'forgot-password', element: <ForgotPasswordPage /> },
   { path: 'products', element: <ProductsPage /> },
   { path: 'products/:slug', element: <ProductDetailPage /> },
-  { path: 'cart', element: <CartPage /> },
-  { path: 'order-success', element: <OrderSuccessPage /> },
+  { path: 'cart', element: <PermissionRoute codes={['MY_CART.READ']} allowGuest><CartPage /></PermissionRoute> },
+  { path: 'order-success', element: <PermissionRoute codes={['MY_ORDERS.READ']} allowGuest><OrderSuccessPage /></PermissionRoute> },
   { path: 'about', element: <AboutPage /> },
   { path: 'knowledge', element: <KnowledgePage /> },
   { path: 'knowledge/:slug', element: <ArticleDetailPage /> },
@@ -47,14 +48,14 @@ const publicRoutes = [
 
 // Requires an authenticated farmer session — see src/context/AuthContext.tsx.
 const protectedRoutes = [
-  { path: 'checkout', element: <CheckoutPage /> },
-  { path: 'payments/payos/return', element: <PayosReturnPage /> },
-  { path: 'payments/payos/cancel', element: <PayosCancelPage /> },
+  { path: 'checkout', element: <PermissionRoute codes={['MY_ORDERS.CHECKOUT', 'MY_CART.READ']}><CheckoutPage /></PermissionRoute> },
+  { path: 'payments/payos/return', element: <PermissionRoute codes={['MY_PAYMENTS.READ']}><PayosReturnPage /></PermissionRoute> },
+  { path: 'payments/payos/cancel', element: <PermissionRoute codes={['MY_PAYMENTS.CANCEL']}><PayosCancelPage /></PermissionRoute> },
   { path: 'contact/requests', element: <MyRequestsPage /> },
-  { path: 'account', element: <AccountPage /> },
-  { path: 'debt', element: <DebtPage /> },
-  { path: 'orders', element: <OrdersPage /> },
-  { path: 'orders/:code', element: <OrderDetailPage /> },
+  { path: 'account', element: <PermissionRoute codes={['MY_PROFILE.READ']}><AccountPage /></PermissionRoute> },
+  { path: 'debt', element: <PermissionRoute codes={['MY_DEBT.READ']}><DebtPage /></PermissionRoute> },
+  { path: 'orders', element: <PermissionRoute codes={['MY_ORDERS.READ']}><OrdersPage /></PermissionRoute> },
+  { path: 'orders/:code', element: <PermissionRoute codes={['MY_ORDERS.READ']}><OrderDetailPage /></PermissionRoute> },
   { path: 'notifications', element: <NotificationsPage /> },
   { path: 'ai-doctor/history', element: <DiagnosisHistoryPage /> },
 ].map((route) => ({ ...route, errorElement: <RouteErrorBoundary /> }))

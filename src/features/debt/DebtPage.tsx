@@ -1,9 +1,11 @@
+import PermissionAction from '../../components/auth/PermissionAction'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import { formatVnd } from '../../data/format'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { useAuth } from '../../context/AuthContext'
+import { usePermissions } from '../../context/PermissionContext'
 import { creditApi } from '../../api/creditApi'
 import { debtApi } from '../../api/debtApi'
 import { paymentsApi } from '../../api/paymentsApi'
@@ -28,6 +30,9 @@ const orNull = <T,>(request: Promise<T>) =>
 export default function DebtPage() {
   useDocumentTitle('Sổ nợ - AgriSage')
   const { activeStore } = useAuth()
+  const { hasPermission } = usePermissions()
+  const canReadCredit = hasPermission('MY_CREDIT.READ')
+  const canReadPayments = hasPermission('MY_PAYMENTS.READ')
 
   const [credit, setCredit] = useState<MyCreditSummary | null>(null)
   const [account, setAccount] = useState<DebtAccount | null>(null)
@@ -56,7 +61,11 @@ export default function DebtPage() {
     let cancelled = false
     setSummaryLoading(true)
     setSummaryError(null)
-    Promise.all([orNull(creditApi.getMyCredit()), orNull(debtApi.getAccount()), paymentsApi.getMyPayments({ pageSize: 100 })])
+    Promise.all([
+      canReadCredit ? orNull(creditApi.getMyCredit()) : Promise.resolve(null),
+      orNull(debtApi.getAccount()),
+      canReadPayments ? paymentsApi.getMyPayments({ pageSize: 100 }) : Promise.resolve({ items: [] }),
+    ])
       .then(([c, a, p]) => {
         if (cancelled) return
         setCredit(c)
@@ -68,7 +77,7 @@ export default function DebtPage() {
     return () => {
       cancelled = true
     }
-  }, [refreshKey])
+  }, [refreshKey, canReadCredit, canReadPayments])
 
   useEffect(() => {
     let cancelled = false
@@ -99,7 +108,7 @@ export default function DebtPage() {
 
   const balance = account?.currentBalance ?? credit?.outstandingReceivable ?? 0
   const noDebtBook = !summaryLoading && !summaryError && !credit && !account
-  const totalRepaid = repayments.filter((p) => p.status === 'PAID').reduce((sum, p) => sum + p.amount, 0)
+  const totalRepaid = canReadPayments ? repayments.filter((p) => p.status === 'PAID').reduce((sum, p) => sum + p.amount, 0) : 0
 
   // What needs attention first: money already overdue, otherwise a due date within a week.
   const overdueAmount = account?.overdueAmount ?? 0
@@ -205,19 +214,19 @@ export default function DebtPage() {
                     )}
                   </p>
                 </div>
-                <button
+                <PermissionAction codes={["MY_PAYMENTS.CREATE"]}><button
                   type="button"
                   onClick={() => setRepayOpen(true)}
                   className="focus-ring min-h-[48px] px-7 rounded-full bg-brand-dark text-white hover:bg-brand-green text-[15px] transition-colors shrink-0"
                 >
                   Trả nợ ngay
-                </button>
+                </button></PermissionAction>
               </div>
             )}
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
               <div className="lg:col-span-8 space-y-10 min-w-0">
-                <DebtSummaryCard storeName={activeStore.name} credit={credit} account={account} />
+                <DebtSummaryCard storeName={activeStore.name} credit={canReadCredit ? credit : null} account={account} />
 
                 <dl className="grid grid-cols-2 md:grid-cols-4 border-y border-brand-dark/15 divide-x divide-brand-dark/15">
                   {[
@@ -311,7 +320,7 @@ export default function DebtPage() {
 
               <div className="lg:col-span-4 space-y-5">
                 {balance > 0 && (
-                  <button
+                  <PermissionAction codes={["MY_PAYMENTS.CREATE"]}><button
                     type="button"
                     onClick={() => setRepayOpen(true)}
                     className="focus-ring w-full min-h-[56px] rounded-full bg-brand-dark hover:bg-brand-green text-white text-base tracking-wide transition-colors flex items-center justify-center gap-2"
@@ -320,16 +329,16 @@ export default function DebtPage() {
                       payments
                     </span>
                     Trả nợ qua payOS
-                  </button>
+                  </button></PermissionAction>
                 )}
-                <RepaymentHistory payments={repayments} />
+                <PermissionAction codes={['MY_PAYMENTS.READ']}><RepaymentHistory payments={repayments} /></PermissionAction>
               </div>
             </div>
           </>
         )}
       </div>
 
-      {disputeEntry && (
+      {disputeEntry && hasPermission('MY_DEBT.DISPUTE') && (
         <DisputeModal
           entry={disputeEntry}
           onClose={() => setDisputeEntry(null)}
@@ -341,7 +350,7 @@ export default function DebtPage() {
         />
       )}
 
-      {repayOpen && <RepayModal balance={balance} onClose={() => setRepayOpen(false)} />}
+      {repayOpen && hasPermission('MY_PAYMENTS.CREATE') && <RepayModal balance={balance} onClose={() => setRepayOpen(false)} />}
     </div>
   )
 }

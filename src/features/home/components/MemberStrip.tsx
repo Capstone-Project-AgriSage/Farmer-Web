@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import Reveal from '../../../components/ui/Reveal'
 import { useAuth } from '../../../context/AuthContext'
 import { useCart } from '../../../context/CartContext'
+import { usePermissions } from '../../../context/PermissionContext'
+import PermissionAction from '../../../components/auth/PermissionAction'
 import { ApiError } from '../../../api/client'
 import { creditApi } from '../../../api/creditApi'
 import { debtApi } from '../../../api/debtApi'
@@ -61,6 +63,11 @@ const Pending = () => <div className="h-9 w-2/3 bg-brand-dark/10 rounded-[var(--
 /** Signed-in farmers see their own orders, debt and cart under the hero. Guests see nothing here. */
 export default function MemberStrip() {
   const { isAuthenticated, farmer } = useAuth()
+  const { hasPermission } = usePermissions()
+  const canReadOrders = hasPermission('MY_ORDERS.READ')
+  const canReadDebt = hasPermission('MY_DEBT.READ')
+  const canReadCredit = hasPermission('MY_CREDIT.READ')
+  const canReadCart = hasPermission('MY_CART.READ')
   const { itemCount, subtotal } = useCart()
   const [summary, setSummary] = useState<Summary | null>(null)
   const [orderError, setOrderError] = useState(false)
@@ -69,7 +76,10 @@ export default function MemberStrip() {
   useEffect(() => {
     if (!isAuthenticated) return
     let cancelled = false
-    ordersApi
+    setSummary(null)
+    setOrderError(false)
+    setDebtError(false)
+    if (canReadOrders) ordersApi
       .getOrders({ page: 1, pageSize: 30 })
       .then((res) => {
         if (cancelled) return
@@ -77,15 +87,15 @@ export default function MemberStrip() {
         setSummary((prev) => ({ debt: prev?.debt ?? null, orders: { total: res.totalCount, active, latest: res.items[0] ?? null } }))
       })
       .catch(() => !cancelled && setOrderError(true))
-    Promise.all([orNull(debtApi.getAccount()), orNull(creditApi.getMyCredit())])
+    if (canReadDebt) Promise.all([orNull(debtApi.getAccount()), canReadCredit ? orNull(creditApi.getMyCredit()) : Promise.resolve(null)])
       .then(([account, credit]) => !cancelled && setSummary((prev) => ({ orders: prev?.orders ?? null, debt: { account, credit } })))
       .catch(() => !cancelled && setDebtError(true))
     return () => {
       cancelled = true
     }
-  }, [isAuthenticated])
+  }, [isAuthenticated, canReadOrders, canReadDebt, canReadCredit])
 
-  if (!isAuthenticated) return null
+  if (!isAuthenticated || !canReadOrders && !canReadDebt && !canReadCart) return null
 
   const name = givenName(farmer.name)
   const orders = summary?.orders
@@ -104,7 +114,7 @@ export default function MemberStrip() {
             {name ? `, bác ${name}` : ''}.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
-            <Tile to="/orders" label="Đơn hàng">
+            <PermissionAction codes={['MY_ORDERS.READ']}><Tile to="/orders" label="Đơn hàng">
               {orderError ? (
                 <p className="text-[15px] text-text-secondary">Chưa tải được đơn hàng.</p>
               ) : !orders ? (
@@ -123,9 +133,9 @@ export default function MemberStrip() {
                   )}
                 </>
               )}
-            </Tile>
+            </Tile></PermissionAction>
 
-            <Tile to="/debt" label="Sổ nợ">
+            <PermissionAction codes={['MY_DEBT.READ']}><Tile to="/debt" label="Sổ nợ">
               {debtError ? (
                 <p className="text-[15px] text-text-secondary">Chưa tải được Sổ nợ.</p>
               ) : !debt ? (
@@ -146,9 +156,9 @@ export default function MemberStrip() {
                   </p>
                 </>
               )}
-            </Tile>
+            </Tile></PermissionAction>
 
-            <Tile to="/cart" label="Giỏ hàng">
+            <PermissionAction codes={['MY_CART.READ']}><Tile to="/cart" label="Giỏ hàng">
               {itemCount === 0 ? (
                 <p className="text-[15px] text-text-secondary">Giỏ hàng đang trống.</p>
               ) : (
@@ -159,7 +169,7 @@ export default function MemberStrip() {
                   <p className="mt-1 text-[15px] text-text-secondary">Tạm tính {formatVnd(subtotal)}</p>
                 </>
               )}
-            </Tile>
+            </Tile></PermissionAction>
           </div>
         </Reveal>
       </div>

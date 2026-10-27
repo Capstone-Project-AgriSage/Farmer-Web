@@ -6,6 +6,7 @@ import type { AllocationPreview } from '../../api/types'
 import { startDebtRepayment } from '../checkout/payos'
 import Modal from '../../components/ui/Modal'
 import { formatDate } from './debtLabels'
+import { usePermissions } from '../../context/PermissionContext'
 
 interface RepayModalProps {
   /** The farmer's whole debt: an online repayment is not tied to one entry, the server settles the oldest due date first. */
@@ -14,6 +15,7 @@ interface RepayModalProps {
 }
 
 export default function RepayModal({ balance, onClose }: RepayModalProps) {
+  const { hasPermission } = usePermissions()
   const maxPayable = Math.floor(balance)
   const [amount, setAmount] = useState(String(maxPayable))
   const [preview, setPreview] = useState<AllocationPreview | null>(null)
@@ -40,7 +42,7 @@ export default function RepayModal({ balance, onClose }: RepayModalProps) {
   }, [value, valid])
 
   const submit = async () => {
-    if (!valid || submitting) return
+    if (!valid || submitting || !hasPermission('MY_PAYMENTS.CREATE')) return
     setSubmitting(true)
     setError(null)
     try {

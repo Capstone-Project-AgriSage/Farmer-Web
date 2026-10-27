@@ -1,3 +1,4 @@
+import PermissionAction from '../../../components/auth/PermissionAction'
 import { Link } from 'react-router-dom'
 import { formatVnd } from '../../../data/format'
 import { PRODUCT_IMAGE_FALLBACK, handleImageError } from '../../../utils/image'
@@ -57,23 +58,23 @@ export default function CartItemRow({ item, alternate, onQuantityChange, onRemov
       </div>
       <div className="sm:col-span-2 flex items-center sm:justify-center gap-2">
         <div className={`flex items-center border border-brand-dark/15 bg-white overflow-hidden ${isUnavailable ? 'opacity-50 pointer-events-none' : ''}`}>
-          <button
+          <PermissionAction codes={["MY_CART.UPDATE"]}><button
             onClick={() => onQuantityChange(item.quantity - 1)}
             aria-label={`Giảm số lượng ${item.productName}`}
             disabled={isUnavailable}
             className="px-2.5 py-1 text-brand-dark/60 hover:bg-brand-cream text-xs transition-colors disabled:cursor-not-allowed"
           >
             -
-          </button>
+          </button></PermissionAction>
           <span className="w-8 text-center text-xs text-brand-dark">{item.quantity}</span>
-          <button
+          <PermissionAction codes={["MY_CART.UPDATE"]}><button
             onClick={() => onQuantityChange(item.quantity + 1)}
             aria-label={`Tăng số lượng ${item.productName}`}
             disabled={isUnavailable}
             className="px-2.5 py-1 text-brand-dark/60 hover:bg-brand-cream text-xs transition-colors disabled:cursor-not-allowed"
           >
             +
-          </button>
+          </button></PermissionAction>
         </div>
       </div>
       <div className="sm:col-span-2 flex items-center justify-between sm:justify-end gap-2">
@@ -81,14 +82,14 @@ export default function CartItemRow({ item, alternate, onQuantityChange, onRemov
         <div className="text-sm text-brand-dark tracking-tight whitespace-nowrap">
           {item.lineTotalAmount != null ? formatVnd(item.lineTotalAmount) : '---'}
         </div>
-        <button
+        <PermissionAction codes={["MY_CART.DELETE"]}><button
           onClick={onRemove}
           className="text-brand-dark/40 hover:text-status-error p-1 transition-colors ml-1"
           title="Xóa sản phẩm"
           aria-label={`Xóa ${item.productName} khỏi giỏ hàng`}
         >
           <span className="material-symbols-outlined text-[18px]">delete</span>
-        </button>
+        </button></PermissionAction>
       </div>
     </div>
   )

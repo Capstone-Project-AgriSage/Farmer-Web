@@ -1,3 +1,4 @@
+import PermissionAction from '../../components/auth/PermissionAction'
 import { Link, useNavigate } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import { useCart } from '../../context/CartContext'
@@ -65,13 +66,13 @@ export default function CartPage() {
               </h1>
             </div>
           </div>
-          <button
+          <PermissionAction codes={["MY_CART.DELETE"]}><button
             onClick={clearCart}
             className="text-xs text-brand-dark/50 hover:text-status-error flex items-center gap-1 tracking-wide transition-colors"
           >
             <span className="material-symbols-outlined text-[16px]">delete_sweep</span>
             <span>Xóa tất cả</span>
-          </button>
+          </button></PermissionAction>
         </div>
 
         {hasUnavailableItem && (

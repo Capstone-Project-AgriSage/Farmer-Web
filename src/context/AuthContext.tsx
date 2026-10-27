@@ -1,7 +1,6 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
 import type { FarmerUser, StoreInfo } from '../types'
 import { authApi } from '../api/authApi'
-import { profileApi } from '../api/profileApi'
 import { ApiError } from '../api/client'
 
 const STORAGE_KEY = 'agrisage.farmer_auth.v1'
@@ -54,20 +53,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (isAuthenticated) {
       localStorage.setItem(STORAGE_KEY, '1')
-      // Sync profile from backend if available
-      profileApi.getProfile()
-        .then((prof) => {
-          setFarmer((prev) => ({
-            ...prev,
-            id: prof.userId,
-            name: prof.fullName,
-            phone: prof.phoneNumber || prev.phone,
-            initials: initialsOf(prof.fullName) || prev.initials,
-          }))
-        })
-        .catch(() => {
-          // Ignore background sync error
-        })
     } else {
       localStorage.setItem(STORAGE_KEY, '0')
       localStorage.removeItem(TOKEN_KEY)
@@ -124,9 +109,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsAuthenticated(false)
   }
 
-  const updateFarmerProfile = (updates: Partial<FarmerUser>) => {
+  const updateFarmerProfile = useCallback((updates: Partial<FarmerUser>) => {
     setFarmer((prev) => ({ ...prev, ...updates }))
-  }
+  }, [])
 
   return (
     <AuthContext.Provider

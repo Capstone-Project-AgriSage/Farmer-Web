@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import FieldError from '../../../components/ui/FieldError'
 import { isValidPhone } from '../../../utils/validation'
 import { profileApi } from '../../../api/profileApi'
+import { usePermissions } from '../../../context/PermissionContext'
+import PermissionAction from '../../../components/auth/PermissionAction'
 import type { AddressResponse } from '../../../api/types'
 
 export interface AddressFormValues {
@@ -70,12 +72,17 @@ export default function AddressForm({
   errors,
 }: AddressFormProps) {
   const [addresses, setAddresses] = useState<AddressResponse[]>([])
+  const { hasPermission } = usePermissions()
+  const canReadAddresses = hasPermission('MY_PROFILE.READ')
   
   useEffect(() => {
-    profileApi.getAddresses().then(setAddresses).catch(console.error)
-  }, [])
+    let cancelled = false
+    setAddresses([])
+    if (canReadAddresses) profileApi.getAddresses().then((data) => !cancelled && setAddresses(data)).catch(console.error)
+    return () => { cancelled = true }
+  }, [canReadAddresses])
 
-  const useAddressBook = values.useAddressBook
+  const useAddressBook = canReadAddresses && values.useAddressBook
   const selectedAddressId = values.selectedAddressId
   const setUseAddressBook = (val: boolean) => onChange('useAddressBook', val as any)
   const setSelectedAddressId = (val: string) => onChange('selectedAddressId', val as any)
@@ -125,7 +132,7 @@ export default function AddressForm({
       </p>
 
       <div className="mb-6 flex items-center gap-4 border-b border-brand-dark/10 pb-4">
-        <label className="flex items-center gap-2 cursor-pointer">
+        <PermissionAction codes={['MY_PROFILE.READ']}><label className="flex items-center gap-2 cursor-pointer">
           <input
             type="radio"
             checked={useAddressBook}
@@ -133,7 +140,7 @@ export default function AddressForm({
             className="text-brand-dark focus:ring-0 w-4 h-4 accent-brand-dark"
           />
           <span className="text-xs text-brand-dark">Chọn từ sổ địa chỉ</span>
-        </label>
+        </label></PermissionAction>
         <label className="flex items-center gap-2 cursor-pointer">
           <input
             type="radio"

@@ -47,6 +47,9 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
     window.dispatchEvent(new CustomEvent('auth:unauthorized'))
     throw new ApiError(401, 'Unauthorized', 'Phiên đăng nhập đã hết hạn hoặc không hợp lệ.')
   }
+  if (res.status === 403 && path !== '/api/me/permissions') {
+    window.dispatchEvent(new CustomEvent('permissions:changed'))
+  }
   
   if (res.ok) {
     if (res.status === 204) return undefined as T
@@ -80,6 +83,8 @@ export function describeApiError(err: unknown, fallback = 'Có lỗi xảy ra, v
   switch (err.status) {
     case 401:
       return 'Phiên đăng nhập đã hết hạn. Bác vui lòng đăng nhập lại.'
+    case 403:
+      return 'Bác chưa được cấp quyền thực hiện thao tác này. Vui lòng liên hệ cửa hàng.'
     case 404:
       return 'Không tìm thấy dữ liệu, có thể đã bị xoá. Vui lòng tải lại trang.'
     case 409:

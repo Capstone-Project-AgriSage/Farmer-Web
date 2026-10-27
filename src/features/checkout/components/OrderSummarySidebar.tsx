@@ -1,3 +1,4 @@
+import PermissionAction from '../../../components/auth/PermissionAction'
 import { Link } from 'react-router-dom'
 import { formatVnd } from '../../../data/format'
 import { PRODUCT_IMAGE_FALLBACK, handleImageError } from '../../../utils/image'
@@ -11,6 +12,7 @@ interface OrderSummarySidebarProps {
   total: number
   onConfirm: () => void
   isSubmitting?: boolean
+  canConfirm: boolean
 }
 
 export default function OrderSummarySidebar({
@@ -21,6 +23,7 @@ export default function OrderSummarySidebar({
   total,
   onConfirm,
   isSubmitting,
+  canConfirm,
 }: OrderSummarySidebarProps) {
   return (
     <div className="lg:col-span-5 space-y-5 sticky top-20">
@@ -90,7 +93,7 @@ export default function OrderSummarySidebar({
             </span>
           </div>
         </div>
-        <button
+        {canConfirm && <PermissionAction codes={["MY_ORDERS.CHECKOUT"]}><button
           onClick={onConfirm}
           disabled={isSubmitting}
           type="button"
@@ -105,7 +108,8 @@ export default function OrderSummarySidebar({
               arrow_forward
             </span>
           )}
-        </button>
+        </button></PermissionAction>}
+        {!canConfirm && <p role="status" className="text-sm text-brand-dark/65">Bác cần quyền sử dụng phương thức thanh toán đã chọn để xác nhận đơn hàng.</p>}
         <div className="space-y-2 pt-2 border-t border-brand-dark/10 text-[11px] text-brand-dark/60">
           <div className="flex items-start gap-2">
             <span className="material-symbols-outlined text-[15px] text-brand-green flex-shrink-0 mt-0.5">

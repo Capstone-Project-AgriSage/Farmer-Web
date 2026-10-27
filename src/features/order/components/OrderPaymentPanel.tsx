@@ -1,4 +1,6 @@
+import PermissionAction from '../../../components/auth/PermissionAction'
 import { useState } from 'react'
+import { usePermissions } from '../../../context/PermissionContext'
 import { ApiError, describeApiError } from '../../../api/client'
 import type { OrderPaymentSummary, OrderResponse } from '../../../api/types'
 import { formatVnd } from '../../../data/format'
@@ -22,6 +24,7 @@ const REFUND_STATUS: Record<string, string> = {
 }
 
 export default function OrderPaymentPanel({ order, summary, onStale }: OrderPaymentPanelProps) {
+  const { hasPermission } = usePermissions()
   const [isPaying, setIsPaying] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -31,6 +34,7 @@ export default function OrderPaymentPanel({ order, summary, onStale }: OrderPaym
   const canPay = !isCredit && summary !== null && remaining > 0 && !CLOSED_STATUSES.includes(order.status)
 
   const handlePay = async () => {
+    if (!hasPermission('MY_PAYMENTS.CREATE')) return
     setIsPaying(true)
     setError(null)
     try {
@@ -113,7 +117,7 @@ export default function OrderPaymentPanel({ order, summary, onStale }: OrderPaym
       )}
 
       {canPay && (
-        <button
+        <PermissionAction codes={["MY_PAYMENTS.CREATE"]}><button
           type="button"
           onClick={handlePay}
           disabled={isPaying}
@@ -121,7 +125,7 @@ export default function OrderPaymentPanel({ order, summary, onStale }: OrderPaym
         >
           <span className="material-symbols-outlined text-[18px]">{isPaying ? 'hourglass_empty' : 'qr_code_2'}</span>
           {isPaying ? 'Đang mở cổng thanh toán...' : `Thanh toán ${formatVnd(remaining)} qua payOS`}
-        </button>
+        </button></PermissionAction>
       )}
 
       {error && (

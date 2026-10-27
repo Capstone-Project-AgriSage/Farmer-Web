@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { usePermissions } from '../../context/PermissionContext'
+import PermissionAction from '../auth/PermissionAction'
 import { useNotifications } from '../../hooks/useNotifications'
 import { useHeroVisible } from './heroSignal'
 
@@ -24,6 +26,10 @@ export default function Header({ cartCount }: HeaderProps) {
   const location = useLocation()
   const navigate = useNavigate()
   const { isAuthenticated, logout } = useAuth()
+  const { hasPermission } = usePermissions()
+  const visibleNavLinks = navLinks.filter((link) => !isAuthenticated
+    || (link.to !== '/orders' || hasPermission('MY_ORDERS.READ'))
+    && (link.to !== '/debt' || hasPermission('MY_DEBT.READ')))
   const heroVisible = useHeroVisible()
   const { unreadCount } = useNotifications()
   const [lastPathname, setLastPathname] = useState(location.pathname)
@@ -114,7 +120,7 @@ export default function Header({ cartCount }: HeaderProps) {
           </Link>
 
           <nav aria-label="Điều hướng chính" className="hidden lg:flex items-center gap-7">
-            {navLinks.slice(1).map((link) => (
+            {visibleNavLinks.filter((link) => link.to !== '/').map((link) => (
               <NavLink key={link.label} to={link.to} className={desktopLinkClass}>
                 {link.label}
               </NavLink>
@@ -122,9 +128,9 @@ export default function Header({ cartCount }: HeaderProps) {
           </nav>
 
           <div className="hidden lg:flex items-center gap-4 ml-auto">
-            <Link to="/cart" className={utilityLinkClass}>
+            <PermissionAction codes={['MY_CART.READ']} allowGuest><Link to="/cart" className={utilityLinkClass}>
               Giỏ ({cartCount})
-            </Link>
+            </Link></PermissionAction>
             {isAuthenticated && (
               <>
                 <Link
@@ -144,9 +150,9 @@ export default function Header({ cartCount }: HeaderProps) {
                     </span>
                   )}
                 </Link>
-                <Link to="/account" className={utilityLinkClass}>
+                <PermissionAction codes={['MY_PROFILE.READ']}><Link to="/account" className={utilityLinkClass}>
                   Tài khoản
-                </Link>
+                </Link></PermissionAction>
               </>
             )}
             {isAuthenticated ? (
@@ -161,7 +167,7 @@ export default function Header({ cartCount }: HeaderProps) {
           </div>
 
           <div className="lg:hidden ml-auto flex items-center gap-1">
-            <Link
+            <PermissionAction codes={['MY_CART.READ']} allowGuest><Link
               to="/cart"
               aria-label={`Giỏ hàng, ${cartCount} sản phẩm`}
               className="focus-ring relative inline-flex items-center justify-center w-11 h-11 text-brand-dark"
@@ -177,7 +183,7 @@ export default function Header({ cartCount }: HeaderProps) {
                   {cartCount}
                 </span>
               )}
-            </Link>
+            </Link></PermissionAction>
             <button
               ref={toggleRef}
               type="button"
@@ -219,7 +225,7 @@ export default function Header({ cartCount }: HeaderProps) {
         >
           <nav aria-label="Điều hướng chính (di động)">
             <ul>
-              {navLinks.map((link) => (
+              {visibleNavLinks.map((link) => (
                 <li key={link.label} className="border-b border-brand-dark/10">
                   <NavLink
                     to={link.to}
@@ -238,11 +244,11 @@ export default function Header({ cartCount }: HeaderProps) {
           </nav>
 
           <ul className="mt-6">
-            <li>
+            <PermissionAction codes={['MY_CART.READ']} allowGuest><li>
               <Link to="/cart" className="focus-ring flex items-center min-h-[48px] text-lg text-brand-dark">
                 Giỏ hàng ({cartCount})
               </Link>
-            </li>
+            </li></PermissionAction>
             {isAuthenticated && (
               <>
                 <li>
@@ -250,11 +256,11 @@ export default function Header({ cartCount }: HeaderProps) {
                     Thông báo{unreadCount > 0 ? ` (${unreadCount > 99 ? '99+' : unreadCount})` : ''}
                   </Link>
                 </li>
-                <li>
+                <PermissionAction codes={['MY_PROFILE.READ']}><li>
                   <Link to="/account" className="focus-ring flex items-center min-h-[48px] text-lg text-brand-dark">
                     Tài khoản
                   </Link>
-                </li>
+                </li></PermissionAction>
               </>
             )}
           </ul>

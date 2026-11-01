@@ -191,20 +191,18 @@ export default function DebtPage() {
           <>
             {(overdueAmount > 0 || dueSoon) && (
               <div
-                role={overdueAmount > 0 ? 'alert' : 'status'}
-                className={`mb-8 p-5 flex flex-col sm:flex-row sm:items-center gap-4 rounded-[var(--radius-surface)] border-l-4 ${
-                  overdueAmount > 0 ? 'bg-status-error-surface border-status-error' : 'bg-status-warning-surface border-status-warning'
-                }`}
+                role="status"
+                className="mb-8 p-5 flex flex-col sm:flex-row sm:items-center gap-4 rounded-[var(--radius-surface)] border-l-4 bg-status-warning-surface border-status-warning"
               >
-                <span className={`material-symbols-outlined shrink-0 ${overdueAmount > 0 ? 'text-status-error' : 'text-status-warning'}`} style={{ fontSize: 28 }} aria-hidden="true">
-                  {overdueAmount > 0 ? 'error' : 'schedule'}
+                <span className="material-symbols-outlined shrink-0 text-status-warning" style={{ fontSize: 28 }} aria-hidden="true">
+                  schedule
                 </span>
                 <div className="flex-1">
-                  <h2 className="text-lg font-medium text-text-primary">{overdueAmount > 0 ? 'Bác có khoản nợ đã quá hạn' : 'Sắp đến hạn trả nợ'}</h2>
+                  <h2 className="text-lg font-medium text-text-primary">{overdueAmount > 0 ? 'Có khoản nợ đã qua hạn trả' : 'Sắp đến hạn trả nợ'}</h2>
                   <p className="mt-1 text-[15px] md:text-base text-text-primary leading-relaxed">
                     {overdueAmount > 0 ? (
                       <>
-                        Số tiền quá hạn <strong className="font-medium">{formatVnd(overdueAmount)}</strong>. Bác nên thanh toán sớm để không bị chặn mua chịu thêm.
+                        Số tiền đã qua hạn <strong className="font-medium">{formatVnd(overdueAmount)}</strong>. Bác trả lúc nào tiện, trả một phần cũng được. Nếu cần thêm thời gian, bác liên hệ {activeStore.name} để trao đổi.
                       </>
                     ) : (
                       <>
@@ -231,7 +229,7 @@ export default function DebtPage() {
                 <dl className="grid grid-cols-2 md:grid-cols-4 border-y border-brand-dark/15 divide-x divide-brand-dark/15">
                   {[
                     { label: 'Khoản nợ đang mở', value: String(account?.openEntryCount ?? 0), tone: '' },
-                    { label: 'Quá hạn', value: formatVnd(overdueAmount), tone: overdueAmount > 0 ? 'text-status-error' : '' },
+                    { label: 'Đã qua hạn', value: formatVnd(overdueAmount), tone: overdueAmount > 0 ? 'text-status-warning' : '' },
                     { label: 'Hạn trả gần nhất', value: account?.oldestDueDate && balance > 0 ? formatDate(account.oldestDueDate) : '—', tone: '' },
                     { label: 'Đã trả gần đây', value: formatVnd(totalRepaid), tone: 'text-primary-dark' },
                   ].map((item, index) => (

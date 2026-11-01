@@ -58,11 +58,11 @@ export default function DebtEntryCard({ entry, onDispute }: DebtEntryCardProps) 
             {entry.orderNumber && <span className="text-[15px] text-text-secondary">({entry.entryNumber})</span>}
             <span className={`px-3 py-0.5 rounded-full border text-[13px] font-medium ${TONE_CLASSES[status.tone]}`}>{status.label}</span>
             {entry.isOverdue && !isClosed && (
-              <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full border border-status-error/50 bg-status-error-surface text-status-error text-[13px] font-medium">
+              <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full border border-status-warning/50 bg-status-warning-surface text-status-warning text-[13px] font-medium">
                 <span className="material-symbols-outlined" style={{ fontSize: 16 }} aria-hidden="true">
                   schedule
                 </span>
-                Quá hạn {entry.overdueDays} ngày
+                Đã qua hạn {entry.overdueDays} ngày
               </span>
             )}
           </div>

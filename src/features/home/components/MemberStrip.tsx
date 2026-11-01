@@ -145,9 +145,9 @@ export default function MemberStrip() {
               ) : (
                 <>
                   <p className="text-3xl font-light tracking-tight text-text-primary">{formatVnd(balance)}</p>
-                  <p className={`mt-1 text-[15px] ${overdue > 0 ? 'text-status-error font-medium' : 'text-text-secondary'}`}>
+                  <p className={`mt-1 text-[15px] ${overdue > 0 ? 'text-status-warning font-medium' : 'text-text-secondary'}`}>
                     {overdue > 0
-                      ? `Quá hạn ${formatVnd(overdue)}`
+                      ? `Đã qua hạn ${formatVnd(overdue)}`
                       : balance > 0 && dueDate
                         ? `Hạn trả gần nhất: ${formatDate(dueDate)}`
                         : debt.credit

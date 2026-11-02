@@ -99,7 +99,7 @@ export default function AiDoctorPage() {
           </div>
 
           <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-28">
-            {showResult && diagnosisCase.result && <RecommendedProductsCard result={diagnosisCase.result} />}
+            {showResult && diagnosisCase.result && <RecommendedProductsCard result={diagnosisCase.result} caseId={diagnosisCase.id} />}
             <PhotoTipsCard />
             <HotlineCard />
           </div>

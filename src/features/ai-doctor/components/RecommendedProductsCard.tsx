@@ -5,6 +5,8 @@ import { diseaseDisplayName } from '../model'
 
 interface RecommendedProductsCardProps {
   result: DiagnosisResult
+  /** The case this result belongs to: the detailed advice remembers it. */
+  caseId?: string
 }
 
 function Heading({ icon, children }: { icon: string; children: string }) {
@@ -22,7 +24,7 @@ function Heading({ icon, children }: { icon: string; children: string }) {
  * Products for the result: only a CONFIDENT, non-healthy AI result (matched by active ingredient, at most 5) or an old
  * store-confirmed case. An UNCERTAIN result never shows a product (AI_DIAGNOSIS.md D2/D13).
  */
-export default function RecommendedProductsCard({ result }: RecommendedProductsCardProps) {
+export default function RecommendedProductsCard({ result, caseId }: RecommendedProductsCardProps) {
   const uncertain = result.certainty === 'UNCERTAIN'
   if (result.disease.isHealthy && !uncertain) return null
 
@@ -73,11 +75,21 @@ export default function RecommendedProductsCard({ result }: RecommendedProductsC
         <p className="text-[15px] text-text-secondary leading-relaxed">Cửa hàng chưa có sản phẩm gợi ý cho bệnh này, bác hỏi cửa hàng để được tư vấn.</p>
       )}
 
+      {result.certainty === 'CONFIDENT' && result.disease.id && (
+        <Link
+          to={`/advisory/problem/${result.disease.id}${caseId ? `?caseId=${caseId}` : ''}`}
+          data-testid="diagnosis-advisory-link"
+          className="focus-ring inline-flex items-center gap-2 min-h-[44px] px-6 rounded-full border border-brand-dark/30 text-[15px] text-text-primary hover:bg-brand-dark hover:text-white transition-colors"
+        >
+          Xem tư vấn chi tiết và số lượng cần mua
+        </Link>
+      )}
+
       {products.length > 0 && (
         <p className="pt-4 border-t border-brand-dark/10 text-[15px] text-text-secondary leading-relaxed">
           {result.certainty === 'VERIFIED'
             ? 'Cửa hàng đã chọn các sản phẩm này cho ca của bác.'
-            : 'Gợi ý theo hoạt chất trị bệnh. Bác đọc kỹ nhãn thuốc và hỏi cửa hàng trước khi dùng.'}
+            : 'Thuốc cửa hàng đã duyệt cho bệnh này. Bác đọc kỹ nhãn thuốc và hỏi cửa hàng trước khi dùng.'}
         </p>
       )}
     </div>

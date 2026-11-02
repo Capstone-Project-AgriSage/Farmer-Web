@@ -15,6 +15,7 @@ const navLinks = [
   { to: '/about', label: 'Giới thiệu' },
   { to: '/products', label: 'Vật tư lúa' },
   { to: '/ai-doctor', label: 'Chẩn đoán AI' },
+  { to: '/advisory', label: 'Tư vấn vật tư' },
   { to: '/orders', label: 'Đơn hàng' },
   { to: '/debt', label: 'Sổ nợ' },
   { to: '/contact', label: 'Liên hệ' },
@@ -30,7 +31,8 @@ export default function Header({ cartCount }: HeaderProps) {
   const { hasPermission } = usePermissions()
   const visibleNavLinks = navLinks.filter((link) => !isAuthenticated
     || (link.to !== '/orders' || hasPermission('MY_ORDERS.READ'))
-    && (link.to !== '/debt' || hasPermission('MY_DEBT.READ')))
+    && (link.to !== '/debt' || hasPermission('MY_DEBT.READ'))
+    && (link.to !== '/advisory' || hasPermission('MY_ADVISORY.READ')))
   const heroVisible = useHeroVisible()
   const { unreadCount } = useNotifications()
   const [lastPathname, setLastPathname] = useState(location.pathname)

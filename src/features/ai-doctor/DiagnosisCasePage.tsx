@@ -156,7 +156,7 @@ export default function DiagnosisCasePage() {
               </div>
 
               <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-28">
-                {c.result && <RecommendedProductsCard result={c.result} />}
+                {c.result && <RecommendedProductsCard result={c.result} caseId={c.id} />}
                 <HotlineCard />
               </div>
             </div>

@@ -26,6 +26,8 @@ const MyRequestsPage = lazy(() => import('./features/contact/MyRequestsPage'))
 const AccountPage = lazy(() => import('./features/account/AccountPage'))
 const DebtPage = lazy(() => import('./features/debt/DebtPage'))
 const AiDoctorPage = lazy(() => import('./features/ai-doctor/AiDoctorPage'))
+const AdvisoryPage = lazy(() => import('./features/advisory/AdvisoryPage'))
+const AdvisoryProblemPage = lazy(() => import('./features/advisory/AdvisoryProblemPage'))
 const OrdersPage = lazy(() => import('./features/order/OrdersPage'))
 const OrderDetailPage = lazy(() => import('./features/order/OrderDetailPage'))
 const NotificationsPage = lazy(() => import('./features/notifications/NotificationsPage'))
@@ -62,6 +64,8 @@ const protectedRoutes = [
   { path: 'orders', element: <PermissionRoute codes={['MY_ORDERS.READ']}><OrdersPage /></PermissionRoute> },
   { path: 'orders/:code', element: <PermissionRoute codes={['MY_ORDERS.READ']}><OrderDetailPage /></PermissionRoute> },
   { path: 'notifications', element: <NotificationsPage /> },
+  { path: 'advisory', element: <PermissionRoute codes={['MY_ADVISORY.READ']}><AdvisoryPage /></PermissionRoute> },
+  { path: 'advisory/problem/:id', element: <PermissionRoute codes={['MY_ADVISORY.READ']}><AdvisoryProblemPage /></PermissionRoute> },
   { path: 'ai-doctor/history', element: <PermissionRoute codes={['MY_DIAGNOSIS.READ']}><DiagnosisHistoryPage /></PermissionRoute> },
   { path: 'ai-doctor/cases/:id', element: <PermissionRoute codes={['MY_DIAGNOSIS.READ']}><DiagnosisCasePage /></PermissionRoute> },
 ].map((route) => ({ ...route, errorElement: <RouteErrorBoundary /> }))

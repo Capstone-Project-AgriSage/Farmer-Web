@@ -1,4 +1,4 @@
-import type { DebtEntryStatus, PaymentStatus } from '../../api/types'
+import type { DebtEntryStatus, DueRule, DueState, PaymentStatus } from '../../api/types'
 import { TONE_CLASSES, type Tone } from '../order/orderLabels'
 
 export { TONE_CLASSES }
@@ -45,6 +45,41 @@ export const ACTION_LABEL: Record<string, string> = {
   ADJUST: 'Đại lý điều chỉnh số nợ',
   CANCEL: 'Đại lý hủy khoản nợ',
   CHANGE_DUE_DATE: 'Đại lý đổi hạn trả',
+  ROLLOVER: 'Đại lý gia hạn hạn trả',
+}
+
+// Why the store moved a due date or changed a debt. The server sends the code; the words are ours.
+export const REASON_CODE_LABEL: Record<string, string> = {
+  MAT_MUA: 'Mất mùa',
+  THIEN_TAI: 'Thiên tai',
+  KHO_KHAN: 'Gia đình khó khăn',
+  TRI_AN: 'Tri ân khách hàng',
+  SAI_SOT: 'Đại lý ghi nhầm',
+  KHONG_THU_HOI: 'Khó thu hồi',
+  KHAC: 'Lý do khác',
+}
+
+// Whether a debt is still within its due date. Text and icon always go with the colour.
+export const DUE_STATE: Record<DueState, { label: string; tone: Tone; icon: string }> = {
+  NOT_DUE: { label: 'Chưa đến hạn', tone: 'neutral', icon: 'schedule' },
+  DUE_SOON: { label: 'Sắp đến hạn', tone: 'pending', icon: 'history' },
+  OVERDUE: { label: 'Đã qua hạn', tone: 'danger', icon: 'error' },
+}
+
+export const DUE_STATE_FILTERS: { value: DueState | 'ALL'; label: string }[] = [
+  { value: 'ALL', label: 'Mọi hạn trả' },
+  { value: 'NOT_DUE', label: 'Chưa đến hạn' },
+  { value: 'DUE_SOON', label: 'Sắp đến hạn' },
+  { value: 'OVERDUE', label: 'Đã qua hạn' },
+]
+
+// How the due date of a credit order is worked out.
+export const DUE_RULE_LABEL: Record<DueRule, string> = {
+  SEASON: 'theo hạn trả của vụ',
+  CAPPED: 'theo hạn trả của vụ, trong giới hạn kỳ hạn của đại lý',
+  TERM_DAYS: 'theo số ngày kỳ hạn của hạng tín dụng',
+  MANUAL: 'do đại lý chọn',
+  NONE: 'chưa có tín dụng',
 }
 
 export const REPAYMENT_STATUS: Record<PaymentStatus, { label: string; tone: Tone }> = {

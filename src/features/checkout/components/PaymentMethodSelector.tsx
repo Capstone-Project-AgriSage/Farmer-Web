@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { creditApi } from '../../../api/creditApi'
-import type { MyCreditSummary } from '../../../api/types'
+import type { MyCreditSummary, MyCurrentSeason } from '../../../api/types'
+import { DUE_RULE_LABEL, formatDate } from '../../debt/debtLabels'
 import { formatVnd } from '../../../data/format'
 import { usePermissions } from '../../../context/PermissionContext'
 import PermissionAction from '../../../components/auth/PermissionAction'
@@ -25,6 +26,9 @@ export default function PaymentMethodSelector({
   // it again when the order is created, so this only decides what the page offers.
   const [credit, setCredit] = useState<MyCreditSummary | null>(null)
   const [creditState, setCreditState] = useState<'loading' | 'ready' | 'none'>('loading')
+  // The season (and so the due date) this credit order would get. Only an estimate: the real date is set on delivery.
+  const canReadSeason = hasPermission('MY_CROP_SEASONS.READ')
+  const [season, setSeason] = useState<MyCurrentSeason | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -47,6 +51,18 @@ export default function PaymentMethodSelector({
       cancelled = true
     }
   }, [canReadCredit])
+
+  useEffect(() => {
+    let cancelled = false
+    if (!canReadSeason || !canReadCredit) {
+      setSeason(null)
+      return
+    }
+    creditApi.getCurrentSeason().then((result) => !cancelled && setSeason(result)).catch(() => !cancelled && setSeason(null))
+    return () => {
+      cancelled = true
+    }
+  }, [canReadSeason, canReadCredit])
 
   const creditActive = canReadCredit && creditState === 'ready' && credit?.status?.toUpperCase() === 'ACTIVE'
   const availableCredit = creditActive && credit ? credit.availableCredit : 0
@@ -150,13 +166,25 @@ export default function PaymentMethodSelector({
                       <span>
                         Hạn mức khả dụng: <strong className="text-brand-dark font-helvetica-neue">{formatVnd(availableCredit)}</strong>
                       </span>
-                      {credit.paymentTermDays ? <span>Hạn thanh toán: {credit.paymentTermDays} ngày</span> : null}
+                      {season?.expectedDueDate ? (
+                        <span>
+                          Hạn trả dự kiến: <strong className="text-brand-dark font-helvetica-neue">{formatDate(season.expectedDueDate)}</strong>
+                          {season.name ? ` (${season.name})` : ''}
+                        </span>
+                      ) : credit.paymentTermDays ? (
+                        <span>Hạn thanh toán: {credit.paymentTermDays} ngày</span>
+                      ) : null}
                       {notEnough ? (
                         <span className="text-rose-600 font-medium bg-rose-50 px-1.5 py-0.5 border border-rose-200">Không đủ hạn mức</span>
                       ) : (
                         <span className="text-brand-green">• Đủ điều kiện thanh toán</span>
                       )}
                     </div>
+                    {season?.expectedDueDate && (
+                      <p className="text-[11px] text-brand-dark/60 mt-1.5">
+                        Đây là hạn dự kiến, {DUE_RULE_LABEL[season.dueRule] ?? 'theo quy định của đại lý'}. Hạn thật được tính khi đại lý giao hàng cho bác.
+                      </p>
+                    )}
                     {notEnough && (
                       <p className="text-[11px] text-rose-600 mt-1.5">
                         * Đơn hàng ({formatVnd(total)}) vượt quá hạn mức công nợ còn lại của bác. Vui lòng thanh toán một phần nợ cũ hoặc chọn hình thức thanh toán khác.

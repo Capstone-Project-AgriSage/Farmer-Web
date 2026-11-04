@@ -1,3 +1,5 @@
+import { invalidateLookupWrite, lookupCache, lookupKey } from './lookupCache'
+
 export class ApiError extends Error {
   status: number
   title: string
@@ -22,6 +24,11 @@ export class ApiError extends Error {
 }
 
 export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const key = (init.method ?? 'GET').toUpperCase() === 'GET' && !init.headers && !init.cache ? lookupKey(path) : null
+  return key ? lookupCache.get(key, () => request<T>(path, { ...init, signal: undefined }), 120_000, init.signal) : request<T>(path, init)
+}
+
+async function request<T>(path: string, init: RequestInit): Promise<T> {
   const token = localStorage.getItem('agrisage.farmer_token') || localStorage.getItem('agrisage_token')
   const baseUrl = import.meta.env.VITE_API_URL || ''
   const isJwt = Boolean(token && token !== '0' && token !== '1' && token.includes('.'))
@@ -43,6 +50,7 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   }
 
   if (res.status === 401) {
+    lookupCache.clear()
     localStorage.removeItem('agrisage.farmer_token')
     localStorage.removeItem('agrisage_token')
     localStorage.setItem('agrisage.farmer_auth.v1', '0')
@@ -54,6 +62,7 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   }
   
   if (res.ok) {
+    if (init.method && !['GET', 'HEAD', 'OPTIONS'].includes(init.method.toUpperCase())) invalidateLookupWrite(path)
     if (res.status === 204) return undefined as T
     const contentType = res.headers.get('content-type') || ''
     if (contentType.includes('application/json') || contentType.includes('application/problem+json')) {

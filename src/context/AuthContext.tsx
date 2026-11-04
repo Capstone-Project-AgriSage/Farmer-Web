@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 import type { FarmerUser, StoreInfo } from '../types'
 import { authApi } from '../api/authApi'
 import { ApiError } from '../api/client'
+import { lookupCache } from '../api/lookupCache'
 
 const TOKEN_KEY = 'agrisage.farmer_token'
 
@@ -64,6 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new ApiError(403, 'Forbidden', 'Tài khoản nhân viên không dùng được trang nông dân. Vui lòng đăng nhập trang quản lý.')
     }
     localStorage.setItem(TOKEN_KEY, res.accessToken)
+    lookupCache.clear()
     setIsAuthenticated(true)
     if (res.user) {
       setFarmer((prev) => ({
@@ -85,6 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
     })
     localStorage.setItem(TOKEN_KEY, res.accessToken)
+    lookupCache.clear()
     setIsAuthenticated(true)
     if (res.user) {
       setFarmer((prev) => ({
@@ -98,6 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const logout = () => {
+    lookupCache.clear()
     localStorage.removeItem(TOKEN_KEY)
     localStorage.removeItem('agrisage_token')
     setIsAuthenticated(false)

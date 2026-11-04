@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict'
 import { spawn } from 'node:child_process'
 import { pathToFileURL } from 'node:url'
+// Vite colours its output when attached to a terminal; strip it before looking for the 'Local:' line.
+const ANSI_COLOR = new RegExp(String.fromCharCode(27) + '\\[[0-9;]*m', 'g')
 
 // AI diagnosis on the farmer web (AI_DIAGNOSIS.md 2.0): the AI result shows at once, CONFIDENT with treatments and
 // products, UNCERTAIN with neither, FAILED with "Thử lại". Every /api request is faked: no backend, no data written.
@@ -17,7 +19,7 @@ const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', '--host
 await new Promise((resolve, reject) => {
   const timeout = setTimeout(() => reject(new Error('Vite startup timed out')), 20000)
   server.stdout.on('data', (data) => {
-    if (data.toString().replace(/[[0-9;]*m/g, '').includes('Local:')) {
+    if (data.toString().replace(ANSI_COLOR, '').includes('Local:')) {
       clearTimeout(timeout)
       resolve()
     }

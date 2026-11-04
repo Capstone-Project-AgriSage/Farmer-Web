@@ -18,7 +18,7 @@ const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', '--host
 await new Promise((resolve, reject) => {
   const timeout = setTimeout(() => reject(new Error('Vite startup timed out')), 30000)
   server.stdout.on('data', (data) => {
-    if (data.toString().includes('Local:')) {
+    if (data.toString().replace(/[[0-9;]*m/g, '').includes('Local:')) {
       clearTimeout(timeout)
       resolve()
     }

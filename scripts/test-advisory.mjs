@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict'
 import { spawn } from 'node:child_process'
 import { pathToFileURL } from 'node:url'
+// Vite colours its output when attached to a terminal; strip it before looking for the 'Local:' line.
+const ANSI_COLOR = new RegExp(String.fromCharCode(27) + '\\[[0-9;]*m', 'g')
 
 // Input consultation on the farmer web (docs/reference/api-flows/ADVISORY.md section 5): search a problem, enter the area and the
 // rice stage, read the products with dose, source and quantity, add one to the cart; the AI result links to the same advice.
@@ -18,7 +20,7 @@ const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', '--host
 await new Promise((resolve, reject) => {
   const timeout = setTimeout(() => reject(new Error('Vite startup timed out')), 30000)
   server.stdout.on('data', (data) => {
-    if (data.toString().includes('Local:')) {
+    if (data.toString().replace(ANSI_COLOR, '').includes('Local:')) {
       clearTimeout(timeout)
       resolve()
     }

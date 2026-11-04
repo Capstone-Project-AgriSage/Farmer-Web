@@ -96,7 +96,7 @@ export default function DebtSummaryCard({ storeName, credit, account }: DebtSumm
           {(reserved > 0 || credit.paymentTermDays) && (
             <div className="mt-5 pt-5 border-t border-white/20 flex flex-wrap gap-x-8 gap-y-1 text-[15px] text-white/80">
               {reserved > 0 && <span>Đang giữ cho đơn mua chịu chưa giao: {formatVnd(reserved)}</span>}
-              {credit.paymentTermDays ? <span>Hạn thanh toán: {credit.paymentTermDays} ngày kể từ ngày giao</span> : null}
+              {credit.paymentTermDays ? <span>Hạn trả theo vụ mùa; giao ngoài vụ thì {credit.paymentTermDays} ngày kể từ ngày giao</span> : null}
             </div>
           )}
         </>

@@ -1,8 +1,10 @@
 import { api } from './client'
-import type { AllocationPreview, DebtAccount, DebtEntryDetail, DebtEntryListItem, DebtEntryStatus, PagedResult } from './types'
+import type { AllocationPreview, DebtAccount, DebtEntryDetail, DebtEntryListItem, DebtEntryStatus, DueState, PagedResult } from './types'
 
 export interface MyDebtEntriesQuery {
   status?: DebtEntryStatus
+  collectionSeasonId?: string
+  dueState?: DueState
   page?: number
   pageSize?: number
 }

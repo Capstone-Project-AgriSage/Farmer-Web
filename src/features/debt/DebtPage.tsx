@@ -10,13 +10,14 @@ import { creditApi } from '../../api/creditApi'
 import { debtApi } from '../../api/debtApi'
 import { paymentsApi } from '../../api/paymentsApi'
 import { ApiError, describeApiError } from '../../api/client'
-import type { DebtAccount, DebtEntryListItem, DebtEntryStatus, MyCreditSummary, PagedResult, PaymentListItem } from '../../api/types'
+import type { DebtAccount, DebtEntryListItem, DebtEntryStatus, DueState, MyCreditSummary, PagedResult, PaymentListItem } from '../../api/types'
 import DebtSummaryCard from './DebtSummaryCard'
 import DebtEntryCard from './DebtEntryCard'
+import DebtDueGroups from './DebtDueGroups'
 import DisputeModal from './DisputeModal'
 import RepayModal from './RepayModal'
 import RepaymentHistory from './RepaymentHistory'
-import { ENTRY_FILTERS, formatDate } from './debtLabels'
+import { DUE_STATE_FILTERS, ENTRY_FILTERS, formatDate } from './debtLabels'
 
 const PAGE_SIZE = 10
 
@@ -41,6 +42,8 @@ export default function DebtPage() {
   const [summaryError, setSummaryError] = useState<string | null>(null)
 
   const [filter, setFilter] = useState<DebtEntryStatus | 'ALL'>('ALL')
+  const [dueFilter, setDueFilter] = useState<DueState | 'ALL'>('ALL')
+  const [seasonFilter, setSeasonFilter] = useState<string | null>(null)
   const [page, setPage] = useState(1)
   const [entries, setEntries] = useState<PagedResult<DebtEntryListItem> | null>(null)
   const [entriesLoading, setEntriesLoading] = useState(true)
@@ -84,7 +87,13 @@ export default function DebtPage() {
     setEntriesLoading(true)
     setEntriesError(null)
     debtApi
-      .getEntries({ status: filter === 'ALL' ? undefined : filter, page, pageSize: PAGE_SIZE })
+      .getEntries({
+        status: filter === 'ALL' ? undefined : filter,
+        dueState: dueFilter === 'ALL' ? undefined : dueFilter,
+        collectionSeasonId: seasonFilter ?? undefined,
+        page,
+        pageSize: PAGE_SIZE,
+      })
       .then((result) => {
         if (cancelled) return
         // The last entry of the last page left the filter (for example it was paid): go back to the new last page.
@@ -104,7 +113,7 @@ export default function DebtPage() {
     return () => {
       cancelled = true
     }
-  }, [filter, page, refreshKey])
+  }, [filter, dueFilter, seasonFilter, page, refreshKey])
 
   const balance = account?.currentBalance ?? credit?.outstandingReceivable ?? 0
   const noDebtBook = !summaryLoading && !summaryError && !credit && !account
@@ -117,6 +126,16 @@ export default function DebtPage() {
 
   const changeFilter = (next: DebtEntryStatus | 'ALL') => {
     setFilter(next)
+    setPage(1)
+  }
+
+  const changeDueFilter = (next: DueState | 'ALL') => {
+    setDueFilter(next)
+    setPage(1)
+  }
+
+  const changeSeason = (next: string | null) => {
+    setSeasonFilter(next)
     setPage(1)
   }
 
@@ -240,6 +259,8 @@ export default function DebtPage() {
                   ))}
                 </dl>
 
+                {account?.groups && account.groups.length > 0 && <DebtDueGroups groups={account.groups} activeSeasonId={seasonFilter ?? undefined} onPickSeason={changeSeason} />}
+
                 <section className="space-y-5" aria-label="Danh sách khoản nợ">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <h2 className="text-[13px] uppercase tracking-[0.16em] text-text-secondary">Danh sách khoản nợ</h2>
@@ -258,6 +279,29 @@ export default function DebtPage() {
                         </button>
                       ))}
                     </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Lọc theo hạn trả">
+                    {DUE_STATE_FILTERS.map((item) => (
+                      <button
+                        key={item.value}
+                        type="button"
+                        aria-pressed={dueFilter === item.value}
+                        onClick={() => changeDueFilter(item.value)}
+                        className={`focus-ring min-h-[44px] px-4 rounded-full text-[15px] transition-colors ${
+                          dueFilter === item.value ? 'bg-brand-dark text-white' : 'border border-brand-dark/25 text-text-primary hover:border-brand-dark/60'
+                        }`}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                    {seasonFilter && (
+                      <button type="button" onClick={() => changeSeason(null)} className="focus-ring min-h-[44px] px-4 rounded-full border border-brand-dark text-[15px] text-text-primary inline-flex items-center gap-1.5">
+                        Đang lọc theo một vụ
+                        <span className="material-symbols-outlined" style={{ fontSize: 18 }} aria-hidden="true">close</span>
+                        <span className="sr-only">Bỏ lọc theo vụ</span>
+                      </button>
+                    )}
                   </div>
 
                   {entriesError && (

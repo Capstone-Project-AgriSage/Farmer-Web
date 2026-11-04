@@ -5,7 +5,8 @@ import { formatVnd } from '../../data/format'
 import { debtApi } from '../../api/debtApi'
 import { describeApiError } from '../../api/client'
 import type { DebtEntryDetail, DebtEntryListItem } from '../../api/types'
-import { ACTION_LABEL, ENTRY_STATUS, SOURCE_LABEL, TONE_CLASSES, TRANSACTION_LABEL, canDispute, formatDate } from './debtLabels'
+import { DueStateBadge } from './DebtDueGroups'
+import { ACTION_LABEL, ENTRY_STATUS, REASON_CODE_LABEL, SOURCE_LABEL, TONE_CLASSES, TRANSACTION_LABEL, canDispute, formatDate } from './debtLabels'
 
 interface DebtEntryCardProps {
   entry: DebtEntryListItem
@@ -66,9 +67,28 @@ export default function DebtEntryCard({ entry, onDispute }: DebtEntryCardProps) 
               </span>
             )}
           </div>
+          {!isClosed && entry.dueState && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <DueStateBadge state={entry.dueState} />
+              {entry.isRolledOver && (
+                <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full border border-blue-200 bg-blue-50 text-blue-800 text-[13px] font-medium">
+                  <span className="material-symbols-outlined" style={{ fontSize: 16 }} aria-hidden="true">
+                    sync
+                  </span>
+                  Đã gia hạn {entry.rolloverCount} lần
+                </span>
+              )}
+            </div>
+          )}
           <p className="text-[15px] text-text-secondary leading-relaxed">
             Hạn trả: <strong className="text-text-primary font-medium">{formatDate(entry.dueDate)}</strong> · Ngày ghi nợ: {formatDate(entry.createdAt)} · {SOURCE_LABEL[entry.sourceType] ?? entry.sourceType}
           </p>
+          {(entry.collectionSeason || (entry.originalDueDate && entry.originalDueDate.slice(0, 10) !== entry.dueDate.slice(0, 10))) && (
+            <p className="text-[15px] text-text-secondary leading-relaxed">
+              {entry.collectionSeason && <>Thu theo vụ: <strong className="text-text-primary font-medium">{entry.collectionSeason.name}</strong></>}
+              {entry.originalDueDate && entry.originalDueDate.slice(0, 10) !== entry.dueDate.slice(0, 10) && <>{entry.collectionSeason ? ' · ' : ''}Hạn ban đầu: {formatDate(entry.originalDueDate)}</>}
+            </p>
+          )}
         </div>
 
         <div className="shrink-0 md:text-right">
@@ -144,6 +164,7 @@ export default function DebtEntryCard({ entry, onDispute }: DebtEntryCardProps) 
                           <strong className="font-medium text-text-primary">{ACTION_LABEL[action.actionType] ?? action.actionType}</strong>
                           <span className="text-text-secondary">{formatDate(action.createdAt)}</span>
                         </div>
+                        {action.reasonCode && <p className="mt-1 text-text-secondary">Lý do: {REASON_CODE_LABEL[action.reasonCode] ?? action.reasonCode}</p>}
                         {action.reason && <p className="mt-1 text-text-secondary">{action.reason}</p>}
                         {action.adjustmentAmount != null && <p className="mt-1 text-text-secondary">Giảm: {formatVnd(action.adjustmentAmount)}</p>}
                         {action.newDueDate && (

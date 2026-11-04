@@ -235,6 +235,21 @@ export interface MyCreditSummary {
 
 export type DebtEntryStatus = 'OPEN' | 'PARTIALLY_PAID' | 'PAID' | 'DISPUTED' | 'ADJUSTED' | 'CANCELLED'
 
+// Debt by crop season (FE_GUIDE_FLOW_3 §3.2): each entry has an origin season (never changes) and a collection season (moves when
+// the store extends the due date).
+export type DueState = 'NOT_DUE' | 'DUE_SOON' | 'OVERDUE'
+export type DueRule = 'SEASON' | 'CAPPED' | 'TERM_DAYS' | 'MANUAL' | 'NONE'
+export interface SeasonRef { id: string; code: string; name: string }
+
+/** Debt grouped by (collection season, due date). A null season means the due date follows the credit tier. */
+export interface DebtGroup {
+  collectionSeason: SeasonRef | null;
+  dueDate: string;
+  outstandingAmount: number;
+  entryCount: number;
+  dueState: DueState;
+}
+
 export interface DebtAccount {
   id: string;
   status: string;
@@ -243,6 +258,7 @@ export interface DebtAccount {
   openEntryCount: number;
   oldestDueDate: string | null;
   lastTransactionAt: string | null;
+  groups?: DebtGroup[];
 }
 
 export interface DebtEntryListItem {
@@ -258,6 +274,14 @@ export interface DebtEntryListItem {
   overdueDays: number;
   status: DebtEntryStatus;
   createdAt: string;
+  originSeason?: SeasonRef | null;
+  collectionSeason?: SeasonRef | null;
+  /** The due date when the debt was recorded; extensions move dueDate, not this. */
+  originalDueDate?: string;
+  rolloverCount?: number;
+  isRolledOver?: boolean;
+  /** null once the entry is fully paid. */
+  dueState?: DueState | null;
 }
 
 export interface DebtTransaction {
@@ -278,6 +302,21 @@ export interface DebtEntryAction {
   oldDueDate: string | null;
   newDueDate: string | null;
   createdAt: string;
+  /** Why the store changed the debt; null on changes made before reason codes existed. */
+  reasonCode?: string | null;
+}
+
+/** GET /api/me/crop-seasons/current: the season a credit order placed today would belong to. Only an estimate. */
+export interface MyCurrentSeason {
+  cropSeasonId: string | null;
+  code: string | null;
+  name: string | null;
+  harvestStart: string | null;
+  harvestEnd: string | null;
+  expectedDueDate: string | null;
+  dueRule: DueRule;
+  termDays: number | null;
+  isEstimate: boolean;
 }
 
 export interface DebtEntryDetail extends DebtEntryListItem {

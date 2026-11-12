@@ -14,6 +14,7 @@ import FeaturedProducts from './components/FeaturedProducts'
 import WeatherSection from './components/WeatherSection'
 import FaqSection from './components/FaqSection'
 import FinaleSection from './components/FinaleSection'
+import LatestArticles from './components/LatestArticles'
 
 export default function HomePage() {
   useDocumentTitle()
@@ -47,6 +48,7 @@ export default function HomePage() {
         {featured.length > 0 && <FeaturedProducts products={featured} />}
         <WeatherSection />
         <GalleryBand />
+        <LatestArticles />
         <FaqSection />
         <FinaleSection />
       </div>

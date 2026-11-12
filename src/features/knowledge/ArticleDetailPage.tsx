@@ -1,12 +1,15 @@
 import { Link, useParams } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import AiDiagnosisCallout from '../../components/ui/AiDiagnosisCallout'
-import { getArticleBySlug } from '../../data/mockArticles'
+import { useCallback } from 'react'
+import { contentApi } from '../../api/contentApi'
+import { useContentQuery } from '../../hooks/useContentQuery'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 
 export default function ArticleDetailPage() {
   const { slug } = useParams<{ slug: string }>()
-  const article = getArticleBySlug(slug ?? '')
+  const load = useCallback((signal: AbortSignal) => contentApi.article(slug ?? '', signal), [slug])
+  const { data: article, error, loading, reload } = useContentQuery(load)
 
   useDocumentTitle(article ? article.title : 'Không tìm thấy bài viết')
 
@@ -15,7 +18,7 @@ export default function ArticleDetailPage() {
       <div className="bg-brand-cream text-brand-dark">
         <div className="max-w-3xl mx-auto px-6 lg:px-8 py-16 md:py-20 text-center">
           <h1 className="text-xl font-helvetica-neue tracking-tight text-brand-dark">
-            Không tìm thấy bài viết
+            {loading ? 'Đang tải bài viết...' : error || 'Không tìm thấy bài viết'}
           </h1>
           <Link
             to="/knowledge"
@@ -23,6 +26,7 @@ export default function ArticleDetailPage() {
           >
             Quay lại Kiến thức nông nghiệp
           </Link>
+          {!loading && <button className="block mx-auto mt-4 underline" onClick={reload}>Thử lại</button>}
         </div>
       </div>
     )
@@ -41,19 +45,18 @@ export default function ArticleDetailPage() {
         <div
           className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs tracking-wide mb-5 border border-brand-dark/10 bg-brand-light text-brand-dark/70`}
         >
-          <span className="material-symbols-outlined text-[14px]">{article.badge.icon}</span>
-          <span>{article.badge.label}</span>
+          <span className="material-symbols-outlined text-[14px]">eco</span>
+          <span>Kiến thức nông nghiệp</span>
         </div>
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-helvetica-neue tracking-tight text-brand-dark leading-[1.2]">
           {article.title}
         </h1>
         <div className="text-xs tracking-wide text-brand-dark/50 mt-4 pb-6 border-b border-brand-dark/10">
-          {article.date}
+          {article.authorName} · {article.publishedAt ? new Date(article.publishedAt).toLocaleDateString('vi-VN') : ''}
         </div>
-        <div className="space-y-4 pt-6 text-base text-brand-dark/60 leading-relaxed">
-          {article.content.map((paragraph, i) => (
-            <p key={i}>{paragraph}</p>
-          ))}
+        {article.thumbnailUrl && <img src={article.thumbnailUrl} alt="" className="w-full mt-6" />}
+        <div className="space-y-4 pt-6 text-base text-brand-dark/60 leading-relaxed whitespace-pre-wrap break-words">
+          {article.content}
         </div>
         <Link
           to="/knowledge"

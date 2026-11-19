@@ -44,7 +44,8 @@ export function parseArea(text: string, unit: AreaUnit): { ok: true; sqm: number
   return { ok: true, sqm: Math.round(sqm * 1000) / 1000 }
 }
 
-export const AREA_ERROR = 'Bác nhập diện tích là số lớn hơn 0 (tối đa 1.000 ha).'
+// The limit in hectares comes from the server's limit in m² (10,000 m² = 1 ha), so the text cannot drift from it.
+export const AREA_ERROR = `Bác nhập diện tích là số lớn hơn 0 (tối đa ${(MAX_AREA_SQM / 10_000).toLocaleString('vi-VN')} ha).`
 
 const AREA_KEY = 'agrisage.advisory_area'
 

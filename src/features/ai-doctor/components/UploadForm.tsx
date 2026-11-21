@@ -1,9 +1,17 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
-import { DIAGNOSIS_IMAGE_TYPES } from '../../../api/diagnosisApi'
+import { DIAGNOSIS_IMAGE_TYPES, type DiagnosisCrop } from '../../../api/diagnosisApi'
 import { parseStageLabel, riceStageOptions, type RiceStageValue } from '../model'
+import { RICE, cropLabel, leafOf } from '../crops'
 import type { DiagnosisStatus, PickedImage } from '../useDiagnosis'
 
 interface UploadFormProps {
+  /** The crops a photo can be sent for (AI_DIAGNOSIS.md 2.2); the AI then only chooses among that crop's diseases. */
+  crops: DiagnosisCrop[]
+  cropsLoading: boolean
+  cropsError: string | null
+  onReloadCrops: () => void
+  crop: string | null
+  onCropChange: (crop: string) => void
   image: PickedImage | null
   fileError: string | null
   status: DiagnosisStatus
@@ -20,7 +28,7 @@ interface UploadFormProps {
   submitError: string | null
 }
 
-const ANALYZING_STEPS = ['AI đang nhận diện vùng bệnh trên lá…', 'Đối chiếu với 5 bệnh lúa AI đã học…', 'Đang chuẩn bị kết quả và cách xử lý…']
+const ANALYZING_STEPS = ['AI đang nhận diện vùng bệnh trên lá…', 'Đối chiếu với các bệnh của cây bác chọn…', 'Đang chuẩn bị kết quả và cách xử lý…']
 const ACCEPT = DIAGNOSIS_IMAGE_TYPES.join(',')
 /** The stage line takes the rest of the backend's 1000-character note. */
 const SYMPTOM_MAX = 900
@@ -37,7 +45,7 @@ function StepTitle({ number, children, hint }: { number: string; children: strin
   )
 }
 
-export default function UploadForm({ image, fileError, status, stage, symptomText, onFileSelected, onResetImage, onStageChange, onSymptomTextChange, onAnalyze, needsSignIn, onSignIn, submitError }: UploadFormProps) {
+export default function UploadForm({ crops, cropsLoading, cropsError, onReloadCrops, crop, onCropChange, image, fileError, status, stage, symptomText, onFileSelected, onResetImage, onStageChange, onSymptomTextChange, onAnalyze, needsSignIn, onSignIn, submitError }: UploadFormProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [stepIndex, setStepIndex] = useState(0)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -68,16 +76,55 @@ export default function UploadForm({ image, fileError, status, stage, symptomTex
   }
 
   // A sent photo already has its case: choose another photo to diagnose again.
-  const canAnalyze = Boolean(image) && !analyzing && status !== 'result'
+  const canAnalyze = Boolean(image) && Boolean(crop) && !analyzing && status !== 'result'
+  // Only rice has growth stages; the step numbers follow what is shown.
+  const isRice = crop === RICE
+  const leaf = crop ? leafOf(crop) : 'lá cây'
 
   return (
     <div className="bg-white border border-brand-dark/15 rounded-[var(--radius-surface)]">
       <input ref={fileInputRef} type="file" accept={ACCEPT} className="hidden" onChange={(e) => pick(e.target.files?.[0])} />
       <input ref={cameraInputRef} type="file" accept={ACCEPT} capture="environment" className="hidden" onChange={(e) => pick(e.target.files?.[0])} />
 
-      {/* 1. Photo */}
-      <section className="p-5 sm:p-8">
-        <StepTitle number="01">Ảnh chụp lá hoặc thân lúa</StepTitle>
+      {/* 1. Crop */}
+      <section className="p-5 sm:p-8" data-testid="crop-step">
+        <StepTitle number="01">Chọn cây trồng</StepTitle>
+        {cropsLoading ? (
+          <div className="h-11 w-2/3 bg-brand-dark/10 rounded-full animate-pulse" aria-busy="true" aria-label="Đang tải danh sách cây" />
+        ) : cropsError ? (
+          <div role="alert" className="flex flex-wrap items-center gap-3 text-[15px] text-status-error">
+            {cropsError}
+            <button type="button" onClick={onReloadCrops} className="focus-ring min-h-[40px] px-4 rounded-full border border-brand-dark/30 text-text-primary hover:bg-brand-dark hover:text-white transition-colors">
+              Thử lại
+            </button>
+          </div>
+        ) : crops.length === 0 ? (
+          <p className="text-[15px] text-text-secondary" data-testid="crops-empty">Chưa có cây nào được chẩn đoán qua ảnh. Bác hỏi cửa hàng nhé.</p>
+        ) : (
+          <div role="radiogroup" aria-label="Cây trồng" className="flex flex-wrap gap-2">
+            {crops.map((c) => (
+              <button
+                key={c.code}
+                type="button"
+                role="radio"
+                aria-checked={crop === c.code}
+                disabled={analyzing}
+                onClick={() => onCropChange(c.code)}
+                data-testid={`crop-${c.code}`}
+                className={`focus-ring min-h-[44px] px-5 rounded-full border text-[15px] transition-colors disabled:cursor-not-allowed ${
+                  crop === c.code ? 'bg-brand-dark text-white border-brand-dark' : 'border-brand-dark/30 text-text-primary hover:border-brand-dark/60'
+                }`}
+              >
+                {c.name || cropLabel(c.code)}
+              </button>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* 2. Photo */}
+      <section className="p-5 sm:p-8 border-t border-brand-dark/15">
+        <StepTitle number="02">{`Ảnh chụp ${leaf}`}</StepTitle>
         <div
           onDragOver={(e) => {
             e.preventDefault()
@@ -91,14 +138,14 @@ export default function UploadForm({ image, fileError, status, stage, symptomTex
           }}
           {...(image
             ? {}
-            : { role: 'button', tabIndex: 0, onClick: openPicker, onKeyDown: onDropzoneKey, 'aria-label': 'Chọn ảnh lá lúa từ máy', 'aria-describedby': 'photo-help' })}
+            : { role: 'button', tabIndex: 0, onClick: openPicker, onKeyDown: onDropzoneKey, 'aria-label': `Chọn ảnh ${leaf} từ máy`, 'aria-describedby': 'photo-help' })}
           className={`focus-ring relative overflow-hidden rounded-[var(--radius-surface)] border-2 border-dashed transition-colors duration-[var(--dur-micro)] flex flex-col items-center justify-center text-center min-h-[260px] ${
             image ? 'border-brand-dark/15 bg-brand-light' : 'cursor-pointer p-6 ' + (isDragging ? 'border-primary bg-primary-subtle' : 'border-brand-dark/30 hover:border-brand-dark/60 bg-brand-cream')
           }`}
         >
           {image ? (
             <>
-              <img src={image.url} alt="Ảnh lá lúa đã chọn" className={`w-full max-h-[360px] object-contain transition-opacity duration-[var(--dur-standard)] ${analyzing ? 'opacity-60' : 'opacity-100'}`} />
+              <img src={image.url} alt={`Ảnh ${leaf} đã chọn`} className={`w-full max-h-[360px] object-contain transition-opacity duration-[var(--dur-standard)] ${analyzing ? 'opacity-60' : 'opacity-100'}`} />
               {analyzing && (
                 <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
                   <div
@@ -113,7 +160,7 @@ export default function UploadForm({ image, fileError, status, stage, symptomTex
               <span className="material-symbols-outlined text-primary-dark" style={{ fontSize: 48 }} aria-hidden="true">
                 {isDragging ? 'download' : 'add_a_photo'}
               </span>
-              <p className="mt-3 text-lg text-text-primary">{isDragging ? 'Thả ảnh vào đây' : 'Chụp hoặc chọn ảnh lá lúa'}</p>
+              <p className="mt-3 text-lg text-text-primary">{isDragging ? 'Thả ảnh vào đây' : `Chụp hoặc chọn ảnh ${leaf}`}</p>
               <p id="photo-help" className="mt-1 text-[15px] text-text-secondary max-w-sm">
                 Kéo thả ảnh vào đây hoặc bấm để chọn. Chụp gần một lá bệnh, rõ vết đốm hoặc cháy mép lá. Ảnh JPEG, PNG hoặc WebP, tối đa 5 MB.
               </p>
@@ -161,9 +208,10 @@ export default function UploadForm({ image, fileError, status, stage, symptomTex
         )}
       </section>
 
-      {/* 2. Growth stage */}
+      {/* 3. Growth stage: rice only */}
+      {isRice && (
       <section className="p-5 sm:p-8 border-t border-brand-dark/15">
-        <StepTitle number="02">Giai đoạn sinh trưởng của lúa</StepTitle>
+        <StepTitle number="03">Giai đoạn sinh trưởng của lúa</StepTitle>
         <div role="radiogroup" aria-label="Giai đoạn sinh trưởng" className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {riceStageOptions.map((option) => {
             const selected = option.value === stage
@@ -195,10 +243,11 @@ export default function UploadForm({ image, fileError, status, stage, symptomTex
           })}
         </div>
       </section>
+      )}
 
-      {/* 3. Symptoms */}
+      {/* Symptoms */}
       <section className="p-5 sm:p-8 border-t border-brand-dark/15">
-        <StepTitle number="03" hint="(tùy chọn)">
+        <StepTitle number={isRice ? '04' : '03'} hint="(tùy chọn)">
           Mô tả triệu chứng ngoài ruộng
         </StepTitle>
         <textarea
@@ -263,10 +312,13 @@ export default function UploadForm({ image, fileError, status, stage, symptomTex
               ? ANALYZING_STEPS[stepIndex]
               : status === 'result'
                 ? 'Đã có kết quả bên dưới. Chọn ảnh khác để chẩn đoán tiếp.'
-                : image
-                  ? 'Sẵn sàng. AI cho kết quả sau vài giây.'
-                  : 'Bác cần chọn ảnh trước khi chẩn đoán.'}
+                : !crop
+                  ? 'Bác chọn cây trồng trước khi gửi ảnh.'
+                  : image
+                    ? 'Sẵn sàng. AI cho kết quả sau vài giây.'
+                    : 'Bác cần chọn ảnh trước khi chẩn đoán.'}
         </p>
+        <p className="mt-1 text-center text-[14px] text-text-muted" data-testid="ai-service-note">Ảnh được gửi tới dịch vụ AI để phân tích.</p>
       </div>
     </div>
   )

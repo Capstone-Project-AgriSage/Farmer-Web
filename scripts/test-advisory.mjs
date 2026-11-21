@@ -42,6 +42,7 @@ const problems = [
   { id: 'd-BROWN_PLANTHOPPER', code: 'BROWN_PLANTHOPPER', name: 'Rầy nâu', problemType: 'PEST', summary: 'Lúa cháy từng chòm.', matchedBy: 'NAME' },
   { id: 'd-NITROGEN_DEFICIENCY', code: 'NITROGEN_DEFICIENCY', name: 'Lúa vàng lá do thiếu đạm', problemType: 'NUTRITION', summary: null, matchedBy: 'KEYWORD' },
 ]
+const durianProblem = { id: 'd-DURIAN_PHYTOPHTHORA', code: 'DURIAN_PHYTOPHTHORA', name: 'Thối gốc chảy nhựa', problemType: 'DISEASE', cropType: 'DURIAN', summary: 'Vỏ thân chảy nhựa.', matchedBy: 'NAME' }
 const fold = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd')
 
 const productOf = (id, name, extra = {}) => ({
@@ -88,9 +89,10 @@ async function check(name, fn) {
 const FARMER = ['MY_PROFILE.READ', 'MY_CART.READ', 'MY_CART.ADD_ITEM', 'MY_ADVISORY.READ', 'MY_DIAGNOSIS.READ', 'MY_DIAGNOSIS.CREATE']
 
 /** A page with every /api call answered from `state`. */
-async function fixture({ signedIn = true, permissions = FARMER, viewport = { width: 1280, height: 900 } } = {}) {
+async function fixture({ signedIn = true, permissions = FARMER, viewport = { width: 1280, height: 900 }, lastCrop = null, rows = problems } = {}) {
   const context = await browser.newContext({ viewport })
   if (signedIn) await context.addInitScript(() => localStorage.setItem('agrisage.farmer_token', 'advisory.test.jwt'))
+  if (lastCrop) await context.addInitScript((code) => localStorage.setItem('agrisage.last_crop', code), lastCrop)
   const state = { requests: [], answer: (body) => answerOf(body), problemError: null, recommendError: null, cartError: false }
   await context.route('**/api/**', async (route) => {
     const request = route.request()
@@ -109,8 +111,10 @@ async function fixture({ signedIn = true, permissions = FARMER, viewport = { wid
       if (state.problemError) return json({ title: 'Down', status: 503 }, 503)
       const text = fold(url.searchParams.get('search') ?? '')
       const type = url.searchParams.get('type')
-      const rows = problems.filter((p) => (!type || p.problemType === type) && (!text || fold(p.name).includes(text) || fold(p.summary ?? '').includes(text)))
-      return json({ items: rows, page: 1, pageSize: 50, totalCount: rows.length, totalPages: 1 })
+      const crop = url.searchParams.get('cropType')
+      const found = rows.filter((p) => (!type || p.problemType === type) && (!crop || (p.cropType ?? 'RICE') === crop)
+        && (!text || fold(p.name).includes(text) || fold(p.summary ?? '').includes(text)))
+      return json({ items: found, page: 1, pageSize: 50, totalCount: found.length, totalPages: 1 })
     }
     if (path === '/api/me/advisory/recommendations') {
       if (state.recommendError) return json({ title: 'Not Found', status: 404 }, 404)
@@ -276,6 +280,50 @@ try {
       await page.getByText('Bác nhập diện tích là số lớn hơn 0').waitFor()
     }
     assert.equal(recommendCalls(state).length, before)
+    await context.close()
+  })
+
+  await check('the crop filter sends cropType and is remembered; a crop without problems says so', async () => {
+    const { context, page, state } = await fixture()
+    await page.goto(base + '/advisory')
+    await page.getByTestId('advisory-problem-LEAF_BLAST').waitFor()
+    assert.equal(problemCalls(state).at(-1).query.cropType, undefined, 'every crop at first')
+    await page.getByTestId('advisory-crop-DURIAN').click()
+    await page.getByTestId('advisory-empty').waitFor()
+    assert.equal(problemCalls(state).at(-1).query.cropType, 'DURIAN')
+    await page.getByText('Cửa hàng chưa có vấn đề nào cho cây sầu riêng.').waitFor()
+    assert.equal(await page.evaluate(() => localStorage.getItem('agrisage.last_crop')), 'DURIAN')
+    await page.getByTestId('advisory-crop-all').click()
+    await page.getByTestId('advisory-problem-LEAF_BLAST').waitFor()
+    assert.equal(await page.evaluate(() => localStorage.getItem('agrisage.last_crop')), null)
+    await context.close()
+  })
+
+  await check('the remembered crop opens filtered; "Mọi cây" names the crop of each problem', async () => {
+    const { context, page, state } = await fixture({ lastCrop: 'DURIAN', rows: [...problems, durianProblem] })
+    await page.goto(base + '/advisory')
+    await page.getByTestId('advisory-problem-DURIAN_PHYTOPHTHORA').waitFor()
+    assert.equal(problemCalls(state)[0].query.cropType, 'DURIAN')
+    assert.equal(await page.getByTestId('advisory-problem-LEAF_BLAST').count(), 0)
+    assert.equal(await page.getByTestId('advisory-problem-crop-DURIAN_PHYTOPHTHORA').count(), 0, 'one crop chosen: no crop tag')
+    await page.getByTestId('advisory-crop-all').click()
+    await page.getByTestId('advisory-problem-LEAF_BLAST').waitFor()
+    assert.equal(await textOf(page.getByTestId('advisory-problem-crop-DURIAN_PHYTOPHTHORA')), 'Sầu riêng')
+    assert.equal(await textOf(page.getByTestId('advisory-problem-crop-LEAF_BLAST')), 'Lúa')
+    await context.close()
+  })
+
+  await check('a durian problem asks no rice stage and sends no growthStage', async () => {
+    const { context, page, state } = await fixture()
+    state.answer = (body) => answerOf(body, { problem: { id: body.diseaseId, code: 'DURIAN_PHYTOPHTHORA', name: 'Thối gốc chảy nhựa', problemType: 'DISEASE', cropType: 'DURIAN', description: null, symptoms: 'Vỏ thân chảy nhựa.', causes: null, prevention: null } })
+    await page.goto(base + '/advisory/problem/d-DURIAN_PHYTOPHTHORA')
+    await page.getByTestId('advisory-product-sp1').waitFor()
+    assert.equal(await page.getByTestId('advisory-stage-any').count(), 0)
+    await page.getByTestId('advisory-area').fill('2')
+    await page.getByTestId('advisory-apply').click()
+    await page.getByTestId('advisory-plan-sp1').waitFor()
+    assert.equal(recommendCalls(state).at(-1).body.areaSqm, 2000)
+    assert.equal(recommendCalls(state).at(-1).body.growthStage, undefined)
     await context.close()
   })
 

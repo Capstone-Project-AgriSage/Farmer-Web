@@ -9,6 +9,7 @@ import DiagnosisResultCard from './components/DiagnosisResultCard'
 import HotlineCard from './components/HotlineCard'
 import RecommendedProductsCard from './components/RecommendedProductsCard'
 import { canCancel, formatDiagnosisTime, statusBadgeClass, statusLabel } from './model'
+import { caseCrop } from './crops'
 
 /** One of the farmer's diagnosis cases: the result as the AI (or, for an old case, the store) gave it. */
 export default function DiagnosisCasePage() {
@@ -112,7 +113,7 @@ export default function DiagnosisCasePage() {
                 <h1 className="text-[length:var(--type-h1)] leading-[var(--type-h1-lh)] font-light tracking-tight text-text-primary" data-testid="case-number">
                   {c.caseNumber}
                 </h1>
-                <p className="mt-2 text-[15px] text-text-secondary">Gửi lúc {formatDiagnosisTime(c.submittedAt)}</p>
+                <p className="mt-2 text-[15px] text-text-secondary" data-testid="case-crop">{caseCrop(c)} · Gửi lúc {formatDiagnosisTime(c.submittedAt)}</p>
               </div>
               <span className={`self-start sm:self-auto px-4 py-1.5 rounded-full text-[15px] ${statusBadgeClass(c.status)}`} data-testid="case-status">
                 {statusLabel(c.status)}

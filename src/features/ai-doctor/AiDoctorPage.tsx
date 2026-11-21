@@ -39,11 +39,11 @@ export default function AiDoctorPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14 space-y-10">
         <Reveal y={16} className="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
           <div className="max-w-2xl">
-            <p className="text-[13px] uppercase tracking-[0.16em] text-text-secondary mb-3">Chẩn đoán AI · Chuyên biệt 5 bệnh lúa</p>
+            <p className="text-[13px] uppercase tracking-[0.16em] text-text-secondary mb-3">Chẩn đoán AI · Chọn cây rồi gửi ảnh lá</p>
             <h1 className="text-[length:var(--type-h1)] leading-[var(--type-h1-lh)] font-light tracking-tight text-text-primary">Bác Sĩ Cây Trồng AI</h1>
             <p className="mt-3 text-base text-text-secondary leading-relaxed">
-              Gửi ảnh lá lúa, AI nhận diện đạo ôn, bạc lá, đốm nâu, khô vằn và cho kết quả ngay, kèm cách xử lý và sản phẩm gợi ý khi AI chắc chắn. Kết quả
-              do AI dự đoán, chỉ để tham khảo.
+              Bác chọn cây (lúa, sầu riêng, cà phê...) rồi gửi ảnh lá: AI chỉ đối chiếu với các bệnh của cây đó và cho kết quả ngay, kèm cách xử lý và sản
+              phẩm gợi ý khi AI chắc chắn. Kết quả do AI dự đoán, chỉ để tham khảo.
             </p>
           </div>
           {diagnosis.isAuthenticated && (
@@ -63,6 +63,12 @@ export default function AiDoctorPage() {
           <div className="lg:col-span-7 space-y-8">
             <Reveal y={20} delay={0.1}>
               <UploadForm
+                crops={diagnosis.crops}
+                cropsLoading={diagnosis.cropsLoading}
+                cropsError={diagnosis.cropsError}
+                onReloadCrops={diagnosis.reloadCrops}
+                crop={diagnosis.crop}
+                onCropChange={diagnosis.chooseCrop}
                 image={image}
                 fileError={diagnosis.fileError}
                 status={status}

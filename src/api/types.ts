@@ -462,6 +462,9 @@ export interface MyDiagnosisCase {
   inconclusive: DiagnosisInconclusive | null;
   /** The AI failed (or the case stalled): the farmer may run it again. */
   canRetry: boolean;
+  /** The crop chosen before the photo (AI_DIAGNOSIS.md 2.2); absent on an older server, read as rice. */
+  cropType?: string;
+  cropName?: string;
 }
 
 export interface MyDiagnosisCaseListItem {
@@ -473,4 +476,6 @@ export interface MyDiagnosisCaseListItem {
   diseaseCode: string | null;
   diseaseName: string | null;
   certainty: DiagnosisCertainty | null;
+  cropType?: string;
+  cropName?: string;
 }

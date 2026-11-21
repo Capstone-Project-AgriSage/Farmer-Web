@@ -21,13 +21,13 @@ export function parseStageLabel(label: string) {
   return { name: match?.[1] ?? label, days: match?.[2] ?? '' }
 }
 
-/** The note sent with the photo: the store reads it on the case. Kept within the backend limit. */
-export function buildDiagnosisNote(stage: RiceStageValue, symptomText: string) {
-  const stageLabel = riceStageOptions.find((o) => o.value === stage)?.label ?? ''
+/** The note sent with the photo: the store reads it on the case. Kept within the backend limit. Only rice has a stage. */
+export function buildDiagnosisNote(stage: RiceStageValue | null, symptomText: string) {
+  const stageLabel = stage ? riceStageOptions.find((o) => o.value === stage)?.label ?? '' : ''
   const head = stageLabel.replace(/^Giai đoạn /, 'Giai đoạn: ')
   const symptoms = symptomText.trim()
   if (!symptoms) return head
-  const prefix = `${head}. Triệu chứng: `
+  const prefix = head ? `${head}. Triệu chứng: ` : 'Triệu chứng: '
   return prefix + symptoms.slice(0, DIAGNOSIS_NOTE_MAX - prefix.length)
 }
 

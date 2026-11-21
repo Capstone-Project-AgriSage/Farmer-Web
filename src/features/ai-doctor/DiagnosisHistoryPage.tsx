@@ -6,6 +6,7 @@ import type { DiagnosisCaseStatus, MyDiagnosisCaseListItem } from '../../api/typ
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { useRealtimeRefresh } from '../../hooks/useRealtimeRefresh'
 import { diseaseDisplayName, formatDiagnosisTime, historyFilters, statusBadgeClass, statusLabel } from './model'
+import { caseCrop } from './crops'
 
 const PAGE_SIZE = 20
 
@@ -34,8 +35,8 @@ function CaseRow({ item }: { item: MyDiagnosisCaseListItem }) {
         </span>
         <span className="min-w-0 flex-1">
           <span className="block text-base md:text-lg text-text-primary">{title}</span>
-          <span className="block mt-0.5 text-[15px] text-text-secondary">
-            {hasDisease ? `${item.caseNumber} · ` : ''}
+          <span className="block mt-0.5 text-[15px] text-text-secondary" data-testid={`history-sub-${item.id}`}>
+            {caseCrop(item)} · {hasDisease ? `${item.caseNumber} · ` : ''}
             {formatDiagnosisTime(item.submittedAt)}
           </span>
           <span className={`inline-block mt-2 px-3 py-0.5 rounded-full text-[13px] ${statusBadgeClass(item.status)}`}>{statusLabel(item.status)}</span>

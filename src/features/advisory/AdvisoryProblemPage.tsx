@@ -66,6 +66,9 @@ export default function AdvisoryProblemPage() {
   const error = failed?.key === key ? failed.message : null
   const isLoading = result === null && error === null
   const [problemName, setProblemName] = useState<string | null>(null)
+  // Known from the first answer; until then the page behaves as for rice (the stage is offered).
+  const [problemCrop, setProblemCrop] = useState<string | null>(null)
+  const isRice = problemCrop === null || problemCrop === 'RICE'
   useDocumentTitle(problemName ? `Tư vấn: ${problemName}` : 'Tư vấn vật tư')
 
   useEffect(() => {
@@ -75,6 +78,7 @@ export default function AdvisoryProblemPage() {
         if (!live) return
         setLoaded({ key, value })
         setProblemName(diseaseDisplayName(value.problem.code, value.problem.name))
+        setProblemCrop(value.problem.cropType ?? 'RICE')
       },
       (err: unknown) => {
         if (live) setFailed({ key, message: describeAdvisoryError(err, 'recommend') })
@@ -93,7 +97,7 @@ export default function AdvisoryProblemPage() {
     }
     setAreaError(null)
     rememberArea(parsed.sqm === undefined ? null : { text: areaText.trim(), unit })
-    setApplied({ sqm: parsed.sqm, stage: nextStage })
+    setApplied({ sqm: parsed.sqm, stage: isRice ? nextStage : undefined })
   }
 
   const submit = (e: FormEvent) => {
@@ -204,6 +208,7 @@ export default function AdvisoryProblemPage() {
               <p className="mt-2 text-[14px] text-text-muted">1 công = 1.000 m², 1 sào = 360 m².</p>
             </div>
 
+            {isRice && (
             <div>
               <p className="text-[15px] text-text-primary">Lúa đang ở giai đoạn</p>
               <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label="Giai đoạn của lúa">
@@ -234,6 +239,7 @@ export default function AdvisoryProblemPage() {
                 ))}
               </div>
             </div>
+            )}
 
             <button type="submit" data-testid="advisory-apply" className="focus-ring min-h-[48px] px-7 rounded-full bg-brand-dark text-white hover:bg-brand-green text-base transition-colors">
               Tính số lượng cần mua

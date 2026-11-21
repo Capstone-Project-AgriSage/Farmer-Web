@@ -1,5 +1,6 @@
-// Same advice as the Farmer app: the AI was trained on single close leaves, so a whole-plant photo is often UNCERTAIN.
+// Same advice as the Farmer app: one close leaf of the crop chosen above; a whole-plant photo is often UNCERTAIN.
 const tips = [
+  'Chọn đúng cây trồng trước: AI chỉ đối chiếu với các bệnh của cây đó',
   'Chụp một lá bệnh, để lá chiếm gần hết khung hình',
   'Chụp gần vết bệnh, không chụp cả cây hay cả ruộng',
   'Chụp dưới ánh sáng tự nhiên, tránh ngược sáng hoặc quá tối',

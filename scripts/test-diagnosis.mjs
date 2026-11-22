@@ -306,7 +306,7 @@ try {
     assert.match(upload.body, /name="cropType"\r\n\r\nDURIAN\r\n/)
     assert.match(upload.body, /name="note"\r\n\r\nTriệu chứng: Thân chảy nhựa\r\n/, 'no rice stage in the note')
     assert.equal(await page.evaluate(() => localStorage.getItem('agrisage.last_crop')), 'DURIAN', 'the crop is remembered')
-    await page.getByTestId('ai-service-note').getByText('Ảnh được gửi tới dịch vụ AI để phân tích.').waitFor()
+    await page.getByTestId('ai-service-note').getByText('Ảnh và mô tả triệu chứng được gửi tới dịch vụ AI để phân tích.').waitFor()
     assert.deepEqual(errors, [])
     await context.close()
   })

@@ -318,7 +318,7 @@ export default function UploadForm({ crops, cropsLoading, cropsError, onReloadCr
                     ? 'Sẵn sàng. AI cho kết quả sau vài giây.'
                     : 'Bác cần chọn ảnh trước khi chẩn đoán.'}
         </p>
-        <p className="mt-1 text-center text-[14px] text-text-muted" data-testid="ai-service-note">Ảnh được gửi tới dịch vụ AI để phân tích.</p>
+        <p className="mt-1 text-center text-[14px] text-text-muted" data-testid="ai-service-note">Ảnh và mô tả triệu chứng được gửi tới dịch vụ AI để phân tích.</p>
       </div>
     </div>
   )

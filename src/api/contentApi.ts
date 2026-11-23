@@ -14,7 +14,7 @@ export interface ContactRequest {
 }
 export const contactLabels: Record<ContactStatus, string> = { OPEN: 'Mới', IN_PROGRESS: 'Đang xử lý', RESOLVED: 'Đã giải quyết', CLOSED: 'Đã đóng' }
 export const contentApi = {
-  articles: (page = 1, search = '', signal?: AbortSignal) => api<PagedResult<Article>>(`/api/articles?page=${page}&pageSize=9&search=${encodeURIComponent(search)}`, { signal, cache: 'no-store' }),
+  articles: (page = 1, search = '', signal?: AbortSignal) => api<PagedResult<Article>>(`/api/articles?page=${page}&pageSize=6&search=${encodeURIComponent(search)}`, { signal, cache: 'no-store' }),
   article: (slug: string, signal?: AbortSignal) => api<Article>(`/api/articles/${encodeURIComponent(slug)}`, { signal, cache: 'no-store' }),
   createContact: (data: { contactName: string; contactPhone?: string; contactEmail?: string; subject: string; message: string }) =>
     api<ContactRequest>('/api/contact-requests', { method: 'POST', body: JSON.stringify(data) }),

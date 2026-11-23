@@ -44,8 +44,9 @@ async function request<T>(path: string, init: RequestInit): Promise<T> {
     },
   })
   
-  // On the sign-in call a 401 means a wrong phone/email or password, not an expired session.
-  if (res.status === 401 && path.startsWith('/api/auth/login')) {
+  // On the sign-in call a 401 means a wrong phone/email or password, not an expired session. A 403 means the account is
+  // not active (locked, suspended): answer with the same neutral message so the screen never tells which case it was.
+  if ((res.status === 401 || res.status === 403) && path.startsWith('/api/auth/login')) {
     throw new ApiError(401, 'Unauthorized', 'Sai số điện thoại/email hoặc mật khẩu, hoặc tài khoản đã bị khoá.')
   }
 

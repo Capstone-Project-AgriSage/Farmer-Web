@@ -23,6 +23,8 @@ export interface AdvisoryProblem {
   code: string
   name: string
   problemType: ProblemType
+  /** The crop code (ADVISORY.md 1.1); absent on an older server, read as RICE. */
+  cropType?: string
   summary: string | null
   /** NAME, KEYWORD or SYMPTOM: what the typed text matched. */
   matchedBy: string | null
@@ -33,6 +35,8 @@ export interface AdvisoryProblemDetail {
   code: string
   name: string
   problemType: ProblemType
+  /** Only a rice problem has growth stages (ADVISORY.md 1.1). */
+  cropType?: string
   description: string | null
   symptoms: string | null
   causes: string | null
@@ -98,6 +102,7 @@ export interface AdvisoryQuery {
 export interface ProblemsQuery {
   search?: string
   type?: ProblemType
+  cropType?: string
   page?: number
   pageSize?: number
 }
@@ -108,6 +113,7 @@ export const advisoryApi = {
     const q = new URLSearchParams()
     if (params.search?.trim()) q.set('search', params.search.trim())
     if (params.type) q.set('type', params.type)
+    if (params.cropType) q.set('cropType', params.cropType)
     q.set('page', String(params.page ?? 1))
     q.set('pageSize', String(params.pageSize ?? 50))
     return api<PagedResult<AdvisoryProblem>>(`/api/me/advisory/problems?${q.toString()}`)

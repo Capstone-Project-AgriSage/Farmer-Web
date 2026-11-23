@@ -58,7 +58,7 @@ const protectedRoutes = [
   { path: 'checkout', element: <PermissionRoute codes={['MY_ORDERS.CHECKOUT', 'MY_CART.READ']}><CheckoutPage /></PermissionRoute> },
   { path: 'payments/payos/return', element: <PermissionRoute codes={['MY_PAYMENTS.READ']}><PayosReturnPage /></PermissionRoute> },
   { path: 'payments/payos/cancel', element: <PermissionRoute codes={['MY_PAYMENTS.CANCEL']}><PayosCancelPage /></PermissionRoute> },
-  { path: 'contact/requests', element: <MyRequestsPage /> },
+  { path: 'contact/requests', element: <PermissionRoute codes={['MY_CONTACT_REQUESTS.READ']}><MyRequestsPage /></PermissionRoute> },
   { path: 'account', element: <PermissionRoute codes={['MY_PROFILE.READ']}><AccountPage /></PermissionRoute> },
   { path: 'debt', element: <PermissionRoute codes={['MY_DEBT.READ']}><DebtPage /></PermissionRoute> },
   { path: 'orders', element: <PermissionRoute codes={['MY_ORDERS.READ']}><OrdersPage /></PermissionRoute> },

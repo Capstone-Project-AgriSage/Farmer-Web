@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import type { DiagnosisResult, MyDiagnosisCase } from '../../../api/types'
 import { certaintyHeading, diseaseDisplayName, isWaiting, treatmentTypeLabel } from '../model'
+import { caseCrop } from '../crops'
 
 interface DiagnosisResultCardProps {
   diagnosisCase: MyDiagnosisCase
@@ -220,7 +221,7 @@ export default function DiagnosisResultCard({ diagnosisCase: c, previewUrl, onNe
   return (
     <div className="bg-white border border-brand-dark/15 rounded-[var(--radius-surface)]" data-testid="diagnosis-result">
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 sm:px-8 py-4 border-b border-brand-dark/15">
-        <h2 className="text-[13px] uppercase tracking-[0.16em] text-text-secondary">Kết quả chẩn đoán · {c.caseNumber}</h2>
+        <h2 className="text-[13px] uppercase tracking-[0.16em] text-text-secondary">Kết quả chẩn đoán · {caseCrop(c)} · {c.caseNumber}</h2>
         <div className="flex flex-wrap items-center gap-x-4">
           {headerAction}
           <button type="button" onClick={onNewPhoto} className="focus-ring inline-flex items-center gap-1.5 min-h-[44px] text-[15px] text-text-primary hover:underline underline-offset-4">

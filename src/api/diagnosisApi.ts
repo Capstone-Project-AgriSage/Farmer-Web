@@ -9,6 +9,15 @@ export const DIAGNOSIS_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 export const DIAGNOSIS_MAX_BYTES = 5 * 1024 * 1024
 export const DIAGNOSIS_NOTE_MAX = 1000
 
+/** A crop the farmer can send a photo of now (AI_DIAGNOSIS.md 2.2): the active AI model knows at least one of its diseases. */
+export interface DiagnosisCrop {
+  code: string
+  name: string
+  diseaseCount: number
+  photoDiagnosis: boolean
+  diseases: { code: string; name: string }[]
+}
+
 export interface MyDiagnosisCasesQuery {
   status?: DiagnosisCaseStatus
   page?: number
@@ -16,12 +25,16 @@ export interface MyDiagnosisCasesQuery {
 }
 
 export const diagnosisApi = {
-  /** multipart/form-data: field "image" and an optional "note". Answers with the case after the AI ran. */
-  create: (image: File, note?: string) => {
+  /** The crops a photo can be sent for; the AI then only chooses among that crop's diseases. */
+  crops: () => api<DiagnosisCrop[]>('/api/me/diagnosis/crops'),
+
+  /** multipart/form-data: "image", an optional "note" and the chosen "cropType". Answers with the case after the AI ran. */
+  create: (image: File, note?: string, cropType?: string) => {
     const form = new FormData()
     form.append('image', image)
     const trimmed = note?.trim()
     if (trimmed) form.append('note', trimmed)
+    if (cropType) form.append('cropType', cropType)
     return api<MyDiagnosisCase>('/api/me/diagnosis-cases', {
       method: 'POST',
       body: form,
@@ -80,7 +93,9 @@ export function describeDiagnosisError(err: unknown, action: DiagnosisAction): s
         ? 'Ca này đã có kết quả hoặc đã huỷ nên không cần phân tích lại.'
         : action === 'cancel'
           ? 'Ca đã có kết quả hoặc đã huỷ nên không thể huỷ nữa.'
-          : describeApiError(err)
+          : action === 'create'
+            ? 'Cây này chưa được chẩn đoán qua ảnh. Bác chọn cây khác hoặc hỏi cửa hàng.'
+            : describeApiError(err)
     case 429:
       return 'Bác gửi hơi nhanh. Vui lòng đợi một chút rồi thử lại.'
     case 503:

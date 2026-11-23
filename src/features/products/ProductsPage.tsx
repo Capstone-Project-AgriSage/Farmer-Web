@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import ProductCard from '../../components/ui/ProductCard'
 import ProductSkeleton from '../../components/ui/ProductSkeleton'
+import Pagination from '../../components/ui/Pagination'
 import { useMotionPolicy } from '../../motion/useMotionPolicy'
 import AiDiagnosisCallout from '../../components/ui/AiDiagnosisCallout'
 import { catalogApi } from '../../api/catalogApi'
@@ -32,20 +33,6 @@ function categoryFromLegacyGroup(group: string, categories: CatalogCategory[]): 
 const CATALOG_FETCH_SIZE = 100
 const PAGE_SIZE = 8
 const SEARCH_DEBOUNCE_MS = 350
-
-/** Page numbers with gaps (null) so long lists stay short: 1 … 4 5 6 … 12. */
-function pageNumbers(current: number, total: number): (number | null)[] {
-  const wanted = new Set([1, total, current - 1, current, current + 1])
-  const pages = [...wanted].filter((p) => p >= 1 && p <= total).sort((a, b) => a - b)
-  const out: (number | null)[] = []
-  pages.forEach((p, i) => {
-    // A single missing page is shown instead of an ellipsis, so the dots never hide just one number.
-    if (i > 0 && p - pages[i - 1] === 2) out.push(p - 1)
-    else if (i > 0 && p - pages[i - 1] > 2) out.push(null)
-    out.push(p)
-  })
-  return out
-}
 
 export default function ProductsPage() {
   useDocumentTitle('Sản phẩm vật tư nông nghiệp')
@@ -143,11 +130,6 @@ export default function ProductsPage() {
 
   const chipClass = (active: boolean) =>
     `focus-ring shrink-0 whitespace-nowrap min-h-[44px] px-4 rounded-full text-[15px] tracking-wide transition-colors duration-[var(--dur-micro)] ${
-      active ? 'bg-brand-dark text-white' : 'border border-brand-dark/25 text-text-primary hover:border-brand-dark/60'
-    }`
-
-  const pageButtonClass = (active: boolean) =>
-    `focus-ring w-11 h-11 flex items-center justify-center rounded-full text-[15px] transition-colors duration-[var(--dur-micro)] ${
       active ? 'bg-brand-dark text-white' : 'border border-brand-dark/25 text-text-primary hover:border-brand-dark/60'
     }`
 
@@ -283,31 +265,7 @@ export default function ProductsPage() {
                 ))}
               </div>
 
-              {totalPages > 1 && (
-                <nav aria-label="Phân trang" className="flex justify-center items-center gap-2 flex-wrap">
-                  <button type="button" onClick={() => goToPage(Math.max(1, currentPage - 1))} disabled={currentPage === 1} aria-label="Trang trước" className={`${pageButtonClass(false)} disabled:opacity-35 disabled:cursor-not-allowed`}>
-                    <span className="material-symbols-outlined" style={{ fontSize: 22 }} aria-hidden="true">
-                      chevron_left
-                    </span>
-                  </button>
-                  {pageNumbers(currentPage, totalPages).map((item, i) =>
-                    item === null ? (
-                      <span key={`gap-${i}`} className="w-8 text-center text-text-secondary" aria-hidden="true">
-                        …
-                      </span>
-                    ) : (
-                      <button key={item} type="button" onClick={() => goToPage(item)} aria-label={`Trang ${item}`} aria-current={currentPage === item ? 'page' : undefined} className={pageButtonClass(currentPage === item)}>
-                        {item}
-                      </button>
-                    ),
-                  )}
-                  <button type="button" onClick={() => goToPage(Math.min(totalPages, currentPage + 1))} disabled={currentPage === totalPages} aria-label="Trang sau" className={`${pageButtonClass(false)} disabled:opacity-35 disabled:cursor-not-allowed`}>
-                    <span className="material-symbols-outlined" style={{ fontSize: 22 }} aria-hidden="true">
-                      chevron_right
-                    </span>
-                  </button>
-                </nav>
-              )}
+              <Pagination page={currentPage} totalPages={totalPages} onChange={goToPage} />
             </div>
           ) : (
             <div className="border border-brand-dark/15 bg-white p-12 text-center rounded-[var(--radius-surface)]">

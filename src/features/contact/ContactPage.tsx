@@ -2,11 +2,15 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
+import { contentApi } from '../../api/contentApi'
+import { ApiError, describeApiError } from '../../api/client'
+import { useAuth } from '../../context/AuthContext'
 
 const REQUEST_TYPES = ['Kỹ thuật canh tác', 'Đặt vật tư', 'Sổ nợ', 'Khác']
 
 export default function ContactPage() {
   useDocumentTitle('Liên hệ')
+  const { isAuthenticated } = useAuth()
   const [name, setName] = useState('')
   const [contact, setContact] = useState('')
   const [area, setArea] = useState('')
@@ -14,19 +18,31 @@ export default function ContactPage() {
   const [message, setMessage] = useState('')
   const [sent, setSent] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState('')
+  const [receipt, setReceipt] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (isSubmitting) return
     setIsSubmitting(true)
-    setTimeout(() => {
-      setIsSubmitting(false)
+    setError('')
+    try {
+      const value = contact.trim()
+      const result = await contentApi.createContact({
+        contactName: name.trim(), subject: requestType,
+        message: `${message.trim()}\n\nKhu vực / Địa chỉ: ${area.trim()}`,
+        ...(value.includes('@') ? { contactEmail: value } : { contactPhone: value }),
+      })
+      setReceipt(result.requestNumber)
       setSent(true)
       setName('')
       setContact('')
       setArea('')
       setRequestType(REQUEST_TYPES[0])
       setMessage('')
-    }, 1000)
+    } catch (err) {
+      setError(err instanceof ApiError && err.errors ? Object.values(err.errors).flat().join('; ') : describeApiError(err, 'Không gửi được yêu cầu. Vui lòng thử lại.'))
+    } finally { setIsSubmitting(false) }
   }
 
   return (
@@ -97,16 +113,19 @@ export default function ContactPage() {
           <div className="lg:col-span-7">
             <div className="border border-brand-dark/10 bg-white p-6 md:p-8">
               {sent ? (
-                <div className="p-4 border border-brand-dark/10 bg-brand-light flex items-start gap-2.5 text-sm text-brand-dark leading-relaxed">
+                <div role="status" className="p-4 border border-brand-dark/10 bg-brand-light flex items-start gap-2.5 text-sm text-brand-dark leading-relaxed">
                   <span className="material-symbols-outlined text-[20px] flex-shrink-0 mt-0.5 text-brand-green">
                     check_circle
                   </span>
                   <span>
-                    Cảm ơn bà con đã liên hệ! Kỹ sư AgriSage sẽ phản hồi trong thời gian sớm nhất.
+                    Đã nhận yêu cầu {receipt}. AgriSage sẽ phản hồi trong thời gian sớm nhất.
+                    {!isAuthenticated && <span className="block mt-2">Yêu cầu gửi khi chưa đăng nhập được phản hồi qua thông tin liên hệ đã cung cấp và không xuất hiện trong lịch sử tài khoản.</span>}
+                    <button className="block mt-3 underline" onClick={() => setSent(false)}>Gửi yêu cầu khác</button>
                   </span>
                 </div>
               ) : (
                 <form className="space-y-4" onSubmit={handleSubmit}>
+                  {error && <p role="alert" className="text-red-700">{error}</p>}
                   <div>
                     <label className="block text-xs tracking-[0.25em]  text-brand-dark/50 mb-1.5 font-helvetica-neue">
                       Họ và tên
@@ -117,6 +136,7 @@ export default function ContactPage() {
                       type="text"
                       placeholder="Nguyễn Văn Nông"
                       value={name}
+                      maxLength={150}
                       onChange={(e) => setName(e.target.value)}
                     />
                   </div>
@@ -130,6 +150,7 @@ export default function ContactPage() {
                       type="text"
                       placeholder="0912 345 678"
                       value={contact}
+                      maxLength={255}
                       onChange={(e) => setContact(e.target.value)}
                     />
                   </div>
@@ -143,6 +164,7 @@ export default function ContactPage() {
                       type="text"
                       placeholder="Ấp Thới Thuận, TT. Thới Lai, Cần Thơ"
                       value={area}
+                      maxLength={500}
                       onChange={(e) => setArea(e.target.value)}
                     />
                   </div>
@@ -170,6 +192,7 @@ export default function ContactPage() {
                       className="w-full px-4 py-2.5 border border-brand-dark/15 text-brand-dark text-sm focus:outline-none focus:border-brand-dark/40 bg-white resize-none"
                       placeholder="Mô tả tình trạng cây trồng, nhu cầu đặt vật tư hoặc câu hỏi của bà con..."
                       value={message}
+                      maxLength={9000}
                       onChange={(e) => setMessage(e.target.value)}
                     />
                   </div>
@@ -179,7 +202,7 @@ export default function ContactPage() {
                     className="w-full h-11 bg-brand-dark hover:bg-brand-green text-white text-sm tracking-wide  rounded-full transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
                   >
                     <span>{isSubmitting ? 'Đang gửi...' : 'Gửi yêu cầu hỗ trợ'}</span>
-                    {!isSubmitting && <span className="material-symbols-outlined text-[18px]">send</span>}
+                    {!isSubmitting && <span aria-hidden="true" className="material-symbols-outlined text-[18px]">send</span>}
                   </button>
                 </form>
               )}

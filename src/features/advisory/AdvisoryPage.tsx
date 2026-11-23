@@ -4,6 +4,7 @@ import Breadcrumb from '../../components/ui/Breadcrumb'
 import { advisoryApi, describeAdvisoryError, type AdvisoryProblem, type ProblemType } from '../../api/advisoryApi'
 import { useDocumentTitle } from '../../hooks/useDocumentTitle'
 import { diseaseDisplayName } from '../ai-doctor/model'
+import { CROP_CODES, cropLabel, readLastCrop, rememberCrop } from '../ai-doctor/crops'
 import { PROBLEM_FILTERS, problemTypeLabel } from './model'
 
 /** Waits for the farmer to stop typing before the server is called. */
@@ -18,11 +19,13 @@ export default function AdvisoryPage() {
   const [text, setText] = useState('')
   const [search, setSearch] = useState('')
   const [type, setType] = useState<ProblemType | ''>('')
+  // Opens on the crop chosen last (shared with the photo diagnosis); '' = every crop.
+  const [crop, setCrop] = useState(() => readLastCrop() ?? '')
   const [attempt, setAttempt] = useState(0)
   // Answers remember the request they belong to, so loading is derived instead of being set before each request.
   const [loaded, setLoaded] = useState<{ key: string; items: AdvisoryProblem[] } | null>(null)
   const [failed, setFailed] = useState<{ key: string; message: string } | null>(null)
-  const key = `${search}|${type}|${attempt}`
+  const key = `${search}|${type}|${crop}|${attempt}`
   const items = loaded?.key === key ? loaded.items : null
   const error = failed?.key === key ? failed.message : null
   const isLoading = items === null && error === null
@@ -34,7 +37,7 @@ export default function AdvisoryPage() {
 
   useEffect(() => {
     let live = true
-    advisoryApi.problems({ search, type: type || undefined }).then(
+    advisoryApi.problems({ search, type: type || undefined, cropType: crop || undefined }).then(
       (page) => {
         if (live) setLoaded({ key, items: page.items })
       },
@@ -45,7 +48,12 @@ export default function AdvisoryPage() {
     return () => {
       live = false
     }
-  }, [search, type, key])
+  }, [search, type, crop, key])
+
+  const pickCrop = (next: string) => {
+    setCrop(next)
+    rememberCrop(next || null)
+  }
 
   return (
     <div className="bg-brand-cream min-h-screen">
@@ -54,7 +62,7 @@ export default function AdvisoryPage() {
         <header className="mb-8">
           <h1 className="text-3xl md:text-4xl font-normal tracking-tight text-text-primary">Tư vấn vật tư</h1>
           <p className="mt-3 text-base md:text-lg text-text-secondary leading-relaxed">
-            Bác chọn vấn đề trên ruộng lúa để xem thuốc và phân bón của cửa hàng, liều dùng, số lượng cần mua cho ruộng của bác.
+            Bác chọn cây và vấn đề trên ruộng để xem thuốc và phân bón của cửa hàng, liều dùng, số lượng cần mua cho ruộng của bác.
           </p>
         </header>
 
@@ -71,6 +79,22 @@ export default function AdvisoryPage() {
               className="focus-ring mt-2 w-full min-h-[48px] px-4 text-base bg-white border border-brand-dark/25 rounded-[var(--radius-input)] text-text-primary placeholder:text-text-muted hover:border-brand-dark/60 focus:border-brand-dark transition-colors"
             />
           </label>
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Lọc theo cây trồng">
+            {['', ...CROP_CODES].map((c) => (
+              <button
+                key={c || 'all'}
+                type="button"
+                onClick={() => pickCrop(c)}
+                aria-pressed={crop === c}
+                data-testid={`advisory-crop-${c || 'all'}`}
+                className={`focus-ring min-h-[40px] px-4 rounded-full border text-[15px] transition-colors ${
+                  crop === c ? 'bg-brand-dark text-white border-brand-dark' : 'border-brand-dark/30 text-text-primary hover:bg-brand-dark hover:text-white'
+                }`}
+              >
+                {c ? cropLabel(c) : 'Mọi cây'}
+              </button>
+            ))}
+          </div>
           <div className="flex flex-wrap gap-2" role="group" aria-label="Lọc theo loại vấn đề">
             {PROBLEM_FILTERS.map((f) => (
               <button
@@ -96,7 +120,7 @@ export default function AdvisoryPage() {
         >
           <span className="material-symbols-outlined text-primary-dark" style={{ fontSize: 28 }} aria-hidden="true">photo_camera</span>
           <span className="flex-1">
-            <span className="block text-base font-medium text-text-primary">Bác chưa biết lúa bị gì?</span>
+            <span className="block text-base font-medium text-text-primary">Bác chưa biết cây bị gì?</span>
             <span className="block text-[15px] text-text-secondary">Chụp ảnh lá bệnh để AI nhận biết rồi gợi ý thuốc.</span>
           </span>
           <span className="material-symbols-outlined text-text-muted" aria-hidden="true">chevron_right</span>
@@ -118,8 +142,10 @@ export default function AdvisoryPage() {
             </div>
           ) : items && items.length === 0 ? (
             <div className="border border-brand-dark/15 bg-white p-8 text-center rounded-[var(--radius-surface)]" data-testid="advisory-empty">
-              <p className="text-lg text-text-primary">Không tìm thấy vấn đề phù hợp.</p>
-              <p className="mt-2 text-[15px] text-text-secondary">Bác thử từ khác, hoặc chụp ảnh lá để AI nhận biết bệnh.</p>
+              <p className="text-lg text-text-primary">
+                {crop && !search && !type ? `Cửa hàng chưa có vấn đề nào cho cây ${cropLabel(crop).toLowerCase()}.` : 'Không tìm thấy vấn đề phù hợp.'}
+              </p>
+              <p className="mt-2 text-[15px] text-text-secondary">Bác thử từ khác hoặc chọn "Mọi cây", hoặc chụp ảnh lá để AI nhận biết bệnh.</p>
             </div>
           ) : (
             <ul className="space-y-3">
@@ -133,6 +159,11 @@ export default function AdvisoryPage() {
                     <span className="flex flex-wrap items-center gap-2">
                       <span className="text-lg font-medium text-text-primary">{diseaseDisplayName(p.code, p.name)}</span>
                       <span className="px-2.5 py-0.5 rounded-full text-[13px] bg-brand-light text-text-secondary">{problemTypeLabel(p.problemType)}</span>
+                      {!crop && (
+                        <span className="px-2.5 py-0.5 rounded-full text-[13px] border border-brand-dark/20 text-text-secondary" data-testid={`advisory-problem-crop-${p.code}`}>
+                          {cropLabel(p.cropType)}
+                        </span>
+                      )}
                     </span>
                     {p.summary && <span className="block mt-2 text-[15px] text-text-secondary line-clamp-2">{p.summary}</span>}
                   </Link>

@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { DIAGNOSIS_IMAGE_TYPES, DIAGNOSIS_MAX_BYTES, describeDiagnosisError, diagnosisApi } from '../../api/diagnosisApi'
+import { DIAGNOSIS_IMAGE_TYPES, DIAGNOSIS_MAX_BYTES, describeDiagnosisError, diagnosisApi, type DiagnosisCrop } from '../../api/diagnosisApi'
 import type { MyDiagnosisCase } from '../../api/types'
 import { useAuth } from '../../context/AuthContext'
 import { usePermissions } from '../../context/PermissionContext'
 import { useRealtimeRefresh } from '../../hooks/useRealtimeRefresh'
 import { buildDiagnosisNote, type RiceStageValue } from './model'
+import { CROP_CODES, CROP_LABEL, RICE, readLastCrop, rememberCrop } from './crops'
 
 export type DiagnosisStatus = 'idle' | 'analyzing' | 'result' | 'error'
 
@@ -23,6 +24,7 @@ export function useDiagnosis() {
   const { isAuthenticated } = useAuth()
   const { hasPermission } = usePermissions()
   const canRead = isAuthenticated && hasPermission('MY_DIAGNOSIS.READ')
+  const canCreate = isAuthenticated && hasPermission('MY_DIAGNOSIS.CREATE')
   const [revision, setRevision] = useState(0)
   useRealtimeRefresh(['diagnosis'], () => setRevision((n) => n + 1))
   const [image, setImage] = useState<PickedImage | null>(null)
@@ -35,6 +37,11 @@ export function useDiagnosis() {
   const [retryError, setRetryError] = useState<string | null>(null)
   const [retrying, setRetrying] = useState(false)
   const [historyCount, setHistoryCount] = useState<number | null>(null)
+  // The crops a photo can be sent for. A guest cannot ask the server, so the form shows the catalog until sign-in.
+  const [offered, setOffered] = useState<DiagnosisCrop[] | null>(null)
+  const [cropsError, setCropsError] = useState<string | null>(null)
+  const [cropsAttempt, setCropsAttempt] = useState(0)
+  const [chosenCrop, setChosenCrop] = useState<string | null>(() => readLastCrop())
   const imageRef = useRef<PickedImage | null>(null)
   // Answers of a run the farmer has since replaced (new photo, reset) are dropped.
   const runRef = useRef(0)
@@ -64,6 +71,34 @@ export function useDiagnosis() {
       live = false
     }
   }, [canRead, revision])
+
+  useEffect(() => {
+    if (!canCreate) return
+    let live = true
+    diagnosisApi.crops().then(
+      (rows) => {
+        if (!live) return
+        setOffered(rows)
+        setCropsError(null)
+      },
+      (err: unknown) => {
+        if (live) setCropsError(describeDiagnosisError(err, 'load'))
+      },
+    )
+    return () => {
+      live = false
+    }
+  }, [canCreate, cropsAttempt])
+
+  const crops: DiagnosisCrop[] = canCreate
+    ? offered ?? []
+    : CROP_CODES.map((code) => ({ code, name: CROP_LABEL[code], diseaseCount: 0, photoDiagnosis: true, diseases: [] }))
+  // The chosen crop if the server still offers it; else the only crop offered; else none (the farmer picks one).
+  const crop = crops.some((c) => c.code === chosenCrop) ? chosenCrop : crops.length === 1 ? crops[0].code : null
+  const chooseCrop = useCallback((code: string) => {
+    setChosenCrop(code)
+    rememberCrop(code)
+  }, [])
 
   useEffect(() => {
     if (!canRead || !caseId || retrying) return
@@ -113,15 +148,16 @@ export function useDiagnosis() {
   }, [clearCase])
 
   const analyze = useCallback(() => {
-    if (!image || !isAuthenticated) return
+    if (!image || !isAuthenticated || !crop) return
     const run = ++runRef.current
     setStatus('analyzing')
     setSubmitError(null)
     setRetryError(null)
     diagnosisApi
-      .create(image.file, buildDiagnosisNote(stage, symptomText))
+      .create(image.file, buildDiagnosisNote(crop === RICE ? stage : null, symptomText), crop)
       .then((created) => {
         if (run !== runRef.current) return
+        rememberCrop(crop)
         setDiagnosisCase(created)
         setStatus('result')
         setHistoryCount((n) => (n === null ? n : n + 1))
@@ -131,7 +167,7 @@ export function useDiagnosis() {
         setSubmitError(describeDiagnosisError(err, 'create'))
         setStatus('error')
       })
-  }, [image, isAuthenticated, stage, symptomText])
+  }, [image, isAuthenticated, crop, stage, symptomText])
 
   const retry = useCallback(() => {
     if (!diagnosisCase) return
@@ -153,6 +189,15 @@ export function useDiagnosis() {
 
   return {
     isAuthenticated,
+    crops,
+    cropsLoading: canCreate && offered === null && cropsError === null,
+    cropsError,
+    reloadCrops: () => {
+      setCropsError(null)
+      setCropsAttempt((n) => n + 1)
+    },
+    crop,
+    chooseCrop,
     image,
     fileError,
     stage,

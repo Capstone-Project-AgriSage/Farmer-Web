@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict'
 import { spawn } from 'node:child_process'
 import { pathToFileURL } from 'node:url'
+// Vite colours its output when attached to a terminal; strip it before looking for the 'Local:' line.
+const ANSI_COLOR = new RegExp(String.fromCharCode(27) + '\\[[0-9;]*m', 'g')
 
 // AI diagnosis on the farmer web (AI_DIAGNOSIS.md 2.0): the AI result shows at once, CONFIDENT with treatments and
 // products, UNCERTAIN with neither, FAILED with "Thử lại". Every /api request is faked: no backend, no data written.
@@ -17,7 +19,7 @@ const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', '--host
 await new Promise((resolve, reject) => {
   const timeout = setTimeout(() => reject(new Error('Vite startup timed out')), 20000)
   server.stdout.on('data', (data) => {
-    if (data.toString().includes('Local:')) {
+    if (data.toString().replace(ANSI_COLOR, '').includes('Local:')) {
       clearTimeout(timeout)
       resolve()
     }
@@ -65,6 +67,7 @@ const caseOf = (id, status, result = null, extra = {}) => ({
 const listItem = (c) => ({
   id: c.id, caseNumber: c.caseNumber, status: c.status, submittedAt: c.submittedAt, completedAt: c.completedAt,
   diseaseCode: c.result?.disease.code ?? null, diseaseName: c.result?.disease.name ?? null, certainty: c.result?.certainty ?? null,
+  ...(c.cropType ? { cropType: c.cropType, cropName: c.cropName } : {}),
 })
 
 async function check(name, fn) {
@@ -78,11 +81,20 @@ async function check(name, fn) {
   }
 }
 
-/** A page with every /api call answered from `state`. `signedIn` puts a farmer token in localStorage first. */
-async function fixture({ signedIn = true, viewport = { width: 1280, height: 900 }, clock = false } = {}) {
+const rice = { code: 'RICE', name: 'Lúa', diseaseCount: 4, photoDiagnosis: true, diseases: [{ code: 'LEAF_BLAST', name: 'Bệnh đạo ôn lá' }] }
+const durian = { code: 'DURIAN', name: 'Sầu riêng', diseaseCount: 1, photoDiagnosis: true, diseases: [{ code: 'DURIAN_PHYTOPHTHORA', name: 'Thối gốc chảy nhựa' }] }
+
+/**
+ * A page with every /api call answered from `state`. `signedIn` puts a farmer token in localStorage first; `crops` are the
+ * crops the server offers for a photo (only rice by default, so the form picks it by itself); `lastCrop` is remembered.
+ */
+async function fixture({ signedIn = true, viewport = { width: 1280, height: 900 }, clock = false, crops = [rice], lastCrop = null } = {}) {
   const context = await browser.newContext({ viewport })
   if (signedIn) await context.addInitScript(() => localStorage.setItem('agrisage.farmer_token', 'diagnosis.test.jwt'))
+  if (lastCrop) await context.addInitScript((code) => localStorage.setItem('agrisage.last_crop', code), lastCrop)
   const state = {
+    crops,
+    cropsFail: false,
     cases: {
       'case-conf': caseOf('case-conf', 'AI_COMPLETED', confident),
       'case-unc1': caseOf('case-unc1', 'AI_COMPLETED', uncertain),
@@ -107,6 +119,10 @@ async function fixture({ signedIn = true, viewport = { width: 1280, height: 900 
       permissions: ['MY_PROFILE.READ', 'MY_CART.READ', 'MY_DIAGNOSIS.READ', 'MY_DIAGNOSIS.CREATE', 'MY_DIAGNOSIS.CANCEL'] })
     if (path === '/api/auth/login') {
       return json({ accessToken: 'diagnosis.test.jwt', refreshToken: 'r', user: { id: 'u1', fullName: 'Nông dân kiểm thử', role: 'FARMER', phoneNumber: '0901234567' } })
+    }
+    if (path === '/api/me/diagnosis/crops') {
+      assert.equal(request.headers().authorization, 'Bearer diagnosis.test.jwt')
+      return state.cropsFail ? json({ title: 'Service Unavailable', status: 503 }, 503) : json(state.crops)
     }
     if (path.startsWith('/api/me/diagnosis-cases')) {
       assert.equal(request.headers().authorization, 'Bearer diagnosis.test.jwt')
@@ -179,7 +195,9 @@ try {
     await page.getByRole('heading', { name: 'Bác Sĩ Cây Trồng AI' }).waitFor()
     assert.equal(await page.getByRole('link', { name: /^Lịch sử/ }).count(), 0, 'a guest has no history link')
     await pick(page)
-    await page.getByAltText('Ảnh lá lúa đã chọn').waitFor()
+    await page.getByAltText('Ảnh lá cây đã chọn').waitFor()
+    assert.equal(await page.getByTestId('crop-step').getByRole('radio').count(), 5, 'a guest sees the whole crop catalog')
+    assert.equal(state.requests.filter((r) => r.path === '/api/me/diagnosis/crops').length, 0, 'a guest does not call the farmer API')
     await page.getByRole('button', { name: 'Đăng nhập để gửi ảnh' }).click()
     await page.waitForURL(/\/login$/)
     await signIn(page)
@@ -226,6 +244,7 @@ try {
     assert.match(upload.contentType, /^multipart\/form-data; boundary=/)
     assert.match(upload.body, /name="image"; filename="leaf.png"/)
     assert.match(upload.body, /name="note"\r\n\r\nGiai đoạn: Làm đòng \(40-55 ngày sau sạ\)\. Triệu chứng: Lá vàng từ chóp/)
+    assert.match(upload.body, /name="cropType"\r\n\r\nRICE\r\n/, 'the only crop offered is chosen by itself and sent')
 
     assert.match(await textOf(page.getByTestId('diagnosis-certainty')), /Kết quả từ AI$/)
     assert.equal(await textOf(page.getByTestId('diagnosis-disease')), 'Đạo ôn lá')
@@ -262,6 +281,71 @@ try {
     await sendButton(page).waitFor()
     assert.equal(await page.getByTestId('diagnosis-result').count(), 0, 'retake goes back to an empty form')
     assert.equal(await sendButton(page).isDisabled(), true)
+    await context.close()
+  })
+
+  await check('several crops: nothing is sent before a crop is chosen; durian has no rice stage and is sent as DURIAN', async () => {
+    const { context, page, state, errors } = await fixture({ crops: [rice, durian] })
+    await page.goto(base + '/ai-doctor')
+    const step = page.getByTestId('crop-step')
+    await step.getByRole('radio', { name: 'Sầu riêng' }).waitFor()
+    await pick(page)
+    assert.equal(await sendButton(page).isDisabled(), true, 'no crop chosen yet')
+    await page.getByText('Bác chọn cây trồng trước khi gửi ảnh.').waitFor()
+    assert.equal(await page.getByRole('radio', { name: /Làm đòng/ }).count(), 0, 'no stage before the crop is known')
+
+    await step.getByRole('radio', { name: 'Lúa' }).click()
+    await page.getByRole('radio', { name: /Làm đòng/ }).waitFor()
+    await step.getByRole('radio', { name: 'Sầu riêng' }).click()
+    assert.equal(await page.getByRole('radio', { name: /Làm đòng/ }).count(), 0, 'durian has no rice stage')
+    await page.getByAltText('Ảnh lá sầu riêng đã chọn').waitFor()
+    await page.getByLabel('Mô tả triệu chứng ngoài ruộng').fill('Thân chảy nhựa')
+    await sendButton(page).click()
+    await page.getByTestId('diagnosis-result').waitFor()
+    const upload = state.uploads[0]
+    assert.match(upload.body, /name="cropType"\r\n\r\nDURIAN\r\n/)
+    assert.match(upload.body, /name="note"\r\n\r\nTriệu chứng: Thân chảy nhựa\r\n/, 'no rice stage in the note')
+    assert.equal(await page.evaluate(() => localStorage.getItem('agrisage.last_crop')), 'DURIAN', 'the crop is remembered')
+    await page.getByTestId('ai-service-note').getByText('Ảnh và mô tả triệu chứng được gửi tới dịch vụ AI để phân tích.').waitFor()
+    assert.deepEqual(errors, [])
+    await context.close()
+  })
+
+  await check('the crop chosen last is picked again; a crop the server no longer offers is not', async () => {
+    const remembered = await fixture({ crops: [rice, durian], lastCrop: 'DURIAN' })
+    await remembered.page.goto(base + '/ai-doctor')
+    await remembered.page.getByTestId('crop-step').getByRole('radio', { name: 'Sầu riêng', checked: true }).waitFor()
+    await remembered.context.close()
+
+    const gone = await fixture({ crops: [rice, durian], lastCrop: 'MANGO' })
+    await gone.page.goto(base + '/ai-doctor')
+    await gone.page.getByTestId('crop-step').getByRole('radio', { name: 'Lúa' }).waitFor()
+    assert.equal(await gone.page.getByTestId('crop-step').getByRole('radio', { checked: true }).count(), 0)
+    await gone.context.close()
+  })
+
+  await check('the crop list fails to load: the error says so and "Thử lại" loads it', async () => {
+    const { context, page, state } = await fixture()
+    state.cropsFail = true
+    await page.goto(base + '/ai-doctor')
+    const step = page.getByTestId('crop-step')
+    await step.getByRole('alert').waitFor()
+    await pick(page)
+    assert.equal(await sendButton(page).isDisabled(), true)
+    state.cropsFail = false
+    await step.getByRole('button', { name: 'Thử lại' }).click()
+    await step.getByRole('radio', { name: 'Lúa', checked: true }).waitFor()
+    assert.equal(await sendButton(page).isDisabled(), false)
+    await context.close()
+  })
+
+  await check('a crop the server stopped offering (422) gets a sentence the farmer can act on', async () => {
+    const { context, page, state } = await fixture()
+    state.createAnswers.push({ status: 422, body: { title: 'Business rule', status: 422, detail: 'Photo diagnosis is not available for Lúa yet.' } })
+    await page.goto(base + '/ai-doctor')
+    await pick(page)
+    await sendButton(page).click()
+    await page.getByText('Cây này chưa được chẩn đoán qua ảnh.', { exact: false }).waitFor()
     await context.close()
   })
 
@@ -324,6 +408,27 @@ try {
     await page.getByRole('button', { name: 'Đã huỷ' }).click()
     await page.getByText('Không có ca "Đã huỷ".').waitFor()
     assert.equal(await iconsAreGlyphs(page.locator('main, body').first()), true, 'icons render as glyphs')
+    await context.close()
+  })
+
+  await check('the history, the case page and the result name the crop each photo was of; an old case is rice', async () => {
+    const { context, page, state } = await fixture({ crops: [rice, durian] })
+    const rot = { ...confident, disease: disease('DURIAN_PHYTOPHTHORA', 'Thối gốc chảy nhựa') }
+    state.cases['case-dur1'] = caseOf('case-dur1', 'AI_COMPLETED', rot, { cropType: 'DURIAN', cropName: 'Sầu riêng' })
+    state.listed.unshift('case-dur1')
+    await page.goto(base + '/ai-doctor/history')
+    await page.getByTestId('diagnosis-row-case-dur1').getByText('Thối gốc chảy nhựa', { exact: true }).waitFor()
+    assert.match(await textOf(page.getByTestId('history-sub-case-dur1')), /^Sầu riêng · DG-20261021-DUR1 · /)
+    assert.match(await textOf(page.getByTestId('history-sub-case-conf')), /^Lúa · /, 'a case without a crop is rice')
+    await page.goto(base + '/ai-doctor/cases/case-dur1')
+    assert.match(await textOf(page.getByTestId('case-crop')), /^Sầu riêng · Gửi lúc /)
+
+    state.createAnswers.push({ status: 201, body: caseOf('case-dur2', 'AI_COMPLETED', rot, { cropType: 'DURIAN', cropName: 'Sầu riêng' }) })
+    await page.goto(base + '/ai-doctor')
+    await page.getByTestId('crop-step').getByRole('radio', { name: 'Sầu riêng' }).click()
+    await pick(page)
+    await sendButton(page).click()
+    await page.getByTestId('diagnosis-result').getByText('Kết quả chẩn đoán · Sầu riêng · DG-20261021-DUR2', { exact: false }).waitFor()
     await context.close()
   })
 

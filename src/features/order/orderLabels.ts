@@ -70,6 +70,7 @@ export const PAYMENT_METHOD: Record<string, string> = {
   PAYOS: 'payOS (VietQR)',
   CASH: 'Tiền mặt',
   BANK_TRANSFER: 'Chuyển khoản',
+  EXCHANGE_CREDIT: 'Bù trừ đổi hàng',
 }
 
 /** Unknown codes fall back to the raw value instead of breaking the page. */

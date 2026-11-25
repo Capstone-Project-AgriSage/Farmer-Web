@@ -1,3 +1,4 @@
+import OrderExchangePanel from '../exchanges/OrderExchangePanel'
 import PermissionAction from '../../components/auth/PermissionAction'
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
@@ -373,6 +374,7 @@ export default function OrderDetailPage() {
             </section>
           </aside>
         </div>
+        <OrderExchangePanel key={order.id} orderId={order.id} completed={order.status === 'COMPLETED'} />
       </div>
     </div>
   )

@@ -1,5 +1,5 @@
 import { api } from './client'
-import type { CheckoutRequest, MyDelivery, OrderListItem, OrderResponse, OrderStatus, PagedResult } from './types'
+import type { CheckoutRequest, MyDelivery, MyDeliveryTracking, OrderListItem, OrderResponse, OrderStatus, PagedResult } from './types'
 
 export interface MyOrdersQuery {
   status?: OrderStatus
@@ -35,5 +35,8 @@ export const ordersApi = {
     body: JSON.stringify({ reason })
   }),
 
-  getOrderDeliveries: (id: string) => api<MyDelivery[]>(`/api/me/orders/${id}/deliveries`)
+  getOrderDeliveries: (id: string) => api<MyDelivery[]>(`/api/me/orders/${id}/deliveries`),
+  /** F2.8: where the driver of this delivery is while the trip runs (polled every 15 s by the order page). */
+  getDeliveryTracking: (orderId: string, deliveryId: string, signal?: AbortSignal) =>
+    api<MyDeliveryTracking>(`/api/me/orders/${orderId}/deliveries/${deliveryId}/tracking`, { signal })
 }

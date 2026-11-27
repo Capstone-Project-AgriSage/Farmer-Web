@@ -194,6 +194,29 @@ export interface PaymentResponse {
 export type DeliveryStatus = 'DRAFT' | 'ASSIGNED' | 'OUT_FOR_DELIVERY' | 'PARTIALLY_DELIVERED' | 'RETRY_PENDING' | 'DELIVERED' | 'CANCELLED'
 export type DeliveryAttemptStatus = 'IN_PROGRESS' | 'SUCCESS' | 'PARTIAL_SUCCESS' | 'FAILED' | 'CANCELLED'
 
+/** One position of the driver's phone (FLOW_2 §9a). */
+export interface TrackPoint {
+  latitude: number;
+  longitude: number;
+  accuracyMeters: number | null;
+  recordedAt: string;
+}
+
+/** GET /api/me/orders/{orderId}/deliveries/{deliveryId}/tracking: the driver while the trip runs, nothing after. */
+export interface MyDeliveryTracking {
+  deliveryId: string;
+  deliveryNumber: string;
+  status: DeliveryStatus;
+  inProgress: boolean;
+  attemptNumber: number | null;
+  startedAt: string | null;
+  driver: { fullName: string | null; phoneNumber: string | null } | null;
+  /** The delivery address; null when it has no coordinates. */
+  destination: { latitude: number; longitude: number } | null;
+  lastPoint: TrackPoint | null;
+  trail: TrackPoint[];
+}
+
 export interface MyDeliveryAttempt {
   attemptNumber: number;
   status: DeliveryAttemptStatus;

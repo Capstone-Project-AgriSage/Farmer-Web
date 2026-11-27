@@ -1,6 +1,6 @@
 import OrderExchangePanel from '../exchanges/OrderExchangePanel'
 import PermissionAction from '../../components/auth/PermissionAction'
-import { useState, useEffect } from 'react'
+import { lazy, Suspense, useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import Breadcrumb from '../../components/ui/Breadcrumb'
 import { formatVnd } from '../../data/format'
@@ -12,6 +12,9 @@ import { usePermissions } from '../../context/PermissionContext'
 import type { MyDelivery, OrderPaymentSummary, OrderResponse } from '../../api/types'
 import OrderPaymentPanel from './components/OrderPaymentPanel'
 import OrderProgress from './components/OrderProgress'
+
+// Leaflet is loaded only for a delivery that is on its way (F2.8).
+const DriverTrackingCard = lazy(() => import('./components/DriverTrackingCard'))
 import { ATTEMPT_STATUS, DELIVERY_STATUS, FAILURE_REASON, ORDER_STATUS, TONE_CLASSES, formatAddress, formatDateTime, labelOf } from './orderLabels'
 
 function SectionTitle({ children }: { children: string }) {
@@ -247,6 +250,17 @@ export default function OrderDetailPage() {
                           Nhân viên giao: <strong className="text-text-primary font-medium">{delivery.assignedTo?.fullName || 'Đang cập nhật'}</strong> · SĐT:{' '}
                           <strong className="text-text-primary font-medium">{delivery.assignedTo?.phoneNumber || 'Đang cập nhật'}</strong>
                         </p>
+
+                        {/* Only a delivery out for delivery can have a driver on the road (FLOW_2 §9a). */}
+                        {delivery.status === 'OUT_FOR_DELIVERY' && (
+                          <Suspense fallback={null}>
+                            <DriverTrackingCard
+                              orderId={orderId!}
+                              deliveryId={delivery.id}
+                              onEnded={() => { ordersApi.getOrderDeliveries(orderId!).then(setDeliveries).catch(() => {}) }}
+                            />
+                          </Suspense>
+                        )}
 
                         <ul className="mt-4 divide-y divide-brand-dark/10 border-t border-brand-dark/10">
                           {delivery.items.map((item) => (

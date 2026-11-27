@@ -28,6 +28,30 @@ const delivery = (deliveryId, status) => ({ id: deliveryId, deliveryNumber: `DL-
   dispatchedAt: ago(60), completedAt: null, assignedTo: { fullName: 'Lê Văn Tài', phoneNumber: '0909000111' },
   items: [{ orderItemId: id, productName: 'Phân NPK', packagingName: 'Bao 25kg', plannedQuantity: 2, deliveredQuantity: 0, remainingQuantity: 2 }],
   attempts: [] })
+// The store's region (Mekong Delta + Ho Chi Minh City). Every tile a map loads must lie in it, at province zoom or closer.
+const REGION = { south: 8.3, west: 103.8, north: 11.8, east: 107.2 }
+const lon2x = (lon, z) => Math.floor(((lon + 180) / 360) * 2 ** z)
+const lat2y = (lat, z) => Math.floor(((1 - Math.log(Math.tan((lat * Math.PI) / 180) + 1 / Math.cos((lat * Math.PI) / 180)) / Math.PI) / 2) * 2 ** z)
+const inRegion = ({ z, x, y }) => z >= 9 && x >= lon2x(REGION.west, z) && x <= lon2x(REGION.east, z) && y >= lat2y(REGION.north, z) && y <= lat2y(REGION.south, z)
+const tileOf = (url) => { const [z, x, y] = new URL(url).pathname.replace('.png', '').split('/').filter(Boolean).map(Number); return { z, x, y } }
+
+/** Zooms out as far as the map allows and drags it towards the sea; the map must stop at the store's region. */
+async function tryToLeaveRegion(page, mapLocator) {
+  const zoomOut = mapLocator.locator('.leaflet-control-zoom-out')
+  for (let i = 0; i < 10 && !(await zoomOut.evaluate((e) => e.classList.contains('leaflet-disabled'))); i++) {
+    await zoomOut.click()
+    await page.waitForTimeout(350)
+  }
+  const stopped = await zoomOut.evaluate((e) => e.classList.contains('leaflet-disabled'))
+  const box = await mapLocator.boundingBox()
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
+  await page.mouse.down()
+  await page.mouse.move(box.x + 5, box.y + 5, { steps: 12 })
+  await page.mouse.up()
+  await page.waitForTimeout(900)
+  return stopped
+}
+
 const running = (minutesAgo = 0.5) => ({ deliveryId: 'd1', deliveryNumber: 'DL-d1', status: 'OUT_FOR_DELIVERY', inProgress: true,
   attemptNumber: 1, startedAt: ago(20), driver: { fullName: 'Lê Văn Tài', phoneNumber: '0909000111' },
   destination: { latitude: 10.0452, longitude: 105.7469 }, lastPoint: point(10.038, 105.76, minutesAgo),
@@ -38,8 +62,11 @@ const ended = { deliveryId: 'd1', deliveryNumber: 'DL-d1', status: 'DELIVERED', 
 async function fixture({ deliveries, tracking, clock = false, viewport = { width: 1440, height: 900 } }) {
   const context = await browser.newContext({ viewport })
   await context.addInitScript((value) => localStorage.setItem('agrisage.farmer_token', value), token)
-  const state = { tracking, deliveries, requests: [] }
-  await context.route('https://tile.openstreetmap.org/**', (route) => route.fulfill({ status: 200, contentType: 'image/png', body: TILE }))
+  const state = { tracking, deliveries, requests: [], tileList: [] }
+  await context.route('https://tile.openstreetmap.org/**', (route) => {
+    state.tileList.push(tileOf(route.request().url()))
+    return route.fulfill({ status: 200, contentType: 'image/png', body: TILE })
+  })
   await context.route('**/api/**', async (intercept) => {
     const request = intercept.request()
     const url = new URL(request.url())
@@ -81,6 +108,11 @@ try {
   assert.equal(await live.page.getByTestId('driver-tracking-map').evaluate((e) => getComputedStyle(e).isolation), 'isolate')
   assert.ok(await live.page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1))
   pass('A trip on its way shows the driver, the route, the destination and the last update')
+
+  // The map cannot leave the store's region: zoom out stops at a province and no tile of the open sea is loaded.
+  assert.ok(await tryToLeaveRegion(live.page, live.page.getByTestId('driver-tracking-map')), 'zoom out stops at province level')
+  assert.deepEqual(live.state.tileList.filter((tile) => !inRegion(tile)), [], 'no tile outside the store region')
+  pass("The map stays in the store's region (no open sea, no islands)")
   await live.context.close()
 
   // A position older than 3 minutes is a lost signal.

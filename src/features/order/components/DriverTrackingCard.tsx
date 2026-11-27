@@ -11,6 +11,11 @@ const REFRESH_MS = 15_000
 const STALE_MS = 3 * 60 * 1000
 // Can Tho, when there is no point yet.
 const STORE_AREA: LatLngTuple = [10.0341, 105.788]
+// The store's region: the Mekong Delta and Ho Chi Minh City, with Phu Quoc and Con Dao (south-west, north-east corners).
+// Maps never leave it and never zoom out past a province, so the open sea and the islands (whose OpenStreetMap labels
+// are disputed) are never shown; tiles outside it are not even loaded.
+const STORE_REGION: [LatLngTuple, LatLngTuple] = [[8.3, 103.8], [11.8, 107.2]]
+const MIN_MAP_ZOOM = 9
 
 const clock = (iso: string) => new Date(iso).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Ho_Chi_Minh' })
 
@@ -92,8 +97,18 @@ export default function DriverTrackingCard({ orderId, deliveryId, onEnded }: Dri
       </div>
       {/* `isolate` keeps Leaflet's panes (z-index up to 1000) under the site's header and dialogs. */}
       <div className="relative isolate h-[260px]" data-testid="driver-tracking-map">
-        <MapContainer center={points[0] ?? STORE_AREA} zoom={14} scrollWheelZoom={false} className="h-full w-full">
+        <MapContainer
+          center={points[0] ?? STORE_AREA}
+          zoom={14}
+          minZoom={MIN_MAP_ZOOM}
+          maxBounds={STORE_REGION}
+          maxBoundsViscosity={1}
+          scrollWheelZoom={false}
+          className="h-full w-full"
+        >
           <TileLayer
+            bounds={STORE_REGION}
+            noWrap
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           />

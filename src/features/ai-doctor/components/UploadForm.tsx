@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { DIAGNOSIS_IMAGE_TYPES, type DiagnosisCrop } from '../../../api/diagnosisApi'
 import { parseStageLabel, riceStageOptions, type RiceStageValue } from '../model'
-import { RICE, cropLabel, leafOf } from '../crops'
+import { DRAGON_FRUIT, RICE, cropLabel, leafOf } from '../crops'
 import type { DiagnosisStatus, PickedImage } from '../useDiagnosis'
 
 interface UploadFormProps {
@@ -28,7 +28,7 @@ interface UploadFormProps {
   submitError: string | null
 }
 
-const ANALYZING_STEPS = ['AI đang nhận diện vùng bệnh trên lá…', 'Đối chiếu với các bệnh của cây bác chọn…', 'Đang chuẩn bị kết quả và cách xử lý…']
+const ANALYZING_STEPS = ['AI đang nhận diện vùng bệnh trong ảnh…', 'Đối chiếu với các bệnh của cây bác chọn…', 'Đang chuẩn bị kết quả và cách xử lý…']
 const ACCEPT = DIAGNOSIS_IMAGE_TYPES.join(',')
 /** The stage line takes the rest of the backend's 1000-character note. */
 const SYMPTOM_MAX = 900
@@ -162,7 +162,7 @@ export default function UploadForm({ crops, cropsLoading, cropsError, onReloadCr
               </span>
               <p className="mt-3 text-lg text-text-primary">{isDragging ? 'Thả ảnh vào đây' : `Chụp hoặc chọn ảnh ${leaf}`}</p>
               <p id="photo-help" className="mt-1 text-[15px] text-text-secondary max-w-sm">
-                Kéo thả ảnh vào đây hoặc bấm để chọn. Chụp gần một lá bệnh, rõ vết đốm hoặc cháy mép lá. Ảnh JPEG, PNG hoặc WebP, tối đa 5 MB.
+                Kéo thả ảnh vào đây hoặc bấm để chọn. {crop === DRAGON_FRUIT ? 'Chụp gần một đoạn cành bệnh, rõ vết đốm hoặc vết loét.' : 'Chụp gần một lá bệnh, rõ vết đốm hoặc cháy mép lá.'} Ảnh JPEG, PNG hoặc WebP, tối đa 5 MB.
               </p>
               <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
                 <span className="inline-flex items-center min-h-[44px] px-6 rounded-full bg-brand-dark text-white text-[15px]">Chọn ảnh</span>

@@ -1,7 +1,8 @@
-// Same advice as the Farmer app: one close leaf of the crop chosen above; a whole-plant photo is often UNCERTAIN.
+// Same advice as the Farmer app: one close leaf (a branch for dragon fruit) of the crop chosen above; a whole-plant photo
+// is often UNCERTAIN.
 const tips = [
   'Chọn đúng cây trồng trước: AI chỉ đối chiếu với các bệnh của cây đó',
-  'Chụp một lá bệnh, để lá chiếm gần hết khung hình',
+  'Chụp một lá bệnh (thanh long: một đoạn cành bệnh), để nó chiếm gần hết khung hình',
   'Chụp gần vết bệnh, không chụp cả cây hay cả ruộng',
   'Chụp dưới ánh sáng tự nhiên, tránh ngược sáng hoặc quá tối',
   'Giữ máy ổn định, lấy nét rõ vào vùng bị bệnh',

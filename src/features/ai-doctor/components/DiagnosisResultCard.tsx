@@ -73,7 +73,7 @@ function ResultBody({ result, previewUrl, onNewPhoto }: { result: DiagnosisResul
               Nên chụp lại hoặc hỏi cửa hàng
             </p>
             <p className="mt-2 text-[15px] md:text-base text-text-primary leading-relaxed">
-              AI chưa chắc đây là bệnh gì nên chưa gợi ý thuốc. Bác chụp lại gần một lá bệnh, đủ sáng, hoặc mang mẫu lá đến cửa hàng để được tư vấn.
+              AI chưa chắc đây là bệnh gì nên chưa gợi ý thuốc. Bác chụp lại gần chỗ bị bệnh, đủ sáng, hoặc mang mẫu bệnh đến cửa hàng để được tư vấn.
             </p>
             <button type="button" onClick={onNewPhoto} className={`${solidButton} mt-4`}>
               <Icon name="photo_camera" />

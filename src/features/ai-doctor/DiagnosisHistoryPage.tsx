@@ -187,11 +187,11 @@ export default function DiagnosisHistoryPage() {
               local_florist
             </span>
             <p className="mt-3 text-lg text-text-primary">
-              {filter ? `Không có ca "${statusLabel(filter)}".` : 'Bác chưa gửi ảnh lá lúa nào để AI chẩn đoán.'}
+              {filter ? `Không có ca "${statusLabel(filter)}".` : 'Bác chưa gửi ảnh cây trồng nào để AI chẩn đoán.'}
             </p>
             {!filter && (
               <Link to="/ai-doctor" className={`${solidButton} mt-5`}>
-                Chụp ảnh lá lúa
+                Chụp ảnh cây trồng
               </Link>
             )}
           </div>

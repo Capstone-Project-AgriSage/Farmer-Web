@@ -83,6 +83,7 @@ async function check(name, fn) {
 
 const rice = { code: 'RICE', name: 'Lúa', diseaseCount: 4, photoDiagnosis: true, diseases: [{ code: 'LEAF_BLAST', name: 'Bệnh đạo ôn lá' }] }
 const durian = { code: 'DURIAN', name: 'Sầu riêng', diseaseCount: 1, photoDiagnosis: true, diseases: [{ code: 'DURIAN_PHYTOPHTHORA', name: 'Thối gốc chảy nhựa' }] }
+const dragonFruit = { code: 'DRAGON_FRUIT', name: 'Thanh long', diseaseCount: 1, photoDiagnosis: true, diseases: [{ code: 'DRAGONFRUIT_STEM_CANKER', name: 'Bệnh đốm nâu (tắc kè)' }] }
 
 /**
  * A page with every /api call answered from `state`. `signedIn` puts a farmer token in localStorage first; `crops` are the
@@ -196,7 +197,7 @@ try {
     assert.equal(await page.getByRole('link', { name: /^Lịch sử/ }).count(), 0, 'a guest has no history link')
     await pick(page)
     await page.getByAltText('Ảnh lá cây đã chọn').waitFor()
-    assert.equal(await page.getByTestId('crop-step').getByRole('radio').count(), 5, 'a guest sees the whole crop catalog')
+    assert.equal(await page.getByTestId('crop-step').getByRole('radio').count(), 6, 'a guest sees the whole crop catalog')
     assert.equal(state.requests.filter((r) => r.path === '/api/me/diagnosis/crops').length, 0, 'a guest does not call the farmer API')
     await page.getByRole('button', { name: 'Đăng nhập để gửi ảnh' }).click()
     await page.waitForURL(/\/login$/)
@@ -281,6 +282,24 @@ try {
     await sendButton(page).waitFor()
     assert.equal(await page.getByTestId('diagnosis-result').count(), 0, 'retake goes back to an empty form')
     assert.equal(await sendButton(page).isDisabled(), true)
+    await context.close()
+  })
+
+  // AI_DIAGNOSIS.md 2.4: dragon fruit photos go to the team's stem model, so the form asks for a branch, not a leaf.
+  await check('dragon fruit asks for a photo of a branch and is sent as DRAGON_FRUIT', async () => {
+    const { context, page, state, errors } = await fixture({ crops: [rice, dragonFruit] })
+    await page.goto(base + '/ai-doctor')
+    const step = page.getByTestId('crop-step')
+    await step.getByRole('radio', { name: 'Thanh long' }).click()
+    await page.getByText('Ảnh chụp cành thanh long').waitFor()
+    await page.getByText('Chụp gần một đoạn cành bệnh, rõ vết đốm hoặc vết loét.', { exact: false }).waitFor()
+    assert.equal(await page.getByRole('radio', { name: /Làm đòng/ }).count(), 0, 'dragon fruit has no rice stage')
+    await pick(page)
+    await page.getByAltText('Ảnh cành thanh long đã chọn').waitFor()
+    await sendButton(page).click()
+    await page.getByTestId('diagnosis-result').waitFor()
+    assert.match(state.uploads[0].body, /name="cropType"\r\n\r\nDRAGON_FRUIT\r\n/)
+    assert.deepEqual(errors, [])
     await context.close()
   })
 

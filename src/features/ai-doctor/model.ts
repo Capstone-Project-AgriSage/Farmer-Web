@@ -31,14 +31,14 @@ export function buildDiagnosisNote(stage: RiceStageValue | null, symptomText: st
   return prefix + symptoms.slice(0, DIAGNOSIS_NOTE_MAX - prefix.length)
 }
 
-/** Vietnamese names of the five classes the AI knows (the backend names are English). */
+/** Vietnamese names of the five seeded classes (the backend names may be English). HEALTHY is shared by every crop. */
 export function diseaseDisplayName(code: string | null | undefined, name: string | null | undefined) {
   switch (code) {
     case 'LEAF_BLAST': return 'Đạo ôn lá'
     case 'BACTERIAL_LEAF_BLIGHT': return 'Bạc lá'
     case 'BROWN_SPOT': return 'Đốm nâu'
     case 'SHEATH_BLIGHT': return 'Khô vằn'
-    case 'HEALTHY': return 'Lá khoẻ mạnh'
+    case 'HEALTHY': return 'Cây khoẻ mạnh'
     default: return name ?? ''
   }
 }
